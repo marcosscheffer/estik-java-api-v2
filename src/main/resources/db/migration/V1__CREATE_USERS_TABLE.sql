@@ -1,0 +1,20 @@
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'USER',
+    createdAt TIMESTAMP NOT NULL DEFAULT now(),
+    updatedAt TIMESTAMP NOT NULL DEFAULT now(),
+    active BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE refreshTokens(
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tokenId UUID NOT NULL,
+    userId UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    createAt TIMESTAMP NOT NULL DEFAULT now(),
+    expiresAt TIMESTAMP NOT NULL,
+    revoked BOOLEAN NOT NULL DEFAULT FALSE,
+    revokedAt TIMESTAMP
+)
