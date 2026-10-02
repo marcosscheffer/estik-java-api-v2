@@ -3,9 +3,11 @@ package com.marcos.estik.user.domain;
 import java.time.Instant;
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor 
 public class User {
     private UUID id;
     private String username;

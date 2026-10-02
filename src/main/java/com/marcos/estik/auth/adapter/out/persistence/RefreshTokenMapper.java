@@ -1,7 +1,6 @@
 package com.marcos.estik.auth.adapter.out.persistence;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import com.marcos.estik.auth.domain.RefreshToken;
 
@@ -9,6 +8,5 @@ import com.marcos.estik.auth.domain.RefreshToken;
 public interface RefreshTokenMapper {
     RefreshToken toDomain(RefreshTokenEntity entity);
 
-    @Mapping(target = "userId", ignore = true)
     RefreshTokenEntity toEntity(RefreshToken refreshToken);
 }

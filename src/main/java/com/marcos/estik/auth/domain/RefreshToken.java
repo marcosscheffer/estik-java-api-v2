@@ -3,9 +3,13 @@ package com.marcos.estik.auth.domain;
 import java.time.Instant;
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter 
+@AllArgsConstructor 
+@NoArgsConstructor 
 public class RefreshToken {
     private UUID id;
     private UUID tokenId;

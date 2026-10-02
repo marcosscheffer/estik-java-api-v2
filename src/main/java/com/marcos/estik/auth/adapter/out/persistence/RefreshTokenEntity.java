@@ -24,9 +24,8 @@ public class RefreshTokenEntity {
 
     @Column(name = "token_id")
     private UUID tokenId;
-    @JoinColumn(name = "user_id")
-    @ManyToOne
-    private UserEntity userId;
+    @Column(name = "user_id")
+    private UUID userId;
     @Column(name = "created_at")
     private Instant createdAt;
     @Column(name = "expires_at")
