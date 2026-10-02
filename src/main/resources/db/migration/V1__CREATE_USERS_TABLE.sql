@@ -4,17 +4,17 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL DEFAULT 'USER',
-    createdAt TIMESTAMP NOT NULL DEFAULT now(),
-    updatedAt TIMESTAMP NOT NULL DEFAULT now(),
+    created_at TIMESTAMP NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP NOT NULL DEFAULT now(),
     active BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-CREATE TABLE refreshTokens(
+CREATE TABLE refresh_tokens(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    tokenId UUID NOT NULL,
-    userId UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    createAt TIMESTAMP NOT NULL DEFAULT now(),
-    expiresAt TIMESTAMP NOT NULL,
+    token_id UUID NOT NULL,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMP NOT NULL DEFAULT now(),
+    expires_at TIMESTAMP NOT NULL,
     revoked BOOLEAN NOT NULL DEFAULT FALSE,
-    revokedAt TIMESTAMP
+    revoked_at TIMESTAMP
 )
