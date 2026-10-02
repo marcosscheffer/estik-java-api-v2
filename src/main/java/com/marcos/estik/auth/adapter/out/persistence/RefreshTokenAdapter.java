@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 
 import com.marcos.estik.auth.application.port.out.RefreshTokenRepositoryPort;
 import com.marcos.estik.auth.domain.RefreshToken;
-import com.marcos.estik.user.adapter.out.persistence.JpaUserRepository;
-import com.marcos.estik.user.adapter.out.persistence.UserRepositoryAdapter;
 
 import lombok.RequiredArgsConstructor;
 

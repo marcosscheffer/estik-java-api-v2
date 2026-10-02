@@ -9,7 +9,10 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import com.marcos.estik.auth.domain.exception.InvalidCredentialsException;
+import com.marcos.estik.auth.domain.exception.UserInactiveException;
+import com.marcos.estik.user.domain.exception.UsernameAlreadyUseException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,15 @@ public class GlobalExceptionHandler {
     ) {
         return build(HttpStatus.UNAUTHORIZED, exception.getMessage(), request);
     }
+    
+    @ExceptionHandler(UserInactiveException.class)
+    public ResponseEntity<ErrorResponse> handleUserInactive(
+        UserInactiveException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.UNAUTHORIZED, exception.getMessage(), request);
+    }
+
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(
@@ -53,6 +65,14 @@ public class GlobalExceptionHandler {
                         fields
                     )
                 );
+    }
+
+    @ExceptionHandler(UsernameAlreadyUseException.class)
+    public ResponseEntity<ErrorResponse> handlerUsernameAlreadyUse (
+        UsernameAlreadyUseException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.CONFLICT, exception.getMessage(), request);
     }
 
     private ResponseEntity<ErrorResponse> build(

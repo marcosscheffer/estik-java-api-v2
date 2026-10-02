@@ -28,5 +28,16 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         return jpaUserRepository.findById(id)
             .map(userPersistenceMapper::toDomain);
     }
-    
+
+    @Override
+    public User save(User user) {
+        UserEntity userEntity = userPersistenceMapper.toEntity(user);
+        jpaUserRepository.save(userEntity);
+        return userPersistenceMapper.toDomain(userEntity);
+    }
+
+    @Override
+    public Boolean ExistsByUsername(String username) {
+       return jpaUserRepository.existsByUsername(username);
+    }
 }
