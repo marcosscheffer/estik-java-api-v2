@@ -1,15 +1,17 @@
 package com.marcos.estik.auth.application.usecase;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 import com.marcos.estik.auth.application.command.RegisterCommand;
 import com.marcos.estik.auth.application.port.in.RegisterPort;
+import com.marcos.estik.auth.application.port.out.NewUserAccountPort;
 import com.marcos.estik.auth.application.port.out.PasswordEncodePort;
-import com.marcos.estik.user.application.command.CreateUserCommand;
-import com.marcos.estik.user.application.mapper.UserMapper;
-import com.marcos.estik.user.application.port.in.CreateUserPort;
-import com.marcos.estik.user.application.result.UserData;
-import com.marcos.estik.user.domain.User;
+import com.marcos.estik.auth.application.port.out.UserByIdPort;
+import com.marcos.estik.auth.domain.NewUserAccount;
+import com.marcos.estik.auth.domain.UserAuth;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,21 +20,21 @@ import lombok.RequiredArgsConstructor;
 public class RegisterUseCase implements RegisterPort {
 
     private final PasswordEncodePort passwordEncodePort;
-    private final CreateUserPort createUserPort;
-    private final UserMapper userMapper;
+    private final NewUserAccountPort newUserAccountPort;
+    private final UserByIdPort userByIdPort;
 
     @Override
-    public UserData execute(RegisterCommand command) {
+    public UserAuth execute(RegisterCommand command) {
         String password = passwordEncodePort.encode(command.password());
 
-        User user = createUserPort.execute(
-            new CreateUserCommand(
-                command.email(),
+        UUID userId = newUserAccountPort.createUser(
+            new NewUserAccount(
                 command.username(),
-                password
+                command.email(),
+                command.password()
             )
         );
         
-        return userMapper.toResult(user);
+        return userByIdPort.findById(userId);
     }
 }

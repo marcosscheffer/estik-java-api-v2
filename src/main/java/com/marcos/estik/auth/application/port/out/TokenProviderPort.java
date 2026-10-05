@@ -2,14 +2,14 @@ package com.marcos.estik.auth.application.port.out;
 
 import java.util.UUID;
 
+import com.marcos.estik.auth.domain.UserCredentials;
 import com.marcos.estik.user.domain.RoleEnum;
-import com.marcos.estik.user.domain.User;
 
 public interface TokenProviderPort {
 
-    String generateToken(User user);
+    String generateToken(UserCredentials user);
 
-    String generateRefreshToken(User user, UUID tokenId);
+    String generateRefreshToken(UserCredentials user, UUID tokenId);
 
     UUID getUserId(String token);
 

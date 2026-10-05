@@ -1,8 +1,8 @@
 package com.marcos.estik.auth.application.port.in;
 
 import com.marcos.estik.auth.application.command.RegisterCommand;
-import com.marcos.estik.user.application.result.UserData;
+import com.marcos.estik.auth.domain.UserAuth;
 
 public interface RegisterPort {
-    UserData execute(RegisterCommand command);
+    UserAuth execute(RegisterCommand command);
 }

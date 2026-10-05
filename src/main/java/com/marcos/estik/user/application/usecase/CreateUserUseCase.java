@@ -19,7 +19,7 @@ public class CreateUserUseCase implements CreateUserPort {
 
     @Override
     public User execute(CreateUserCommand command) {
-        if (userRepositoryPort.ExistsByUsername(command.username())) {
+        if (userRepositoryPort.existsByUsername(command.username())) {
             throw new UsernameAlreadyUseException("Username already exists");
         }
 
