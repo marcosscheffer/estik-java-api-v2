@@ -2,23 +2,25 @@ package com.marcos.estik.user.application.usecase;
 
 import java.util.UUID;
 
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
 
-import com.marcos.estik.user.application.port.in.FindByIdPort;
+import com.marcos.estik.user.application.port.in.FindUserByIdPort;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
 import com.marcos.estik.user.domain.User;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
+@Service 
 @RequiredArgsConstructor 
-public class FindByIdUseCase implements FindByIdPort {
+public class FindUserByIdUseCase implements FindUserByIdPort {
 
     private final UserRepositoryPort userRepositoryPort;
 
     @Override
     public User execute(UUID id) {
         return userRepositoryPort.findById(id)
-            .orElseThrow(() -> new DataIntegrityViolationException("Username not found"));
+            .orElseThrow(() -> new EntityNotFoundException("Id not found"));
     }
     
 }

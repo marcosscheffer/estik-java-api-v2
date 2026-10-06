@@ -4,6 +4,6 @@ import java.util.UUID;
 
 import com.marcos.estik.auth.domain.UserAuth;
 
-public interface UserByIdPort {
+public interface LoadUserByIdPort {
     UserAuth findById(UUID id);
 }

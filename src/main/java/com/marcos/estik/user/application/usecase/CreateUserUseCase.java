@@ -1,6 +1,5 @@
 package com.marcos.estik.user.application.usecase;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.marcos.estik.user.application.command.CreateUserCommand;

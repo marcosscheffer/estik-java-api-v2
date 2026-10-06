@@ -2,16 +2,19 @@ package com.marcos.estik.auth.adapter.out.user;
 
 import java.util.UUID;
 
-import com.marcos.estik.auth.application.port.out.UserByIdPort;
+import org.springframework.stereotype.Component;
+
+import com.marcos.estik.auth.application.port.out.LoadUserByIdPort;
 import com.marcos.estik.auth.domain.UserAuth;
-import com.marcos.estik.user.application.port.in.FindByIdPort;
+import com.marcos.estik.user.application.port.in.FindUserByIdPort;
 
 import lombok.RequiredArgsConstructor;
 
+@Component 
 @RequiredArgsConstructor 
-public class UserByIdAdapter implements UserByIdPort {
+public class LoadUserByIdAdapter implements LoadUserByIdPort {
 
-    private final FindByIdPort findByIdPort;
+    private final FindUserByIdPort findByIdPort;
     private final UserMapper userMapper;
 
     @Override

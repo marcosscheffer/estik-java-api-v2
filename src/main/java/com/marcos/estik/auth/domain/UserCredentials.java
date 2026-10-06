@@ -2,15 +2,15 @@ package com.marcos.estik.auth.domain;
 
 import java.util.UUID;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.marcos.estik.user.domain.RoleEnum;
 
-@Getter 
-@RequiredArgsConstructor 
-public class UserCredentials {
-    private UUID id;
-    private String username;
-    private String email;
-    private String password;
-    private Boolean active;
+public record UserCredentials(
+    UUID id,
+    String username,
+    String email,
+    String password,
+    RoleEnum role,
+    Boolean active
+) {
+
 }

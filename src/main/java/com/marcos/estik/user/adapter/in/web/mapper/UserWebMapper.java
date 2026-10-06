@@ -2,10 +2,11 @@ package com.marcos.estik.user.adapter.in.web.mapper;
 
 import org.mapstruct.Mapper;
 
-import com.marcos.estik.user.adapter.in.web.response.UserResponse;
-import com.marcos.estik.user.application.result.UserData;
+import com.marcos.estik.user.adapter.in.web.response.UserResponseSummary;
+import com.marcos.estik.user.domain.User;
 
 @Mapper(componentModel = "spring")
 public interface UserWebMapper {
-    UserResponse toResponse(UserData userData);
+    UserResponseSummary toResponseSummary(User user);
+
 }

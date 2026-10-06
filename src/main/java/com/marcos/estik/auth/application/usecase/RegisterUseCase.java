@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 
 import com.marcos.estik.auth.application.command.RegisterCommand;
 import com.marcos.estik.auth.application.port.in.RegisterPort;
-import com.marcos.estik.auth.application.port.out.NewUserAccountPort;
+import com.marcos.estik.auth.application.port.out.CreateUserAccountPort;
 import com.marcos.estik.auth.application.port.out.PasswordEncodePort;
-import com.marcos.estik.auth.application.port.out.UserByIdPort;
+import com.marcos.estik.auth.application.port.out.LoadUserByIdPort;
 import com.marcos.estik.auth.domain.NewUserAccount;
 import com.marcos.estik.auth.domain.UserAuth;
 
@@ -20,8 +20,8 @@ import lombok.RequiredArgsConstructor;
 public class RegisterUseCase implements RegisterPort {
 
     private final PasswordEncodePort passwordEncodePort;
-    private final NewUserAccountPort newUserAccountPort;
-    private final UserByIdPort userByIdPort;
+    private final CreateUserAccountPort newUserAccountPort;
+    private final LoadUserByIdPort getUserByIdPort;
 
     @Override
     public UserAuth execute(RegisterCommand command) {
@@ -31,10 +31,10 @@ public class RegisterUseCase implements RegisterPort {
             new NewUserAccount(
                 command.username(),
                 command.email(),
-                command.password()
+                password
             )
         );
         
-        return userByIdPort.findById(userId);
+        return getUserByIdPort.findById(userId);
     }
 }

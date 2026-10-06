@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.marcos.estik.auth.application.port.out.TokenProviderPort;
+import com.marcos.estik.auth.domain.UserCredentials;
 import com.marcos.estik.user.domain.RoleEnum;
-import com.marcos.estik.user.domain.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -42,28 +42,28 @@ public class JwtTokenAdapter implements TokenProviderPort {
 
 
     @Override
-    public String generateToken(User user) {
+    public String generateToken(UserCredentials user) {
         Instant now = Instant.now();
         return Jwts.builder()
-                .subject(user.getId().toString())
+                .subject(user.id().toString())
                 .issuer(issuer)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(expirationTime)))
 
                 .claim("type", "access")
-                .claim("username", user.getUsername())
-                .claim("role", user.getRole().name())
+                .claim("username", user.username())
+                .claim("role", user.role().name())
 
                 .signWith(secret)
                 .compact();
     }
 
     @Override
-    public String generateRefreshToken(User user, UUID tokenId) {
+    public String generateRefreshToken(UserCredentials user, UUID tokenId) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .id(tokenId.toString())
-                .subject(user.getId().toString())
+                .subject(user.id().toString())
                 .issuer(issuer)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(refreshTokenExpirationTime)))
@@ -119,7 +119,6 @@ public class JwtTokenAdapter implements TokenProviderPort {
             return false;
         }
     }
-
 
     @Override
     public RoleEnum getRole(String token) {

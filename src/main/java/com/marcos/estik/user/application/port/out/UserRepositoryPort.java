@@ -14,7 +14,7 @@ public interface UserRepositoryPort {
 
     Boolean existsByUsername(String username);
 
-    PageResult<User> findByUsername(String username, PageQuery pageQuery);
+    PageResult<User> SearchByUsername(String username, PageQuery pageQuery);
 
     User save(User user);
 

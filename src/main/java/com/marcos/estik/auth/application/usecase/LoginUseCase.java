@@ -9,13 +9,12 @@ import com.marcos.estik.auth.application.port.in.LoginPort;
 import com.marcos.estik.auth.application.port.out.PasswordEncodePort;
 import com.marcos.estik.auth.application.port.out.RefreshTokenRepositoryPort;
 import com.marcos.estik.auth.application.port.out.TokenProviderPort;
-import com.marcos.estik.auth.application.port.out.UserCredentialsPort;
+import com.marcos.estik.auth.application.port.out.LoadUserByUsernamePort;
 import com.marcos.estik.auth.application.result.AuthTokens;
 import com.marcos.estik.auth.domain.RefreshToken;
 import com.marcos.estik.auth.domain.UserCredentials;
 import com.marcos.estik.auth.domain.exception.InvalidCredentialsException;
 import com.marcos.estik.auth.domain.exception.UserInactiveException;
-
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,19 +23,21 @@ import lombok.RequiredArgsConstructor;
 public class LoginUseCase implements LoginPort {
 
     private final PasswordEncodePort passwordEncoder;
-    private final UserCredentialsPort userCredentialsPort;
+    private final LoadUserByUsernamePort getUserByUsernamePort;
     private final TokenProviderPort tokenProvider;
     private final RefreshTokenRepositoryPort refreshTokenRepository;
 
     @Override
     public AuthTokens execute(LoginCommand command) {
-        UserCredentials user = userCredentialsPort.findByUsername(null);
+        UserCredentials user = getUserByUsernamePort.findByUsername(command.username());
 
-        if (!user.getActive()) {
+        System.out.println(user.active());
+
+        if (!user.active()) {
             throw new UserInactiveException();
         }
 
-        if (!passwordEncoder.matches(command.password(), user.getPassword())) {
+        if (!passwordEncoder.matches(command.password(), user.password())) {
             throw new InvalidCredentialsException("Invalid username or password");
         }
 
@@ -45,7 +46,7 @@ public class LoginUseCase implements LoginPort {
         UUID tokenId = UUID.randomUUID();
 
         String refreshToken = tokenProvider.generateRefreshToken(user, tokenId);
-        refreshTokenRepository.save(RefreshToken.create(tokenId, user.getId()));
+        refreshTokenRepository.save(RefreshToken.create(tokenId, user.id()));
 
         return new AuthTokens(accessToken, refreshToken);
     }

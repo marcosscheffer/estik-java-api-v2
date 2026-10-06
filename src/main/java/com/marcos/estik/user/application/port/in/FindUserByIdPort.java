@@ -4,6 +4,6 @@ import java.util.UUID;
 
 import com.marcos.estik.user.domain.User;
 
-public interface FindByIdPort {
+public interface FindUserByIdPort {
     User execute(UUID id);
 }

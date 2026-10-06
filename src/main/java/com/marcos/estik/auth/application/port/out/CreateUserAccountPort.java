@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import com.marcos.estik.auth.domain.NewUserAccount;
 
-public interface NewUserAccountPort {
+public interface CreateUserAccountPort {
     UUID createUser(NewUserAccount user);
 
 }

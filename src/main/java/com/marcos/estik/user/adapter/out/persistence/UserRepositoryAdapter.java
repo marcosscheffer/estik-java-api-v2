@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +47,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public PageResult<User> findByUsername(String username, PageQuery pageQuery) {
+    public PageResult<User> SearchByUsername(String username, PageQuery pageQuery) {
         Page<UserEntity> page = jpaUserRepository.findByUsernameContainingIgnoreCase(
             username,
             PageRequest.of(
