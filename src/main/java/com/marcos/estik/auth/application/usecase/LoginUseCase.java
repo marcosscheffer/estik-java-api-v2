@@ -12,7 +12,7 @@ import com.marcos.estik.auth.application.port.out.TokenProviderPort;
 import com.marcos.estik.auth.application.port.out.LoadUserByUsernamePort;
 import com.marcos.estik.auth.application.result.AuthTokens;
 import com.marcos.estik.auth.domain.RefreshToken;
-import com.marcos.estik.auth.domain.UserCredentials;
+import com.marcos.estik.auth.domain.UserAuth;
 import com.marcos.estik.auth.domain.exception.InvalidCredentialsException;
 import com.marcos.estik.auth.domain.exception.UserInactiveException;
 
@@ -23,13 +23,13 @@ import lombok.RequiredArgsConstructor;
 public class LoginUseCase implements LoginPort {
 
     private final PasswordEncodePort passwordEncoder;
-    private final LoadUserByUsernamePort getUserByUsernamePort;
+    private final LoadUserByUsernamePort loadUserByUsernamePort;
     private final TokenProviderPort tokenProvider;
     private final RefreshTokenRepositoryPort refreshTokenRepository;
 
     @Override
     public AuthTokens execute(LoginCommand command) {
-        UserCredentials user = getUserByUsernamePort.findByUsername(command.username());
+        UserAuth user = loadUserByUsernamePort.findByUsername(command.username());
 
         System.out.println(user.active());
 

@@ -8,9 +8,9 @@ import com.marcos.estik.auth.adapter.in.web.mapper.AuthWebMapper;
 import com.marcos.estik.auth.adapter.in.web.request.LoginRequest;
 import com.marcos.estik.auth.adapter.in.web.request.RegisterRequest;
 import com.marcos.estik.auth.adapter.in.web.response.TokenResponse;
+import com.marcos.estik.auth.adapter.in.web.response.UserAuthResponse;
 import com.marcos.estik.auth.application.port.in.LoginPort;
 import com.marcos.estik.auth.application.port.in.RegisterPort;
-import com.marcos.estik.user.adapter.in.web.response.UserResponse;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,11 +44,11 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(
+    public ResponseEntity<UserAuthResponse> register(
         @RequestBody @Valid RegisterRequest request,
         UriComponentsBuilder uriBuilder
     ) {
-        UserResponse userResponse = authWebMapper.toResponseUser(
+        UserAuthResponse userResponse = authWebMapper.toResponseUser(
             registerPort.execute(
                 authWebMapper.toCommandRegister(request)
             )

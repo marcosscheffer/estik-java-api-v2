@@ -28,6 +28,9 @@ public class UserEntity {
     private String role;
     private Boolean active;
 
+    @Column(name = "facility_id")
+    private UUID facility;
+
     @CreationTimestamp 
     @Column (
         updatable = false,

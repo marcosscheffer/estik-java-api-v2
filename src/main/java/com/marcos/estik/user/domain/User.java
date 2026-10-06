@@ -17,8 +17,9 @@ public class User {
     private Instant createdAt;
     private Instant updatedAt;
     private Boolean active;
+    private UUID facility;
 
-    public static User create(String username, String email, String password) {
+    public static User create(String username, String email, String password, UUID facilityId) {
         return new User(
             UUID.randomUUID(),
             username,
@@ -27,7 +28,8 @@ public class User {
             RoleEnum.USER,
             Instant.now(),
             Instant.now(),
-            Boolean.FALSE
+            Boolean.FALSE,
+            facilityId
         );
     }
 }

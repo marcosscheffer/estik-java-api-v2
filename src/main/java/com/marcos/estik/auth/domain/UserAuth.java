@@ -1,17 +1,18 @@
 package com.marcos.estik.auth.domain;
 
+import java.time.Instant;
 import java.util.UUID;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+public record UserAuth(
+    UUID id,
+    String username,
+    String email,
+    String password,
+    UUID facilityId,
+    RoleEnum role,
+    Instant createdAt,
+    Instant updatedAt,
+    Boolean active
+) {
 
-@Getter
-@AllArgsConstructor 
-public class UserAuth {
-    private UUID id;
-    private String username;
-    private String email;
-    private String createdAt;
-    private String updatedAt;
-    private String active;
 }

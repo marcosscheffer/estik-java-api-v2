@@ -1,8 +1,8 @@
 package com.marcos.estik.auth.application.port.out;
 
-import com.marcos.estik.auth.domain.UserCredentials;
+import com.marcos.estik.auth.domain.UserAuth;
 
 public interface LoadUserByUsernamePort {
-    UserCredentials findByUsername(String username);
+    UserAuth findByUsername(String username);
 
 }

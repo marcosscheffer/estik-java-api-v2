@@ -12,7 +12,6 @@ import com.marcos.estik.auth.application.port.out.LoadUserByIdPort;
 import com.marcos.estik.auth.domain.NewUserAccount;
 import com.marcos.estik.auth.domain.UserAuth;
 
-
 import lombok.RequiredArgsConstructor;
 
 @Service 
@@ -34,7 +33,7 @@ public class RegisterUseCase implements RegisterPort {
                 password
             )
         );
-        
+
         return getUserByIdPort.findById(userId);
     }
 }

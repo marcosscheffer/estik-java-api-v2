@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.marcos.estik.auth.application.port.out.TokenProviderPort;
-import com.marcos.estik.auth.domain.UserCredentials;
+import com.marcos.estik.auth.domain.UserAuth;
 import com.marcos.estik.user.domain.RoleEnum;
 
 import io.jsonwebtoken.Claims;
@@ -40,9 +40,8 @@ public class JwtTokenAdapter implements TokenProviderPort {
         this.refreshTokenExpirationTime = refreshTokenExpirationTime;
     }
 
-
     @Override
-    public String generateToken(UserCredentials user) {
+    public String generateToken(UserAuth user) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .subject(user.id().toString())
@@ -59,7 +58,7 @@ public class JwtTokenAdapter implements TokenProviderPort {
     }
 
     @Override
-    public String generateRefreshToken(UserCredentials user, UUID tokenId) {
+    public String generateRefreshToken(UserAuth user, UUID tokenId) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .id(tokenId.toString())
@@ -86,7 +85,6 @@ public class JwtTokenAdapter implements TokenProviderPort {
         return UUID.fromString(claim.getId());
     }
 
-
     private Claims getClaims(String token) {
         return Jwts.parser()
             .verifyWith(secret)
@@ -95,7 +93,6 @@ public class JwtTokenAdapter implements TokenProviderPort {
             .parseSignedClaims(token)
             .getPayload();
     }
-
 
     @Override
     public Boolean isValidRefreshToken(String token) {
@@ -107,7 +104,6 @@ public class JwtTokenAdapter implements TokenProviderPort {
             return false;
         }
     }
-
 
     @Override
     public Boolean isValidAccessToken(String token) {
@@ -126,7 +122,6 @@ public class JwtTokenAdapter implements TokenProviderPort {
         String role = claims.get("role", String.class);
         return RoleEnum.valueOf(role);
     }
-
 
     @Override
     public String getUsername(String token) {
