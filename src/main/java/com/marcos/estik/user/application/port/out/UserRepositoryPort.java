@@ -16,6 +16,8 @@ public interface UserRepositoryPort {
 
     PageResult<User> SearchByUsername(String username, PageQuery pageQuery);
 
+    PageResult<User> FindAllByFacility(UUID facilityId, PageQuery pageQuery);
+
     User save(User user);
 
 }

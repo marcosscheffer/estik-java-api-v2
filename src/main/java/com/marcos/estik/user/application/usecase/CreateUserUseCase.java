@@ -26,7 +26,7 @@ public class CreateUserUseCase implements CreateUserPort {
                 command.username(), 
                 command.email(), 
                 command.password(),
-                command.facilityId()
+                command.facility()
         );
 
         userRepositoryPort.save(user);

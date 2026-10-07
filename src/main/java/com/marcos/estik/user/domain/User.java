@@ -19,7 +19,7 @@ public class User {
     private Boolean active;
     private UUID facility;
 
-    public static User create(String username, String email, String password, UUID facilityId) {
+    public static User create(String username, String email, String password, UUID facility) {
         return new User(
             UUID.randomUUID(),
             username,
@@ -29,7 +29,7 @@ public class User {
             Instant.now(),
             Instant.now(),
             Boolean.FALSE,
-            facilityId
+            facility
         );
     }
 }

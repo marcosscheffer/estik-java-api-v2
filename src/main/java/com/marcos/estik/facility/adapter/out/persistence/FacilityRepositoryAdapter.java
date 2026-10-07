@@ -32,7 +32,7 @@ public class FacilityRepositoryAdapter implements FacilityRepositoryPort{
     public Facility findFacilityById(UUID id) {
         return jpaFacilityRepository.findById(id)
             .map(facilityPersistenceMapper::toDomain)
-            .orElseThrow(() -> new EntityNotFoundException("Facility Id not found"));
+            .orElseThrow(() -> new EntityNotFoundException("Facility not found"));
     }
 
     @Override

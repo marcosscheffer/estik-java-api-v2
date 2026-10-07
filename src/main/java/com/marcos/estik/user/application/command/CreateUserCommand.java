@@ -6,7 +6,7 @@ public record CreateUserCommand(
     String email,
     String username,
     String password,
-    UUID facilityId
+    UUID facility
 ) {
     
 }

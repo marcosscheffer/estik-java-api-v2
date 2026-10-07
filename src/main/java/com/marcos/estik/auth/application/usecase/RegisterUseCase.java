@@ -19,21 +19,22 @@ import lombok.RequiredArgsConstructor;
 public class RegisterUseCase implements RegisterPort {
 
     private final PasswordEncodePort passwordEncodePort;
-    private final CreateUserAccountPort newUserAccountPort;
-    private final LoadUserByIdPort getUserByIdPort;
+    private final CreateUserAccountPort createUserAccountPort;
+    private final LoadUserByIdPort loadUserByIdPort;
 
     @Override
     public UserAuth execute(RegisterCommand command) {
         String password = passwordEncodePort.encode(command.password());
 
-        UUID userId = newUserAccountPort.createUser(
+        UUID userId = createUserAccountPort.createUser(
             new NewUserAccount(
                 command.username(),
                 command.email(),
-                password
+                password,
+                command.facility()
             )
         );
 
-        return getUserByIdPort.findById(userId);
+        return loadUserByIdPort.findById(userId);
     }
 }

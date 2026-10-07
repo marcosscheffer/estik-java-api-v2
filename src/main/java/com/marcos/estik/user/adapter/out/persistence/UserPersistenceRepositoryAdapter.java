@@ -62,4 +62,17 @@ public class UserPersistenceRepositoryAdapter implements UserRepositoryPort {
             page.getNumber(), page.getSize(), page.getTotalElements(), page.getTotalPages()
         );
     }
+
+    @Override
+    public PageResult<User> FindAllByFacility(UUID facilityId, PageQuery page) {
+        Page<UserEntity> users =  jpaUserRepository.findByFacility(
+            facilityId, PageRequest.of(page.page(), page.size()));
+        return new PageResult<User>(
+            users.getContent().stream().map(userPersistenceMapper::toDomain).toList(),
+            users.getNumber(),
+            users.getSize(),
+            users.getTotalElements(),
+            users.getTotalPages()
+        );
+    }
 }

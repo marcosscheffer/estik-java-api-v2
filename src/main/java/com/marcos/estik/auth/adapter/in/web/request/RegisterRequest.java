@@ -14,7 +14,7 @@ public record RegisterRequest(
     @NotBlank
     String password,
     @NotNull
-    UUID facilityId
+    UUID facility
 ) {
     
 }

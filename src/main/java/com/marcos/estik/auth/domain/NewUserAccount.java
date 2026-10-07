@@ -1,5 +1,7 @@
 package com.marcos.estik.auth.domain;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,5 +11,6 @@ public class NewUserAccount {
     String username;
     String email;
     String password;
+    UUID facility;
     
 }

@@ -1,6 +1,5 @@
 package com.marcos.estik.auth.adapter.out.persistence;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.marcos.estik.auth.application.port.out.RefreshTokenRepositoryPort;
 import com.marcos.estik.auth.domain.RefreshToken;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Component 
@@ -18,8 +18,9 @@ public class RefreshTokenAdapter implements RefreshTokenRepositoryPort {
     private final RefreshTokenMapper refreshTokenMapper;
 
     @Override
-    public Optional<RefreshToken> findById(UUID tokenId) {
-        return jpaRefreshtokenRepository.findById(tokenId).map(refreshTokenMapper::toDomain);
+    public RefreshToken findById(UUID tokenId) {
+        return refreshTokenMapper.toDomain(jpaRefreshtokenRepository.findById(tokenId)
+            .orElseThrow(() -> new EntityNotFoundException("Refresh Token not found")));
     }
 
     @Override

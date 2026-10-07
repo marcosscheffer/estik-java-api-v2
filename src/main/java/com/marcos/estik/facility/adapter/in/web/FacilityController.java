@@ -1,9 +1,11 @@
 package com.marcos.estik.facility.adapter.in.web;
 
 import java.net.URI;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,10 +15,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.marcos.estik.facility.adapter.in.web.mapper.FacilityWebMapper;
 import com.marcos.estik.facility.adapter.in.web.request.CreateFacilityRequest;
+import com.marcos.estik.facility.adapter.in.web.response.FacilityResponse;
 import com.marcos.estik.facility.adapter.in.web.response.FacilitySummaryResponse;
+import com.marcos.estik.facility.adapter.in.web.response.FacilityUsersResponse;
 import com.marcos.estik.facility.application.ports.in.CreateFacilityPort;
+import com.marcos.estik.facility.application.ports.in.FindFacilityByIdPort;
 import com.marcos.estik.facility.application.ports.in.SearchFacilityByNamePort;
+import com.marcos.estik.facility.application.ports.out.LoadFacilityUsersPort;
 import com.marcos.estik.facility.domain.Facility;
+import com.marcos.estik.facility.domain.FacilityUser;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 
@@ -31,6 +38,8 @@ public class FacilityController {
     private final CreateFacilityPort createFacilityPort;
     private final SearchFacilityByNamePort searchFacilityByNamePort;
     private final FacilityWebMapper facilityWebMapper;
+    private final FindFacilityByIdPort findFacilityByIdPort;
+    private final LoadFacilityUsersPort loadFacilityUsersPort;
 
     @PostMapping
     public ResponseEntity<FacilitySummaryResponse> newFacility(
@@ -47,7 +56,7 @@ public class FacilityController {
             .toUri();
 
         return ResponseEntity.created(uri).body(
-            facilityWebMapper.toResponse(facility)
+            facilityWebMapper.toSummaryResponse(facility)
         );
     }
 
@@ -62,6 +71,29 @@ public class FacilityController {
             new PageQuery(page, size)
         );
 
-        return ResponseEntity.ok(facilities.map(facilityWebMapper::toResponse));
+        return ResponseEntity.ok(facilities.map(facilityWebMapper::toSummaryResponse));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FacilityResponse> getFacility(
+        @PathVariable UUID id
+    ) {
+        Facility facility = findFacilityByIdPort.execute(id);
+
+        return ResponseEntity.ok(facilityWebMapper.toResponse(facility));
+    }
+
+    @GetMapping("/{id}/users")
+    public ResponseEntity<PageResult<FacilityUsersResponse>> getFacilityUsers(
+        @PathVariable UUID id,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "20") int size
+    ) {
+        PageResult<FacilityUser> users = loadFacilityUsersPort.findAllFacilityUsers(
+            id, 
+            new PageQuery(page, size)
+        );
+
+        return ResponseEntity.ok(users.map(facilityWebMapper::toUserResponse));
     }
 }

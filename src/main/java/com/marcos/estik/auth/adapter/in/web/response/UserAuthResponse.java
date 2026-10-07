@@ -7,7 +7,7 @@ public record UserAuthResponse(
     UUID id,
     String username,
     String email,
-    String FacilityName,
+    UUID facility,
     Instant createdAt,
     Instant updatedAt,
     Boolean active

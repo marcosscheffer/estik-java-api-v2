@@ -4,8 +4,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.marcos.estik.shared.application.pagination.PageResult;
+import com.marcos.estik.user.domain.User;
 
 
 public interface JpaUserRepository extends JpaRepository<UserEntity, UUID> {
@@ -14,4 +18,6 @@ public interface JpaUserRepository extends JpaRepository<UserEntity, UUID> {
     Boolean existsByUsername(String username);
 
     Page<UserEntity> findByUsernameContainingIgnoreCase(String username, Pageable pageable);
+
+    Page<UserEntity> findByFacility(UUID facilityId, PageRequest of);
 }

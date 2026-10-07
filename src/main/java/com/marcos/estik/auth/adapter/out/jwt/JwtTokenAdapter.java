@@ -44,14 +44,14 @@ public class JwtTokenAdapter implements TokenProviderPort {
     public String generateToken(UserAuth user) {
         Instant now = Instant.now();
         return Jwts.builder()
-                .subject(user.id().toString())
+                .subject(user.getId().toString())
                 .issuer(issuer)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(expirationTime)))
 
                 .claim("type", "access")
-                .claim("username", user.username())
-                .claim("role", user.role().name())
+                .claim("username", user.getUsername())
+                .claim("role", user.getRole().name())
 
                 .signWith(secret)
                 .compact();
@@ -62,7 +62,7 @@ public class JwtTokenAdapter implements TokenProviderPort {
         Instant now = Instant.now();
         return Jwts.builder()
                 .id(tokenId.toString())
-                .subject(user.id().toString())
+                .subject(user.getId().toString())
                 .issuer(issuer)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(refreshTokenExpirationTime)))

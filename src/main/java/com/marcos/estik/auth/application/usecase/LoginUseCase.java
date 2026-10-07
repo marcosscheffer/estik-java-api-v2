@@ -31,13 +31,11 @@ public class LoginUseCase implements LoginPort {
     public AuthTokens execute(LoginCommand command) {
         UserAuth user = loadUserByUsernamePort.findByUsername(command.username());
 
-        System.out.println(user.active());
-
-        if (!user.active()) {
+        if (!user.getActive()) {
             throw new UserInactiveException();
         }
 
-        if (!passwordEncoder.matches(command.password(), user.password())) {
+        if (!passwordEncoder.matches(command.password(), user.getPassword())) {
             throw new InvalidCredentialsException("Invalid username or password");
         }
 
@@ -46,7 +44,7 @@ public class LoginUseCase implements LoginPort {
         UUID tokenId = UUID.randomUUID();
 
         String refreshToken = tokenProvider.generateRefreshToken(user, tokenId);
-        refreshTokenRepository.save(RefreshToken.create(tokenId, user.id()));
+        refreshTokenRepository.save(RefreshToken.create(tokenId, user.getId()));
 
         return new AuthTokens(accessToken, refreshToken);
     }
