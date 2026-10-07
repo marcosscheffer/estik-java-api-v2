@@ -2,9 +2,9 @@ package com.marcos.estik.user.application.usecase;
 
 import org.springframework.stereotype.Service;
 
+import com.marcos.estik.shared.application.pagination.PageQuery;
+import com.marcos.estik.shared.application.pagination.PageResult;
 import com.marcos.estik.user.application.command.SearchByIdCommand;
-import com.marcos.estik.user.application.pagination.PageQuery;
-import com.marcos.estik.user.application.pagination.PageResult;
 import com.marcos.estik.user.application.port.in.SearchUserByIdPort;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
 import com.marcos.estik.user.domain.User;

@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.marcos.estik.shared.application.pagination.PageResult;
 import com.marcos.estik.user.adapter.in.web.mapper.UserWebMapper;
 import com.marcos.estik.user.adapter.in.web.response.PageResponse;
 import com.marcos.estik.user.adapter.in.web.response.UserResponseSummary;
 import com.marcos.estik.user.application.command.SearchByIdCommand;
-import com.marcos.estik.user.application.pagination.PageResult;
 import com.marcos.estik.user.application.port.in.SearchUserByIdPort;
 import com.marcos.estik.user.domain.User;
 

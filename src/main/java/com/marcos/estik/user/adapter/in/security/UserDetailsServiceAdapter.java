@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import com.marcos.estik.user.adapter.out.persistence.UserRepositoryAdapter;
+import com.marcos.estik.user.adapter.out.persistence.UserPersistenceRepositoryAdapter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor 
 public class UserDetailsServiceAdapter implements UserDetailsService {
 
-    private final UserRepositoryAdapter userRepositoryAdapter;
+    private final UserPersistenceRepositoryAdapter userRepositoryAdapter;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
