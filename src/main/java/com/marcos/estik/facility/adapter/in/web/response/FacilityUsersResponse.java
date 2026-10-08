@@ -5,7 +5,8 @@ import java.util.UUID;
 public record FacilityUsersResponse(
     UUID userId,
     String username,
-    String email
+    String email,
+    Boolean active
 ) {
     
 }

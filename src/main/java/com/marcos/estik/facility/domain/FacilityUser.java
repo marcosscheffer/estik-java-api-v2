@@ -11,4 +11,5 @@ public class FacilityUser {
     private UUID userId;
     private String username;
     private String email;
+    private Boolean active;
 }

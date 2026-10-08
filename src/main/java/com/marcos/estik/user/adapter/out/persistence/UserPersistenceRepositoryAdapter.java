@@ -13,6 +13,7 @@ import com.marcos.estik.shared.application.pagination.PageResult;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
 import com.marcos.estik.user.domain.User;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Component 
@@ -23,15 +24,17 @@ public class UserPersistenceRepositoryAdapter implements UserRepositoryPort {
     private final UserPersistenceMapper userPersistenceMapper;
 
     @Override
-    public Optional<User> findByUsername(String username) {
+    public User findByUsername(String username) {
         return jpaUserRepository.findByUsername(username)
-            .map(userPersistenceMapper::toDomain);
+            .map(userPersistenceMapper::toDomain)
+            .orElseThrow(() -> new EntityNotFoundException("Username not found"));
     }
 
     @Override
-    public Optional<User> findById(UUID id) {
+    public User findById(UUID id) {
         return jpaUserRepository.findById(id)
-            .map(userPersistenceMapper::toDomain);
+            .map(userPersistenceMapper::toDomain)
+            .orElseThrow(() -> new EntityNotFoundException("Id not found"));
     }
 
     @Override
@@ -75,4 +78,5 @@ public class UserPersistenceRepositoryAdapter implements UserRepositoryPort {
             users.getTotalPages()
         );
     }
+
 }

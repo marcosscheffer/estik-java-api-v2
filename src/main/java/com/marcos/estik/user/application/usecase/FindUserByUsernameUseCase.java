@@ -6,7 +6,6 @@ import com.marcos.estik.user.application.port.in.FindUserByUsernamePort;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
 import com.marcos.estik.user.domain.User;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service 
@@ -16,7 +15,6 @@ public class FindUserByUsernameUseCase implements FindUserByUsernamePort {
 
     @Override
     public User execute(String username) {
-        return userRepositoryPort.findByUsername(username)
-            .orElseThrow(() -> new EntityNotFoundException("Username not found"));
+        return userRepositoryPort.findByUsername(username);
     }
 }

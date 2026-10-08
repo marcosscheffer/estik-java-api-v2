@@ -8,7 +8,6 @@ import com.marcos.estik.user.application.port.in.FindUserByIdPort;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
 import com.marcos.estik.user.domain.User;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service 
@@ -19,8 +18,7 @@ public class FindUserByIdUseCase implements FindUserByIdPort {
 
     @Override
     public User execute(UUID id) {
-        return userRepositoryPort.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Id not found"));
+        return userRepositoryPort.findById(id);
     }
     
 }

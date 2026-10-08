@@ -7,9 +7,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.marcos.estik.auth.adapter.in.web.mapper.AuthWebMapper;
 import com.marcos.estik.auth.adapter.in.web.request.LoginRequest;
 import com.marcos.estik.auth.adapter.in.web.request.RegisterRequest;
+import com.marcos.estik.auth.adapter.in.web.request.refreshRequest;
 import com.marcos.estik.auth.adapter.in.web.response.TokenResponse;
 import com.marcos.estik.auth.adapter.in.web.response.UserAuthResponse;
 import com.marcos.estik.auth.application.port.in.LoginPort;
+import com.marcos.estik.auth.application.port.in.RefreshPort;
 import com.marcos.estik.auth.application.port.in.RegisterPort;
 
 import jakarta.validation.Valid;
@@ -29,6 +31,7 @@ public class AuthController {
 
     private final LoginPort loginPort;
     private final RegisterPort registerPort;
+    private final RefreshPort refreshPort;
     private final AuthWebMapper authWebMapper;
 
     @PostMapping("/login")
@@ -60,5 +63,14 @@ public class AuthController {
             .toUri();
         
         return ResponseEntity.created(uri).body(userResponse);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenResponse> refresh(
+        @RequestBody refreshRequest request
+    ) {
+        TokenResponse tokens = authWebMapper.toResponseToken(refreshPort.execute(request.refreshToken()));
+
+        return ResponseEntity.ok(tokens);
     }
 }

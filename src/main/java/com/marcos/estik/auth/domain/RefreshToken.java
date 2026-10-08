@@ -5,8 +5,10 @@ import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter 
+@Setter 
 @AllArgsConstructor 
 public class RefreshToken {
     private UUID id;
@@ -20,7 +22,7 @@ public class RefreshToken {
     public static RefreshToken create(UUID tokenId, UUID userId) {
         Instant createdAt = Instant.now();
         return new RefreshToken(
-            UUID.randomUUID(),
+            tokenId,
             tokenId,
             userId,
             createdAt,

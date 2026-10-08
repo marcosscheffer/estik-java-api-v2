@@ -40,11 +40,11 @@ public class LoginUseCase implements LoginPort {
         }
 
         String accessToken = tokenProvider.generateToken(user);
-
+        
         UUID tokenId = UUID.randomUUID();
-
-        String refreshToken = tokenProvider.generateRefreshToken(user, tokenId);
-        refreshTokenRepository.save(RefreshToken.create(tokenId, user.getId()));
+        RefreshToken token = RefreshToken.create(tokenId, user.getId());
+        refreshTokenRepository.save(token);
+        String refreshToken = tokenProvider.generateRefreshToken(user, token.getId());
 
         return new AuthTokens(accessToken, refreshToken);
     }
