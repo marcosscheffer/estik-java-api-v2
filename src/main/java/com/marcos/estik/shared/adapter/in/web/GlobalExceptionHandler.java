@@ -6,9 +6,11 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.marcos.estik.auth.domain.exception.InvalidCredentialsException;
 import com.marcos.estik.auth.domain.exception.UserInactiveException;
@@ -83,6 +85,23 @@ public class GlobalExceptionHandler {
     ) {
         return build(HttpStatus.CONFLICT, exception.getMessage(), request);
     }
+    
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatch(
+        MethodArgumentTypeMismatchException exception,
+        HttpServletRequest request
+    ) {
+        String message = "Invalid value for the parameter '" + exception.getName() + "': " + exception.getValue();
+        return build(HttpStatus.BAD_REQUEST, message, request);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupported(
+        HttpRequestMethodNotSupportedException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.BAD_REQUEST, exception.getMessage(), request);
+    }
 
     private ResponseEntity<ErrorResponse> build(
         HttpStatus status, 
@@ -98,4 +117,5 @@ public class GlobalExceptionHandler {
                     )
                 );
     }
+
 }
