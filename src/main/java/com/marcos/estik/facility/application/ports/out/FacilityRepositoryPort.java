@@ -12,4 +12,5 @@ public interface FacilityRepositoryPort {
     Facility findFacilityById(UUID id);
 
     PageResult<Facility> SearchFacilityByName(String name, PageQuery page);
+
 }
