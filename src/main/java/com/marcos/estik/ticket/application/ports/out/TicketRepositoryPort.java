@@ -14,7 +14,10 @@ public interface TicketRepositoryPort {
     PageResult<Ticket> searchTicketsByPriority(String title, PriorityEnum priority, PageQuery page);
     PageResult<Ticket> searchTicketsByStatus(String title, StatusEnum status, PageQuery page);
     PageResult<Ticket> searchTickets(String title, PageQuery page);
-    PageResult<Ticket> searchTicketsByFacility(UUID facilityId, PageQuery page);
+
+    PageResult<Ticket> findTicketsByFacility(UUID facilityId, PageQuery page);
+    PageResult<Ticket> findTicketsByRequester(UUID requesterId, PageQuery page);
+    PageResult<Ticket> findTicketsByAssignee(UUID requesterId, PageQuery page);
 
     Ticket findTicketById(UUID id);
 

@@ -8,7 +8,7 @@ import com.marcos.estik.facility.application.ports.out.LoadFacilityTicketsPort;
 import com.marcos.estik.facility.domain.FacilityTicket;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
-import com.marcos.estik.ticket.application.ports.in.SearchTicketsByFacilityPort;
+import com.marcos.estik.ticket.application.ports.in.FindTicketsByFacilityPort;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor 
 public class LoadFacilityTicketsAdapter implements LoadFacilityTicketsPort {
 
-    private final SearchTicketsByFacilityPort searchTicketsByFacilityPort;
+    private final FindTicketsByFacilityPort searchTicketsByFacilityPort;
     private final FacilityTicketMapper facilityTicketMapper;
 
     @Override

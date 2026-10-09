@@ -3,7 +3,6 @@ package com.marcos.estik.ticket.adapter.out.persistence;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -18,6 +17,10 @@ public interface JpaTicketRepository extends JpaRepository<TicketEntity, UUID> {
 
     Page<TicketEntity> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 
-    Page<TicketEntity> findByFacilityId(UUID userId, PageRequest of);
+    Page<TicketEntity> findByFacilityId(UUID userId, Pageable pageable);
+
+    Page<TicketEntity> findByRequesterId(UUID requesterId, Pageable pageable);
+
+    Page<TicketEntity> findByAssigneeId(UUID assigneeId, Pageable pageable);
     
 }

@@ -6,6 +6,6 @@ import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 import com.marcos.estik.ticket.domain.Ticket;
 
-public interface SearchTicketsByFacilityPort {
-    PageResult<Ticket> execute(UUID Id, PageQuery page);
+public interface FindTicketsByAssigneePort {
+    PageResult<Ticket> execute(UUID id, PageQuery page);
 }

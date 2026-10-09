@@ -1,6 +1,5 @@
 package com.marcos.estik.user.adapter.out.persistence;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -12,6 +11,7 @@ import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
 import com.marcos.estik.user.domain.User;
+import com.marcos.estik.user.domain.UserTicket;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -83,5 +83,4 @@ public class UserPersistenceRepositoryAdapter implements UserRepositoryPort {
     public Boolean existsById(UUID id) {
         return jpaUserRepository.existsById(id);
     }
-
 }

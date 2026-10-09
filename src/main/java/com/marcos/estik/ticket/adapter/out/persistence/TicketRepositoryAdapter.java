@@ -76,9 +76,29 @@ public class TicketRepositoryAdapter implements TicketRepositoryPort {
     }
 
     @Override
-    public PageResult<Ticket> searchTicketsByFacility(UUID userId, PageQuery page) {
+    public PageResult<Ticket> findTicketsByFacility(UUID userId, PageQuery page) {
         Page<TicketEntity> tickets = jpaTicketRepository.findByFacilityId(
             userId, 
+            PageRequest.of(page.page(), page.size())
+        );
+
+        return createPageResult(tickets);
+    }
+
+    @Override
+    public PageResult<Ticket> findTicketsByRequester(UUID requesterId, PageQuery page) {
+        Page<TicketEntity> tickets = jpaTicketRepository.findByRequesterId(
+            requesterId,
+            PageRequest.of(page.page(), page.size())
+        );
+
+        return createPageResult(tickets);
+    }
+
+    @Override
+    public PageResult<Ticket> findTicketsByAssignee(UUID assigneeId, PageQuery page) {
+        Page<TicketEntity> tickets = jpaTicketRepository.findByAssigneeId(
+            assigneeId,
             PageRequest.of(page.page(), page.size())
         );
 
