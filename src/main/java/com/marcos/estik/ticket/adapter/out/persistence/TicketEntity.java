@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.marcos.estik.ticket.domain.PriorityEnum;
 import com.marcos.estik.ticket.domain.StatusEnum;
+import com.marcos.estik.ticket.domain.TicketTypeEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,6 +42,9 @@ public class TicketEntity {
 
     @Enumerated(EnumType.STRING)
     private PriorityEnum priority;
+    
+    @Enumerated(EnumType.STRING)
+    private TicketTypeEnum ticketType;
 
     @CreationTimestamp 
     @Column(name = "created_at")

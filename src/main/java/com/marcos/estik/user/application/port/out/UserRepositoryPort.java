@@ -13,6 +13,8 @@ public interface UserRepositoryPort {
 
     Boolean existsByUsername(String username);
 
+    Boolean existsById(UUID id);
+
     PageResult<User> SearchByUsername(String username, PageQuery pageQuery);
 
     PageResult<User> FindAllByFacility(UUID facilityId, PageQuery pageQuery);

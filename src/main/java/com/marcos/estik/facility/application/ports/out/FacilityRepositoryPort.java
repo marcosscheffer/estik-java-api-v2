@@ -13,4 +13,6 @@ public interface FacilityRepositoryPort {
 
     PageResult<Facility> SearchFacilityByName(String name, PageQuery page);
 
+    Boolean existsById(UUID id);
+
 }

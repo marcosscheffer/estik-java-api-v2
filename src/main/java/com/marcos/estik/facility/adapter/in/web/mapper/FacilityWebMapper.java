@@ -5,9 +5,11 @@ import org.mapstruct.Mapper;
 import com.marcos.estik.facility.adapter.in.web.request.CreateFacilityRequest;
 import com.marcos.estik.facility.adapter.in.web.response.FacilityResponse;
 import com.marcos.estik.facility.adapter.in.web.response.FacilitySummaryResponse;
+import com.marcos.estik.facility.adapter.in.web.response.FacilityTicketsResponse;
 import com.marcos.estik.facility.adapter.in.web.response.FacilityUsersResponse;
 import com.marcos.estik.facility.application.command.CreateFacilityCommand;
 import com.marcos.estik.facility.domain.Facility;
+import com.marcos.estik.facility.domain.FacilityTicket;
 import com.marcos.estik.facility.domain.FacilityUser;
 
 @Mapper(componentModel = "spring")
@@ -19,4 +21,6 @@ public interface FacilityWebMapper {
     FacilityResponse toResponse(Facility facility);
 
     FacilityUsersResponse toUserResponse(FacilityUser user);
+
+    FacilityTicketsResponse toFacilityTicketResponse(FacilityTicket tickets);
 }

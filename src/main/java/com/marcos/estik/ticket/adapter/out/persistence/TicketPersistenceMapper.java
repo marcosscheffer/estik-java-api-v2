@@ -9,4 +9,5 @@ public interface TicketPersistenceMapper {
     TicketEntity toEntity(Ticket ticket);
 
     Ticket toDomain(TicketEntity ticket);
+
 }

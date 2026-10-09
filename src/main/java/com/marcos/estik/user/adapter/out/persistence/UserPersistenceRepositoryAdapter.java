@@ -79,4 +79,9 @@ public class UserPersistenceRepositoryAdapter implements UserRepositoryPort {
         );
     }
 
+    @Override
+    public Boolean existsById(UUID id) {
+        return jpaUserRepository.existsById(id);
+    }
+
 }

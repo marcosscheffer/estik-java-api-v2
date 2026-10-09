@@ -52,4 +52,9 @@ public class FacilityRepositoryAdapter implements FacilityRepositoryPort{
             facilities.getTotalPages()
         );
     }
+
+    @Override
+    public Boolean existsById(UUID id) {
+        return jpaFacilityRepository.existsById(id);
+    }
 }

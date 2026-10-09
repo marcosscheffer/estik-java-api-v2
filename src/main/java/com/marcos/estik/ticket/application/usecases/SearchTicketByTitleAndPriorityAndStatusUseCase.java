@@ -19,7 +19,7 @@ public class SearchTicketByTitleAndPriorityAndStatusUseCase implements SearchTic
     @Override
     public PageResult<Ticket> execute(SearchTicketsByTitleAndPriorityAndStatusCommand command) {
         if (command.priority() != null) {
-            return ticketRepositoryPort.SearchTicketsByPriority(
+            return ticketRepositoryPort.searchTicketsByPriority(
                 command.title(), 
                 command.priority(), 
                 command.page()
@@ -27,14 +27,14 @@ public class SearchTicketByTitleAndPriorityAndStatusUseCase implements SearchTic
         }
 
         if (command.status() != null) {
-            return ticketRepositoryPort.SearchTicketsByStatus(
+            return ticketRepositoryPort.searchTicketsByStatus(
                 command.title(),
                 command.status(),
                 command.page()
             );
         }
 
-        return ticketRepositoryPort.SearchTickets(command.title(), command.page());
+        return ticketRepositoryPort.searchTickets(command.title(), command.page());
     }
     
 }

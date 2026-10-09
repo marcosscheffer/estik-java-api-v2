@@ -14,6 +14,7 @@ public class Ticket {
     private UUID id;
     private String title;
     private String description;
+    private TicketTypeEnum ticketType;
     private UUID requesterId;
     private UUID facilityId;
     private UUID assigneeId;
@@ -25,6 +26,7 @@ public class Ticket {
     public static Ticket create(
         String title, 
         String description,
+        TicketTypeEnum ticketType,
         UUID requesterId,
         UUID facilityId,
         PriorityEnum priority
@@ -33,6 +35,7 @@ public class Ticket {
             UUID.randomUUID(),
             title, 
             description, 
+            ticketType,
             requesterId, 
             facilityId, 
             null,
