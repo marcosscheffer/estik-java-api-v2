@@ -2,10 +2,10 @@ package com.marcos.estik.user.application.usecase;
 
 import org.springframework.stereotype.Service;
 
+import com.marcos.estik.shared.domain.user.RoleEnum;
 import com.marcos.estik.user.application.command.UpdateUserCommand;
 import com.marcos.estik.user.application.port.in.UpdateUserPort;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
-import com.marcos.estik.user.domain.RoleEnum;
 import com.marcos.estik.user.domain.User;
 
 import lombok.RequiredArgsConstructor;

@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,15 +17,16 @@ import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 import com.marcos.estik.ticket.adapter.in.web.mapper.TicketWebMapper;
 import com.marcos.estik.ticket.adapter.in.web.request.CreateTicketRequest;
+import com.marcos.estik.ticket.adapter.in.web.request.UpdateTicketRequest;
 import com.marcos.estik.ticket.adapter.in.web.response.TicketResponse;
 import com.marcos.estik.ticket.adapter.in.web.response.TicketSummaryResponse;
-import com.marcos.estik.ticket.application.command.AssumeTicketCommand;
 import com.marcos.estik.ticket.application.command.CreateTicketCommand;
 import com.marcos.estik.ticket.application.command.SearchTicketsCommand;
 import com.marcos.estik.ticket.application.ports.in.AssumeTicketPort;
 import com.marcos.estik.ticket.application.ports.in.CreateTicketPort;
 import com.marcos.estik.ticket.application.ports.in.FindTicketByIdPort;
 import com.marcos.estik.ticket.application.ports.in.SearchTicketsPort;
+import com.marcos.estik.ticket.application.ports.in.UpdateTicketPort;
 import com.marcos.estik.ticket.domain.PriorityEnum;
 import com.marcos.estik.ticket.domain.StatusEnum;
 import com.marcos.estik.ticket.domain.Ticket;
@@ -45,6 +47,7 @@ public class TicketController {
     private final SearchTicketsPort searchTicketsPort;
     private final AssumeTicketPort assumeTicketPort;
     private final FindTicketByIdPort findTicketByIdPort;
+    private final UpdateTicketPort updateTicketPort;
     private final TicketWebMapper ticketWebMapper;
 
     @GetMapping
@@ -104,9 +107,22 @@ public class TicketController {
         @PathVariable UUID id,
         @AuthenticationPrincipal AuthenticatedUser principal
     ) {
-        Ticket ticket = assumeTicketPort.execute(new AssumeTicketCommand(
-            id, principal.id()
-        ));
+        Ticket ticket = assumeTicketPort.execute(id, principal);
+
+        return ResponseEntity.ok(ticketWebMapper.toResponse(ticket));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TicketResponse> updateTicket(
+        @PathVariable UUID id,
+        @RequestBody UpdateTicketRequest request,
+        @AuthenticationPrincipal AuthenticatedUser principal
+    ) {
+        Ticket ticket = updateTicketPort.execute(
+            ticketWebMapper.toUpdateTicketCommand(request), 
+            id, 
+            principal
+        );
 
         return ResponseEntity.ok(ticketWebMapper.toResponse(ticket));
     }

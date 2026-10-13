@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.marcos.estik.user.domain.RoleEnum;
+import com.marcos.estik.shared.domain.user.RoleEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.marcos.estik.auth.application.port.out.TokenProviderPort;
-import com.marcos.estik.user.domain.RoleEnum;
+import com.marcos.estik.shared.domain.user.RoleEnum;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.marcos.estik.auth.application.port.out.TokenProviderPort;
 import com.marcos.estik.auth.domain.UserAuth;
-import com.marcos.estik.user.domain.RoleEnum;
+import com.marcos.estik.shared.domain.user.RoleEnum;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

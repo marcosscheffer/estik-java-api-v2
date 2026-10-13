@@ -1,4 +1,4 @@
-package com.marcos.estik.user.domain;
+package com.marcos.estik.shared.domain.user;
 
 public enum RoleEnum {
     USER, IT, ARCH

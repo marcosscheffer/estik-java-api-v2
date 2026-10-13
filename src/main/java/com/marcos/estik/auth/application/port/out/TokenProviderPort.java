@@ -3,7 +3,7 @@ package com.marcos.estik.auth.application.port.out;
 import java.util.UUID;
 
 import com.marcos.estik.auth.domain.UserAuth;
-import com.marcos.estik.user.domain.RoleEnum;
+import com.marcos.estik.shared.domain.user.RoleEnum;
 
 public interface TokenProviderPort {
 

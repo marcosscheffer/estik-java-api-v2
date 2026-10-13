@@ -3,6 +3,8 @@ package com.marcos.estik.user.domain;
 import java.time.Instant;
 import java.util.UUID;
 
+import com.marcos.estik.shared.domain.user.RoleEnum;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

@@ -2,7 +2,7 @@ package com.marcos.estik.user.adapter.in.web.request;
 
 import java.util.UUID;
 
-import com.marcos.estik.user.domain.RoleEnum;
+import com.marcos.estik.shared.domain.user.RoleEnum;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

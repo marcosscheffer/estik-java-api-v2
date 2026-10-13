@@ -1,11 +1,13 @@
 package com.marcos.estik.ticket.application.usecases;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
-import com.marcos.estik.ticket.application.command.AssumeTicketCommand;
+import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.ticket.application.ports.in.AssumeTicketPort;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
-import com.marcos.estik.ticket.application.ports.out.VerifyUserExistsPort;
+import com.marcos.estik.ticket.domain.StatusEnum;
 import com.marcos.estik.ticket.domain.Ticket;
 
 import lombok.RequiredArgsConstructor;
@@ -14,16 +16,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor 
 public class AssumeTicketUseCase implements AssumeTicketPort {
 
-    private final VerifyUserExistsPort verifyUserExistsPort;
     private final TicketRepositoryPort ticketRepositoryPort;
-    
+
     @Override
-    public Ticket execute(AssumeTicketCommand command) {
-        verifyUserExistsPort.existsById(command.principal());
-        Ticket ticket = ticketRepositoryPort.findTicketById(command.ticketId());
-
-        ticket.setAssigneeId(command.principal());
-
+    public Ticket execute(UUID ticketId, AuthenticatedUser principal) {
+        Ticket ticket = ticketRepositoryPort.findTicketById(ticketId);
+        ticket.setAssigneeId(principal.id());
+        ticket.setStatus(StatusEnum.PROGRESS);
         ticketRepositoryPort.save(ticket);
         return ticket;
     }

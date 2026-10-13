@@ -3,7 +3,7 @@ package com.marcos.estik.user.adapter.in.web.response;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.marcos.estik.user.domain.RoleEnum;
+import com.marcos.estik.shared.domain.user.RoleEnum;
 
 public record UserResponse(
     UUID id,
