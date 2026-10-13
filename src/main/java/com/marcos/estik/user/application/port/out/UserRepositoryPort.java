@@ -9,15 +9,13 @@ import com.marcos.estik.user.domain.User;
 public interface UserRepositoryPort {
     User findByUsername(String username);
 
+    PageResult<User> SearchUsers(UUID facilityId, String username, PageQuery page);
+
     User findById(UUID id);
 
     Boolean existsByUsername(String username);
 
     Boolean existsById(UUID id);
-
-    PageResult<User> SearchByUsername(String username, PageQuery pageQuery);
-
-    PageResult<User> FindAllByFacility(UUID facilityId, PageQuery pageQuery);
 
     User save(User user);
 

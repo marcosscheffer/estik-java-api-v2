@@ -19,7 +19,7 @@ public class User {
     private Instant createdAt;
     private Instant updatedAt;
     private Boolean active;
-    private UUID facility;
+    private UUID facilityId;
 
     public static User create(String username, String email, String password, UUID facility) {
         return new User(

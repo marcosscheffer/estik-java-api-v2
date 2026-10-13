@@ -5,11 +5,12 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import com.marcos.estik.ticket.domain.PriorityEnum;
 import com.marcos.estik.ticket.domain.StatusEnum;
 
-public interface JpaTicketRepository extends JpaRepository<TicketEntity, UUID> {
+public interface JpaTicketRepository extends JpaRepository<TicketEntity, UUID>, JpaSpecificationExecutor<TicketEntity> {
 
     Page<TicketEntity> findByPriorityAndTitleContainingIgnoreCase(PriorityEnum priority, String title, Pageable pageable);
 

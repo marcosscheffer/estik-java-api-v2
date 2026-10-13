@@ -17,16 +17,10 @@ import com.marcos.estik.facility.adapter.in.web.mapper.FacilityWebMapper;
 import com.marcos.estik.facility.adapter.in.web.request.CreateFacilityRequest;
 import com.marcos.estik.facility.adapter.in.web.response.FacilityResponse;
 import com.marcos.estik.facility.adapter.in.web.response.FacilitySummaryResponse;
-import com.marcos.estik.facility.adapter.in.web.response.FacilityTicketsResponse;
-import com.marcos.estik.facility.adapter.in.web.response.FacilityUsersResponse;
 import com.marcos.estik.facility.application.ports.in.CreateFacilityPort;
 import com.marcos.estik.facility.application.ports.in.FindFacilityByIdPort;
 import com.marcos.estik.facility.application.ports.in.SearchFacilityByNamePort;
-import com.marcos.estik.facility.application.ports.out.LoadFacilityTicketsPort;
-import com.marcos.estik.facility.application.ports.out.LoadFacilityUsersPort;
 import com.marcos.estik.facility.domain.Facility;
-import com.marcos.estik.facility.domain.FacilityTicket;
-import com.marcos.estik.facility.domain.FacilityUser;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 
@@ -40,10 +34,8 @@ public class FacilityController {
 
     private final CreateFacilityPort createFacilityPort;
     private final SearchFacilityByNamePort searchFacilityByNamePort;
-    private final LoadFacilityTicketsPort loadFacilityTicketsPort;
     private final FacilityWebMapper facilityWebMapper;
     private final FindFacilityByIdPort findFacilityByIdPort;
-    private final LoadFacilityUsersPort loadFacilityUsersPort;
 
     @PostMapping
     public ResponseEntity<FacilitySummaryResponse> newFacility(
@@ -86,33 +78,4 @@ public class FacilityController {
 
         return ResponseEntity.ok(facilityWebMapper.toResponse(facility));
     }
-
-    @GetMapping("/{id}/users")
-    public ResponseEntity<PageResult<FacilityUsersResponse>> getFacilityUsers(
-        @PathVariable UUID id,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "20") int size
-    ) {
-        PageResult<FacilityUser> users = loadFacilityUsersPort.findAllFacilityUsers(
-            id, 
-            new PageQuery(page, size)
-        );
-
-        return ResponseEntity.ok(users.map(facilityWebMapper::toUserResponse));
-    }
-
-    @GetMapping("/{id}/tickets")
-    public ResponseEntity<PageResult<FacilityTicketsResponse>> getTicketsByFacility(
-        @PathVariable UUID id,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "20") int size
-    ) {
-        PageResult<FacilityTicket> tickets = loadFacilityTicketsPort.findByFacility(
-            id,
-            new PageQuery(page, size)
-        );
-
-        return ResponseEntity.ok(tickets.map(facilityWebMapper::toFacilityTicketResponse));
-    }
-
 }

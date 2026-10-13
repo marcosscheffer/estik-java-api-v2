@@ -20,11 +20,11 @@ import com.marcos.estik.ticket.adapter.in.web.response.TicketResponse;
 import com.marcos.estik.ticket.adapter.in.web.response.TicketSummaryResponse;
 import com.marcos.estik.ticket.application.command.AssumeTicketCommand;
 import com.marcos.estik.ticket.application.command.CreateTicketCommand;
-import com.marcos.estik.ticket.application.command.SearchTicketsByTitleAndPriorityAndStatusCommand;
+import com.marcos.estik.ticket.application.command.SearchTicketsCommand;
 import com.marcos.estik.ticket.application.ports.in.AssumeTicketPort;
 import com.marcos.estik.ticket.application.ports.in.CreateTicketPort;
 import com.marcos.estik.ticket.application.ports.in.FindTicketByIdPort;
-import com.marcos.estik.ticket.application.ports.in.SearchTicketsByTitleAndPriorityAndStatusPort;
+import com.marcos.estik.ticket.application.ports.in.SearchTicketsPort;
 import com.marcos.estik.ticket.domain.PriorityEnum;
 import com.marcos.estik.ticket.domain.StatusEnum;
 import com.marcos.estik.ticket.domain.Ticket;
@@ -42,24 +42,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class TicketController {
 
     private final CreateTicketPort createTicketPort;
-    private final SearchTicketsByTitleAndPriorityAndStatusPort searchTicketsByTitleAndPriorityAndStatusPort;
+    private final SearchTicketsPort searchTicketsPort;
     private final AssumeTicketPort assumeTicketPort;
     private final FindTicketByIdPort findTicketByIdPort;
     private final TicketWebMapper ticketWebMapper;
 
     @GetMapping
     public ResponseEntity<PageResult<TicketSummaryResponse>> getTickets(
-        @RequestParam(defaultValue = "") String q,
+        @RequestParam(defaultValue = "") String title,
         @RequestParam(required = false) StatusEnum status,
         @RequestParam(required = false) PriorityEnum priority,
+        @RequestParam(required = false) UUID facilityId,
+        @RequestParam(required = false) UUID requesterId,
+        @RequestParam(required = false) UUID assigneeId,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
-        PageResult<Ticket> tickets = searchTicketsByTitleAndPriorityAndStatusPort.execute(
-            new SearchTicketsByTitleAndPriorityAndStatusCommand(
-                q,
+        PageResult<Ticket> tickets = searchTicketsPort.execute(
+            new SearchTicketsCommand(
+                title,
                 status,
                 priority,
+                facilityId,
+                requesterId,
+                assigneeId,
                 new PageQuery(page, size)
             )
         );

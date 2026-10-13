@@ -20,15 +20,12 @@ import com.marcos.estik.user.adapter.in.web.request.UpdateUserRequest;
 import com.marcos.estik.user.adapter.in.web.response.PageResponse;
 import com.marcos.estik.user.adapter.in.web.response.UserResponse;
 import com.marcos.estik.user.adapter.in.web.response.UserResponseSummary;
-import com.marcos.estik.user.adapter.in.web.response.UserTicketResponse;
-import com.marcos.estik.user.application.command.SearchByIdCommand;
+import com.marcos.estik.user.application.command.SearchUsersCommand;
 import com.marcos.estik.user.application.command.UpdateUserCommand;
-import com.marcos.estik.user.application.port.in.FindTicketsByUserPort;
 import com.marcos.estik.user.application.port.in.FindUserByIdPort;
-import com.marcos.estik.user.application.port.in.SearchUserByIdPort;
+import com.marcos.estik.user.application.port.in.SearchUsersPort;
 import com.marcos.estik.user.application.port.in.UpdateUserPort;
 import com.marcos.estik.user.domain.User;
-import com.marcos.estik.user.domain.UserTicket;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,21 +34,23 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor 
 public class UserController {
 
-    private final SearchUserByIdPort searchByIdPort;
     private final UpdateUserPort updateUserPort;
+    private final SearchUsersPort searchUsersPort;
     private final FindUserByIdPort findUserByIdPort;
-    private final FindTicketsByUserPort findTicketsByUserPort;
     private final UserWebMapper userWebMapper;
 
     @GetMapping
     public ResponseEntity<PageResponse<UserResponseSummary>> getUsers(
-        @RequestParam(defaultValue = "") String q,
+        @RequestParam(defaultValue = "") String username,
+        @RequestParam(required = false) UUID facilityId,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
-        PageResult<User> users = searchByIdPort.execute(
-            new SearchByIdCommand(
-                q, page, size
+        PageResult<User> users = searchUsersPort.execute(
+            new SearchUsersCommand (
+                username,
+                facilityId,
+                new PageQuery(page, size)
             )
         );
 
@@ -88,18 +87,4 @@ public class UserController {
         return ResponseEntity.ok(userWebMapper.toResponse(user));
     }
 
-    @GetMapping("/{id}/tickets")
-    public ResponseEntity<PageResult<UserTicketResponse>> getUserTickets(
-        @PathVariable UUID id,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "20") int size,
-        @AuthenticationPrincipal AuthenticatedUser principal
-    ) {
-        PageResult<UserTicket> tickets = findTicketsByUserPort.execute(
-            id,
-            new PageQuery(page, size)
-        );
-
-        return ResponseEntity.ok(tickets.map(userWebMapper::toUserTicketResponse));
-    }
 }

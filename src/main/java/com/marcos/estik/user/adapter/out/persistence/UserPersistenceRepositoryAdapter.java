@@ -4,14 +4,13 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
 import com.marcos.estik.user.domain.User;
-import com.marcos.estik.user.domain.UserTicket;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -49,32 +48,20 @@ public class UserPersistenceRepositoryAdapter implements UserRepositoryPort {
        return jpaUserRepository.existsByUsername(username);
     }
 
-    @Override
-    public PageResult<User> SearchByUsername(String username, PageQuery pageQuery) {
-        Page<UserEntity> page = jpaUserRepository.findByUsernameContainingIgnoreCase(
-            username,
-            PageRequest.of(
-                pageQuery.page(),
-                pageQuery.size(),
-                Sort.by("username")
-            )
-        );
 
-        return new PageResult<>(
-            page.getContent().stream().map(userPersistenceMapper::toDomain).toList(),
-            page.getNumber(), page.getSize(), page.getTotalElements(), page.getTotalPages()
+    @Override 
+    public PageResult<User> SearchUsers(UUID facilityId, String username, PageQuery page) {
+        Specification<UserEntity> spec = Specification.allOf(
+            UserSpecification.facilityIs(facilityId),
+            UserSpecification.usernameContains(username)
         );
-    }
+        Page<UserEntity> users = jpaUserRepository.findAll(spec, PageRequest.of(page.page(), page.size()));
 
-    @Override
-    public PageResult<User> FindAllByFacility(UUID facilityId, PageQuery page) {
-        Page<UserEntity> users =  jpaUserRepository.findByFacility(
-            facilityId, PageRequest.of(page.page(), page.size()));
         return new PageResult<User>(
-            users.getContent().stream().map(userPersistenceMapper::toDomain).toList(),
-            users.getNumber(),
-            users.getSize(),
-            users.getTotalElements(),
+            users.getContent().stream().map(userPersistenceMapper::toDomain).toList(), 
+            users.getNumber(), 
+            users.getSize(), 
+            users.getTotalElements(), 
             users.getTotalPages()
         );
     }

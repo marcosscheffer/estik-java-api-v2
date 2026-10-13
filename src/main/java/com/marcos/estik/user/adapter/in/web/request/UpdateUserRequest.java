@@ -16,7 +16,7 @@ public record UpdateUserRequest(
     @NotBlank 
     String username,
     @NotNull
-    UUID facility,
+    UUID facilityId,
     @NotNull 
     Boolean active,
     @NotNull 

@@ -9,7 +9,7 @@ public record UserResponse(
     UUID id,
     String username,
     String email,
-    UUID facility,
+    UUID facilityId,
     RoleEnum role,
     Instant createdAt,
     Instant updatedAt,

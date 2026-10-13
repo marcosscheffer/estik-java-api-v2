@@ -33,7 +33,7 @@ public class UserEntity {
     private Boolean active;
 
     @Column(name = "facility_id")
-    private UUID facility;
+    private UUID facilityId;
 
     @CreationTimestamp 
     @Column (
