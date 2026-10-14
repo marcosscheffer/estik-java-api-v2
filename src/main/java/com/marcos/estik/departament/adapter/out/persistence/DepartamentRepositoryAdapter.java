@@ -59,5 +59,10 @@ public class DepartamentRepositoryAdapter implements DepartamentRepositoryPort {
             departaments.getTotalPages()
         );
     }
+
+    @Override
+    public Boolean existsDepartamentById(UUID id) {
+        return jpaDepartamentRepository.existsById(id);
+    }
     
 }

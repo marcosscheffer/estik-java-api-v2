@@ -31,7 +31,7 @@ public class RegisterUseCase implements RegisterPort {
                 command.username(),
                 command.email(),
                 password,
-                command.facility()
+                command.facilityId()
             )
         );
 

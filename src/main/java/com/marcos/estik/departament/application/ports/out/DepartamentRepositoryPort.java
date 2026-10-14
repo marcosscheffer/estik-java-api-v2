@@ -14,5 +14,7 @@ public interface DepartamentRepositoryPort {
 
     PageResult<Departament> searchDepartaments(String name, String code, 
         UUID facilityId, PageQuery page);
+
+    Boolean existsDepartamentById(UUID id);
     
 }

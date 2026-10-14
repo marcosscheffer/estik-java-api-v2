@@ -6,7 +6,7 @@ public record RegisterCommand(
     String email,
     String username,
     String password,
-    UUID facility
+    UUID facilityId
 ) {
     
 }
