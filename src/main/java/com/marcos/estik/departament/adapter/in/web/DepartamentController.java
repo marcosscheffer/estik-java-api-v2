@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,12 +16,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.marcos.estik.departament.adapter.in.web.mapper.DepartamentWebMapper;
 import com.marcos.estik.departament.adapter.in.web.request.CreateDepartamentRequest;
+import com.marcos.estik.departament.adapter.in.web.request.UpdateDepartamentRequest;
 import com.marcos.estik.departament.adapter.in.web.response.DepartamentResponse;
 import com.marcos.estik.departament.adapter.in.web.response.DepartamentSummaryResponse;
 import com.marcos.estik.departament.application.command.SearchDepartamentCommand;
 import com.marcos.estik.departament.application.ports.in.CreateDepartamentPort;
 import com.marcos.estik.departament.application.ports.in.FindDepartamentByIdPort;
 import com.marcos.estik.departament.application.ports.in.SearchDepartamentPort;
+import com.marcos.estik.departament.application.ports.in.UpdateDepartamentPort;
 import com.marcos.estik.departament.domain.Departament;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
@@ -35,6 +38,7 @@ public class DepartamentController {
     private final FindDepartamentByIdPort findDepartamentByIdPort;
     private final SearchDepartamentPort searchDepartamentPort;
     private final CreateDepartamentPort createDepartamentPort;
+    private final UpdateDepartamentPort updateDepartamentPort;
     private final DepartamentWebMapper departamentWebMapper;
     
     @GetMapping("/{id}")
@@ -81,5 +85,18 @@ public class DepartamentController {
             .toUri();
 
         return ResponseEntity.created(uri).body(departamentWebMapper.toResponse(departament));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DepartamentResponse> updateDepartament(
+        @PathVariable UUID id,
+        @RequestBody UpdateDepartamentRequest request
+    ) {
+        Departament departament = updateDepartamentPort.execute(
+            id,
+            departamentWebMapper.toUpdateDepartamentCommand(request)
+        );
+
+        return ResponseEntity.ok(departamentWebMapper.toResponse(departament));
     }
 }
