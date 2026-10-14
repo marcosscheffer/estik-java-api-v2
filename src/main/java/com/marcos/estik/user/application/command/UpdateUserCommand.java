@@ -15,7 +15,7 @@ public class UpdateUserCommand {
     UUID id;
     String email;
     String username;
-    UUID facility;
+    UUID facilityId;
     Boolean active;
     RoleEnum role;
     RoleEnum actorRole;

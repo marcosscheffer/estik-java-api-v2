@@ -22,7 +22,7 @@ public class UpdateUserUseCase implements UpdateUserPort {
         user.setUsername(command.getUsername());
 
         if (command.getActorRole() == RoleEnum.IT) {
-            user.setFacilityId(command.getFacility());
+            user.setFacilityId(command.getFacilityId());
             user.setRole(command.getRole());
             user.setActive(command.getActive());
         }
