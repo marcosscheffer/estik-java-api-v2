@@ -18,7 +18,7 @@ public class VerifyDepartamentExistsByIdUseCase implements VerifyDepartamentExis
 
     @Override
     public void execute(UUID id) {
-        if (departamentRepositoryPort.existsDepartamentById(id)) {
+        if (!departamentRepositoryPort.existsDepartamentById(id)) {
             throw new EntityNotFoundException("departament not found"); 
         }
     }

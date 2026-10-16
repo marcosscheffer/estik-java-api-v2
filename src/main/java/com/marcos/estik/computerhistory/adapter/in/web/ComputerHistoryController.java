@@ -1,24 +1,18 @@
 package com.marcos.estik.computerhistory.adapter.in.web;
 
-import java.net.URI;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.marcos.estik.computerhistory.adapter.in.web.mapper.ComputerHistoryWebMapper;
-import com.marcos.estik.computerhistory.adapter.in.web.request.CreateComputerHistoryRequest;
 import com.marcos.estik.computerhistory.adapter.in.web.response.ComputerHistoryResponse;
 import com.marcos.estik.computerhistory.adapter.in.web.response.ComputerHistorySummaryResponse;
 import com.marcos.estik.computerhistory.application.command.SearchComputerHistoryCommand;
-import com.marcos.estik.computerhistory.application.ports.in.CreateComputerHistoryPort;
 import com.marcos.estik.computerhistory.application.ports.in.FindComputerHistoryByIdPort;
 import com.marcos.estik.computerhistory.application.ports.in.SearchComputerHistoryPort;
 import com.marcos.estik.computerhistory.domain.ComputerHistory;
@@ -36,7 +30,6 @@ public class ComputerHistoryController {
     private final ComputerHistoryWebMapper computerHistoryWebMapper;
     private final SearchComputerHistoryPort searchComputerHistoryPort;
     private final FindComputerHistoryByIdPort findComputerHistoryByIdPort;
-    private final CreateComputerHistoryPort createComputerHistoryPort;
 
     @GetMapping
     public ResponseEntity<PageResult<ComputerHistorySummaryResponse>> getComputerHistories(
@@ -65,21 +58,5 @@ public class ComputerHistoryController {
         ComputerHistory computerHistory = findComputerHistoryByIdPort.execute(id);
 
         return ResponseEntity.ok(computerHistoryWebMapper.toResponse(computerHistory));
-    }
-
-    @PostMapping
-    public ResponseEntity<ComputerHistoryResponse> createComputerHistory(
-        @RequestBody CreateComputerHistoryRequest request,
-        UriComponentsBuilder uriBuilder
-    ) {
-        ComputerHistory computerHistory = createComputerHistoryPort.execute(
-            computerHistoryWebMapper.toCreateComputerHistoryCommand(request));
-        
-        URI uri = uriBuilder
-            .path("/histories/{id}")
-            .buildAndExpand(computerHistory.getId())
-            .toUri();
-        
-        return ResponseEntity.created(uri).body(computerHistoryWebMapper.toResponse(computerHistory));
     }
 }

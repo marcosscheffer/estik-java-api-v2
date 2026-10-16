@@ -27,8 +27,7 @@ public class UpdateUserUseCase implements UpdateUserPort {
             user.setActive(command.getActive());
         }
 
-        userRepositoryPort.save(user);
-        return user;
+        return userRepositoryPort.save(user);
     }
     
 }

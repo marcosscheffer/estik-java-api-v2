@@ -21,5 +21,4 @@ public interface AuthWebMapper {
 
     UserAuthResponse toResponseUser(UserAuth user);
 
-
 }

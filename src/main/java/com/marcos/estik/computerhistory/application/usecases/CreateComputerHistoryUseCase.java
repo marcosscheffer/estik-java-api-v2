@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.marcos.estik.computerhistory.application.command.CreateComputerHistoryCommand;
 import com.marcos.estik.computerhistory.application.ports.in.CreateComputerHistoryPort;
 import com.marcos.estik.computerhistory.application.ports.out.ComputerHistoryRepositoryPort;
-import com.marcos.estik.computerhistory.application.ports.out.LoadVerifyDepartamentExistsByIdPort;
+import com.marcos.estik.computerhistory.application.ports.out.LoadComputerHistoryVerifyDepartamentExistsByIdPort;
 import com.marcos.estik.computerhistory.domain.ComputerHistory;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class CreateComputerHistoryUseCase implements CreateComputerHistoryPort {
 
     private final ComputerHistoryRepositoryPort computerHistoryRepositoryPort;
-    private final LoadVerifyDepartamentExistsByIdPort loadVerifyDepartamentExistsByIdPort;
+    private final LoadComputerHistoryVerifyDepartamentExistsByIdPort loadVerifyDepartamentExistsByIdPort;
 
     @Override
     public ComputerHistory execute(CreateComputerHistoryCommand command) {

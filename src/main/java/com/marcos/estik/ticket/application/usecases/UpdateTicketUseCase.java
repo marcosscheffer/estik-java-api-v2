@@ -35,8 +35,6 @@ public class UpdateTicketUseCase implements UpdateTicketPort {
         ticket.setFacilityId(command.facilityId());
         ticket.setPriority(command.priority());
 
-        ticketRepositoryPort.save(ticket);
-
-        return ticket;
+        return ticketRepositoryPort.save(ticket);
     }
 }

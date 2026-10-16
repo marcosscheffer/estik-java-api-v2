@@ -23,7 +23,7 @@ public class UpdateDepartamentUseCase implements UpdateDepartamentPort {
         departament.setCode(command.code());
         departament.setName(command.name());
         departament.setFacilityId(command.facilityId());
-        departamentRepositoryPort.save(departament);
-        return departament;
+        return departamentRepositoryPort.save(departament);
+
     }
 }
