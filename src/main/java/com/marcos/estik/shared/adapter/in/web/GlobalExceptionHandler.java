@@ -115,16 +115,17 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ErrorResponse> build(
         HttpStatus status, 
         String message,
-        HttpServletRequest request) {
-            return ResponseEntity.status(status)
-                .body(
-                    ErrorResponse.of(
-                        status.value(), 
-                        status.getReasonPhrase(), 
-                        message, 
-                        request.getRequestURI()
-                    )
-                );
+        HttpServletRequest request
+    ) {
+        return ResponseEntity.status(status)
+            .body(
+                ErrorResponse.of(
+                    status.value(), 
+                    status.getReasonPhrase(), 
+                    message, 
+                    request.getRequestURI()
+                )
+            );
     }
 
 }
