@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +20,8 @@ import com.marcos.estik.facility.adapter.in.web.request.CreateFacilityRequest;
 import com.marcos.estik.facility.adapter.in.web.request.UpdateFacilityRequest;
 import com.marcos.estik.facility.adapter.in.web.response.FacilityResponse;
 import com.marcos.estik.facility.adapter.in.web.response.FacilitySummaryResponse;
-import com.marcos.estik.facility.application.command.UpdateFacilityCommand;
 import com.marcos.estik.facility.application.ports.in.CreateFacilityPort;
+import com.marcos.estik.facility.application.ports.in.DeleteFacilityByIdPort;
 import com.marcos.estik.facility.application.ports.in.FindFacilityByIdPort;
 import com.marcos.estik.facility.application.ports.in.SearchFacilityByNamePort;
 import com.marcos.estik.facility.application.ports.in.UpdateFacilityPort;
@@ -28,7 +29,6 @@ import com.marcos.estik.facility.domain.Facility;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 
-import io.micrometer.core.ipc.http.HttpSender.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -42,6 +42,7 @@ public class FacilityController {
     private final FacilityWebMapper facilityWebMapper;
     private final FindFacilityByIdPort findFacilityByIdPort;
     private final UpdateFacilityPort updateFacilityPort;
+    private final DeleteFacilityByIdPort deleteFacilityByIdPort;
 
     @PostMapping
     public ResponseEntity<FacilitySummaryResponse> newFacility(
@@ -96,5 +97,13 @@ public class FacilityController {
         );
 
         return ResponseEntity.ok(facilityWebMapper.toResponse(facility));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteFacility(
+        @PathVariable UUID id
+    ) {
+        deleteFacilityByIdPort.execute(id);
+        return ResponseEntity.noContent().build();
     }
 }

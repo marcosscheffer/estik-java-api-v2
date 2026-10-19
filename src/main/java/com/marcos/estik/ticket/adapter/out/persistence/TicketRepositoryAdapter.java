@@ -28,8 +28,8 @@ public class TicketRepositoryAdapter implements TicketRepositoryPort {
     @Override
     public Ticket save(Ticket ticket) {
         TicketEntity ticketEntity = ticketPersistenceMapper.toEntity(ticket);
-        jpaTicketRepository.save(ticketEntity);
-        return ticketPersistenceMapper.toDomain(ticketEntity);
+        TicketEntity ticketSaved = jpaTicketRepository.save(ticketEntity);
+        return ticketPersistenceMapper.toDomain(ticketSaved);
     }
 
     @Override
@@ -49,8 +49,7 @@ public class TicketRepositoryAdapter implements TicketRepositoryPort {
             TicketSpecification.requesterIs(requesterId),
             TicketSpecification.assigneeIs(assigneeId),
             TicketSpecification.priorityIs(priority),
-            TicketSpecification.statusIs(status),
-            TicketSpecification.priorityIs(priority)
+            TicketSpecification.statusIs(status)
         );
 
         Page<TicketEntity> tickets = jpaTicketRepository.findAll(
@@ -72,5 +71,10 @@ public class TicketRepositoryAdapter implements TicketRepositoryPort {
         return ticketPersistenceMapper.toDomain(jpaTicketRepository.findById(id).orElseThrow(
             () -> new EntityNotFoundException("Ticket not found")
         ));
+    }
+
+    @Override
+    public void deleteTicketById(UUID id) {
+        jpaTicketRepository.deleteById(id);
     }
 }

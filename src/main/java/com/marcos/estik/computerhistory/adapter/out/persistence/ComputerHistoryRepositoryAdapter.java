@@ -27,8 +27,8 @@ public class ComputerHistoryRepositoryAdapter implements ComputerHistoryReposito
     @Override
     public ComputerHistory save(ComputerHistory computerHistory) {
         ComputerHistoryEntity computerHistoryEntity = computerHistoryPersistenceMapper.toEntity(computerHistory);
-        jpaComputerHistoryRepository.save(computerHistoryEntity);
-        return computerHistoryPersistenceMapper.toDomain(computerHistoryEntity);
+        ComputerHistoryEntity computerHistorySaved = jpaComputerHistoryRepository.save(computerHistoryEntity);
+        return computerHistoryPersistenceMapper.toDomain(computerHistorySaved);
     }
 
     @Override

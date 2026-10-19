@@ -4,8 +4,7 @@ import java.util.UUID;
 
 public record UpdateDepartamentCommand(
     String name,
-    String code,
-    UUID facilityId
+    String code
 ) {
     
 }

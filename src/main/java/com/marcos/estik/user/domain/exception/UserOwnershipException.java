@@ -1,0 +1,8 @@
+package com.marcos.estik.user.domain.exception;
+
+public class UserOwnershipException extends RuntimeException {
+    public UserOwnershipException(String message) {
+        super(message);
+    }
+    
+}

@@ -15,4 +15,6 @@ public interface FacilityRepositoryPort {
 
     Boolean existsById(UUID id);
 
+    void deleteFacilityById(UUID id);
+
 }

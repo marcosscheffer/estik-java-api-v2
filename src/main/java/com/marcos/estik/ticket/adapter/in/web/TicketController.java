@@ -23,8 +23,12 @@ import com.marcos.estik.ticket.adapter.in.web.response.TicketSummaryResponse;
 import com.marcos.estik.ticket.application.command.CreateTicketCommand;
 import com.marcos.estik.ticket.application.command.SearchTicketsCommand;
 import com.marcos.estik.ticket.application.ports.in.AssumeTicketPort;
+import com.marcos.estik.ticket.application.ports.in.CancelTicketPort;
 import com.marcos.estik.ticket.application.ports.in.CreateTicketPort;
+import com.marcos.estik.ticket.application.ports.in.DeleteTicketByIdPort;
 import com.marcos.estik.ticket.application.ports.in.FindTicketByIdPort;
+import com.marcos.estik.ticket.application.ports.in.ReopenTicketPort;
+import com.marcos.estik.ticket.application.ports.in.ResolveTicketPort;
 import com.marcos.estik.ticket.application.ports.in.SearchTicketsPort;
 import com.marcos.estik.ticket.application.ports.in.UpdateTicketPort;
 import com.marcos.estik.ticket.domain.PriorityEnum;
@@ -33,6 +37,8 @@ import com.marcos.estik.ticket.domain.Ticket;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,6 +55,10 @@ public class TicketController {
     private final FindTicketByIdPort findTicketByIdPort;
     private final UpdateTicketPort updateTicketPort;
     private final TicketWebMapper ticketWebMapper;
+    private final DeleteTicketByIdPort deleteTicketByIdPort;
+    private final ResolveTicketPort resolveTicketPort;
+    private final CancelTicketPort cancelTicketPort;
+    private final ReopenTicketPort reopenTicketPort;
 
     @GetMapping
     public ResponseEntity<PageResult<TicketSummaryResponse>> getTickets(
@@ -112,6 +122,35 @@ public class TicketController {
         return ResponseEntity.ok(ticketWebMapper.toResponse(ticket));
     }
 
+    @PostMapping("/{id}/resolve")
+    public ResponseEntity<TicketResponse> resolveTicket(
+        @PathVariable UUID id,
+        @AuthenticationPrincipal AuthenticatedUser principal
+    ) {
+        Ticket ticket = resolveTicketPort.execute(id, principal);
+        return ResponseEntity.ok(ticketWebMapper.toResponse(ticket));
+
+    }
+
+    @PostMapping("/{id}/reopen")
+    public ResponseEntity<TicketResponse> reopenTicket(
+        @PathVariable UUID id,
+        @AuthenticationPrincipal AuthenticatedUser principal
+    ){
+        Ticket ticket = reopenTicketPort.execute(id, principal);
+        return ResponseEntity.ok(ticketWebMapper.toResponse(ticket));
+    }
+
+    @PostMapping("/{id}/cancel")
+    public ResponseEntity<TicketResponse> cancelTicket(
+        @PathVariable UUID id,
+        @AuthenticationPrincipal AuthenticatedUser principal
+    ){
+        Ticket ticket = cancelTicketPort.execute(id, principal);
+        return ResponseEntity.ok(ticketWebMapper.toResponse(ticket));
+    }
+
+
     @PutMapping("/{id}")
     public ResponseEntity<TicketResponse> updateTicket(
         @PathVariable UUID id,
@@ -125,5 +164,13 @@ public class TicketController {
         );
 
         return ResponseEntity.ok(ticketWebMapper.toResponse(ticket));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTicket(
+        @PathVariable UUID id
+    ) {
+        deleteTicketByIdPort.execute(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -23,4 +23,6 @@ public interface TicketRepositoryPort {
 
     Ticket findTicketById(UUID id);
 
+    void deleteTicketById(UUID id);
+
 }

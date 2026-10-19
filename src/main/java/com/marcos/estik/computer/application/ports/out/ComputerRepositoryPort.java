@@ -19,4 +19,6 @@ public interface ComputerRepositoryPort {
         PageQuery page
     );
 
+    void deleteComputerById(UUID id);
+
 }

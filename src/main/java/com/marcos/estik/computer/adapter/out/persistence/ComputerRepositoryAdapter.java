@@ -26,8 +26,8 @@ public class ComputerRepositoryAdapter implements ComputerRepositoryPort {
     @Override
     public Computer save(Computer computer) {
         ComputerEntity computerEntity = computerPersistenceMapper.toEntity(computer);
-        jpaComputerRepository.save(computerEntity);
-        return computerPersistenceMapper.toDomain(computerEntity);
+        ComputerEntity computerSaved = jpaComputerRepository.save(computerEntity);
+        return computerPersistenceMapper.toDomain(computerSaved);
     }
 
     @Override
@@ -64,5 +64,10 @@ public class ComputerRepositoryAdapter implements ComputerRepositoryPort {
             computers.getTotalElements(),
             computers.getTotalPages()
         );
+    }
+
+    @Override
+    public void deleteComputerById(UUID id) {
+        jpaComputerRepository.deleteById(id);
     }
 }

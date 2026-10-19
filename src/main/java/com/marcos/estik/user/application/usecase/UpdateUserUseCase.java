@@ -1,8 +1,10 @@
 package com.marcos.estik.user.application.usecase;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
-import com.marcos.estik.shared.domain.user.RoleEnum;
+import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.user.application.command.UpdateUserCommand;
 import com.marcos.estik.user.application.port.in.UpdateUserPort;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
@@ -16,18 +18,9 @@ public class UpdateUserUseCase implements UpdateUserPort {
     private final UserRepositoryPort userRepositoryPort;
 
     @Override
-    public User execute(UpdateUserCommand command) {
-        User user = userRepositoryPort.findById(command.getId());
-        user.setEmail(command.getEmail());
-        user.setUsername(command.getUsername());
-
-        if (command.getActorRole() == RoleEnum.IT) {
-            user.setFacilityId(command.getFacilityId());
-            user.setRole(command.getRole());
-            user.setActive(command.getActive());
-        }
-
+    public User execute(UUID userId, UpdateUserCommand command, AuthenticatedUser principal) {
+        User user = userRepositoryPort.findById(userId);
+        user.updateInfo(principal.id(), command.username(), command.email());
         return userRepositoryPort.save(user);
     }
-    
 }

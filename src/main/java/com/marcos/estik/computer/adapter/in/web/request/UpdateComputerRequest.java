@@ -1,7 +1,5 @@
 package com.marcos.estik.computer.adapter.in.web.request;
 
-import java.util.UUID;
-
 import com.marcos.estik.computer.domain.OsEnum;
 import com.marcos.estik.computer.domain.StorageTypeEnum;
 
@@ -19,10 +17,6 @@ public record UpdateComputerRequest(
     StorageTypeEnum storageType,
     @NotBlank
     String storage,
-    @NotNull
-    UUID facilityId,
-    @NotNull
-    UUID departamentId,
     @NotBlank
     String serviceDescription,
     @NotBlank

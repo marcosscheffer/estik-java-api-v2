@@ -14,9 +14,19 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.marcos.estik.auth.domain.exception.InvalidCredentialsException;
+import com.marcos.estik.auth.domain.exception.InvalidRefreshTokenException;
 import com.marcos.estik.auth.domain.exception.UserInactiveException;
+import com.marcos.estik.shared.domain.exception.DomainCannotMovedException;
+import com.marcos.estik.ticket.domain.exception.InvalidTicketStatusException;
+import com.marcos.estik.ticket.domain.exception.TicketAlreadyAssignedException;
+import com.marcos.estik.ticket.domain.exception.TicketNotAssignableException;
+import com.marcos.estik.ticket.domain.exception.TicketOwnerShipException;
+import com.marcos.estik.user.domain.exception.CannotAssignSelfException;
+import com.marcos.estik.user.domain.exception.CannotDeactiveSelfException;
+import com.marcos.estik.user.domain.exception.UserOwnershipException;
 import com.marcos.estik.user.domain.exception.UsernameAlreadyUseException;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -110,6 +120,86 @@ public class GlobalExceptionHandler {
         HttpServletRequest request
     ) {
         return build(HttpStatus.NOT_FOUND, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(InvalidTicketStatusException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTicketStatus(
+        InvalidTicketStatusException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.CONFLICT, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(TicketAlreadyAssignedException.class)
+    public ResponseEntity<ErrorResponse> handleTicketAlreadyAssigned(
+        TicketAlreadyAssignedException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.CONFLICT, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(TicketNotAssignableException.class)
+    public ResponseEntity<ErrorResponse> handleTicketNotAssignable(
+        TicketNotAssignableException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.CONFLICT, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(TicketOwnerShipException.class)
+    public ResponseEntity<ErrorResponse> handleTicketOwnerShipException(
+        TicketOwnerShipException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.FORBIDDEN, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(DomainCannotMovedException.class)
+    public ResponseEntity<ErrorResponse> handleDomainCannotMoved(
+        DomainCannotMovedException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.CONFLICT, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(CannotAssignSelfException.class)
+    public ResponseEntity<ErrorResponse> handleCannotAssignSelf(
+        CannotAssignSelfException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.CONFLICT, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(CannotDeactiveSelfException.class)
+    public ResponseEntity<ErrorResponse> handleCannotDeactiveSelf(
+        CannotDeactiveSelfException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.CONFLICT, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(UserOwnershipException.class)
+    public ResponseEntity<ErrorResponse> handleUserOwnership(
+        UserOwnershipException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.FORBIDDEN, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidRefreshToken(
+        InvalidRefreshTokenException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.UNAUTHORIZED, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponse> handleExpiredJwt(
+        ExpiredJwtException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.UNAUTHORIZED, exception.getMessage(), request);
     }
 
     private ResponseEntity<ErrorResponse> build(

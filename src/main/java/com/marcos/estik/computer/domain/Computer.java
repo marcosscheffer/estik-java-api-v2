@@ -3,12 +3,12 @@ package com.marcos.estik.computer.domain;
 import java.time.Instant;
 import java.util.UUID;
 
+import com.marcos.estik.shared.domain.exception.DomainCannotMovedException;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter 
 @AllArgsConstructor 
 public class Computer {
     UUID id;
@@ -46,5 +46,30 @@ public class Computer {
             Instant.now(),
             Instant.now()
         );
+    }
+
+    public void updateSpecs(
+        String cpu,
+        String ram,
+        OsEnum os,
+        StorageTypeEnum storageType,
+        String storage
+    ) {
+        this.cpu = cpu;
+        this.ram = ram;
+        this.os = os;
+        this.storageType = storageType;
+        this.storage = storage;
+        this.updatedAt =Instant.now();
+    }
+
+    public void moveTo(UUID facilityId, UUID departamentId) {
+        if (this.facilityId.equals(facilityId) && this.departamentId.equals(departamentId)) {
+            throw new DomainCannotMovedException("failed to move computer");
+        }
+
+        this.facilityId = facilityId;
+        this.departamentId = departamentId;
+        this.updatedAt = Instant.now();
     }
 }

@@ -16,5 +16,7 @@ public interface DepartamentRepositoryPort {
         UUID facilityId, PageQuery page);
 
     Boolean existsDepartamentById(UUID id);
+
+    void deleteDepartamentById(UUID id);
     
 }

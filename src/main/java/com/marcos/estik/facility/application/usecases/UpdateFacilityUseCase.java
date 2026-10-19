@@ -2,7 +2,6 @@ package com.marcos.estik.facility.application.usecases;
 
 import java.util.UUID;
 
-import org.flywaydb.core.FlywayExecutor.Command;
 import org.springframework.stereotype.Service;
 
 import com.marcos.estik.facility.application.command.UpdateFacilityCommand;
@@ -21,12 +20,7 @@ public class UpdateFacilityUseCase implements UpdateFacilityPort {
     @Override
     public Facility execute(UpdateFacilityCommand command, UUID facilityId) {
         Facility facility = facilityRepositoryPort.findFacilityById(facilityId);
-
-        facility.setName(command.name());
-        facility.setCode(command.code());
-
-        facilityRepositoryPort.save(facility);
-
-        return facility;
+        facility.updateInfo(command.name(), command.code());
+        return facilityRepositoryPort.save(facility);
     }
 }

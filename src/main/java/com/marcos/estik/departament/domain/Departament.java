@@ -5,11 +5,9 @@ import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @AllArgsConstructor
 @Getter 
-@Setter 
 public class Departament {
     private UUID id;
     private UUID facilityId;
@@ -31,5 +29,14 @@ public class Departament {
             Instant.now(),
             Instant.now()
         );
+    }
+
+    public void updateInfo(
+        String name,
+        String code
+    ) {
+        this.name = name;
+        this.code = code;
+        this.updatedAt = Instant.now();
     }
 }

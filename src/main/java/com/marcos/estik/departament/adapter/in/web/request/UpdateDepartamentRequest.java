@@ -1,10 +1,11 @@
 package com.marcos.estik.departament.adapter.in.web.request;
 
-import java.util.UUID;
+import jakarta.validation.constraints.NotBlank;
 
 public record UpdateDepartamentRequest(
-    UUID facilityId,
+    @NotBlank 
     String name,
+    @NotBlank 
     String code
 ) {
     

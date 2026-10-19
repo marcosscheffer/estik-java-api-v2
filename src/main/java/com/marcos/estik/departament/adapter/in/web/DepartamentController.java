@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import com.marcos.estik.departament.adapter.in.web.response.DepartamentResponse;
 import com.marcos.estik.departament.adapter.in.web.response.DepartamentSummaryResponse;
 import com.marcos.estik.departament.application.command.SearchDepartamentCommand;
 import com.marcos.estik.departament.application.ports.in.CreateDepartamentPort;
+import com.marcos.estik.departament.application.ports.in.DeleteDepartamentByIdPort;
 import com.marcos.estik.departament.application.ports.in.FindDepartamentByIdPort;
 import com.marcos.estik.departament.application.ports.in.SearchDepartamentPort;
 import com.marcos.estik.departament.application.ports.in.UpdateDepartamentPort;
@@ -40,6 +42,7 @@ public class DepartamentController {
     private final CreateDepartamentPort createDepartamentPort;
     private final UpdateDepartamentPort updateDepartamentPort;
     private final DepartamentWebMapper departamentWebMapper;
+    private final DeleteDepartamentByIdPort deleteDepartamentByIdPort;
     
     @GetMapping("/{id}")
     public ResponseEntity<DepartamentResponse> getDepartament(
@@ -98,5 +101,13 @@ public class DepartamentController {
         );
 
         return ResponseEntity.ok(departamentWebMapper.toResponse(departament));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDepartament(
+        @PathVariable UUID id
+    ) {
+        deleteDepartamentByIdPort.execute(id);
+        return ResponseEntity.noContent().build();
     }
 }

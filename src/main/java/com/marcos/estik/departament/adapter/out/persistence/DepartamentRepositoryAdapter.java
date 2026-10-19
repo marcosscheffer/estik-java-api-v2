@@ -26,8 +26,8 @@ public class DepartamentRepositoryAdapter implements DepartamentRepositoryPort {
     @Override
     public Departament save(Departament departament) {
         DepartamentEntity departamentEntity = departamentPersistenceMapper.toEntity(departament);
-        jpaDepartamentRepository.save(departamentEntity);
-        return departamentPersistenceMapper.toDomain(departamentEntity);
+        DepartamentEntity departamentSaved = jpaDepartamentRepository.save(departamentEntity);
+        return departamentPersistenceMapper.toDomain(departamentSaved);
     }
 
     @Override
@@ -63,6 +63,11 @@ public class DepartamentRepositoryAdapter implements DepartamentRepositoryPort {
     @Override
     public Boolean existsDepartamentById(UUID id) {
         return jpaDepartamentRepository.existsById(id);
+    }
+
+    @Override
+    public void deleteDepartamentById(UUID id) {
+        jpaDepartamentRepository.deleteById(id);
     }
     
 }

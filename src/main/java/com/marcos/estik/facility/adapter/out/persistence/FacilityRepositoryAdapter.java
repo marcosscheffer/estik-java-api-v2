@@ -24,8 +24,8 @@ public class FacilityRepositoryAdapter implements FacilityRepositoryPort{
     @Override
     public Facility save(Facility facility) {
         FacilityEntity facilityEntity = facilityPersistenceMapper.toEntity(facility);
-        jpaFacilityRepository.save(facilityEntity);
-        return facilityPersistenceMapper.toDomain(facilityEntity);
+        FacilityEntity facilitySaved = jpaFacilityRepository.save(facilityEntity);
+        return facilityPersistenceMapper.toDomain(facilitySaved);
     }
 
     @Override
@@ -56,5 +56,10 @@ public class FacilityRepositoryAdapter implements FacilityRepositoryPort{
     @Override
     public Boolean existsById(UUID id) {
         return jpaFacilityRepository.existsById(id);
+    }
+
+    @Override
+    public void deleteFacilityById(UUID id) {
+        jpaFacilityRepository.deleteById(id);
     }
 }

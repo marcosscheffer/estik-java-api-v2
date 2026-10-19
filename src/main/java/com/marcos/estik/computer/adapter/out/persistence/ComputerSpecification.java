@@ -10,13 +10,13 @@ public final class ComputerSpecification {
     public static Specification<ComputerEntity> facilityIs(UUID facilityId) {
         return facilityId == null 
             ? Specification.unrestricted()
-            : (root, q, cb) -> cb.equal(root.get("facility_id"), facilityId);
+            : (root, q, cb) -> cb.equal(root.get("facilityId"), facilityId);
     }
 
     public static Specification<ComputerEntity> departamentIs(UUID departamentId) {
         return departamentId == null 
             ? Specification.unrestricted()
-            : (root, q, cb) -> cb.equal(root.get("departament_id"), departamentId);
+            : (root, q, cb) -> cb.equal(root.get("departamentId"), departamentId);
     }
 
     public static Specification<ComputerEntity> nameContain(String name) {

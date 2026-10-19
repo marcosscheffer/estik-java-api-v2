@@ -23,21 +23,21 @@ public class FacilityEntity {
 
     String name;
     String code;
-
-    @CreationTimestamp 
-    @Column(
-        name = "updated_at",
-        updatable = false,
-        nullable = false
-    )
-    Instant createdAt;
     
     @UpdateTimestamp
     @Column(
-        name = "created_at",
+        name = "updated_at",
         updatable = true,
         nullable = false
     )
     Instant updatedAt;
+    
+    @CreationTimestamp 
+    @Column(
+        name = "created_at",
+        updatable = false,
+        nullable = false
+    )
+    Instant createdAt;
 
 }

@@ -3,12 +3,15 @@ package com.marcos.estik.ticket.domain;
 import java.time.Instant;
 import java.util.UUID;
 
+import com.marcos.estik.ticket.domain.exception.InvalidTicketStatusException;
+import com.marcos.estik.ticket.domain.exception.TicketAlreadyAssignedException;
+import com.marcos.estik.ticket.domain.exception.TicketNotAssignableException;
+import com.marcos.estik.ticket.domain.exception.TicketOwnerShipException;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter 
-@Setter 
 @AllArgsConstructor 
 public class Ticket {
     private UUID id;
@@ -44,5 +47,78 @@ public class Ticket {
             Instant.now(), 
             Instant.now()
         );
+    }
+
+    public void assignTo(UUID userId) {
+        if (status.equals(StatusEnum.CANCELLED) || status.equals(StatusEnum.RESOLVED)) {
+            throw new TicketNotAssignableException(id);
+        }
+
+        if (assigneeId != null) {
+            throw new TicketAlreadyAssignedException(id);
+        }
+
+        this.assigneeId = userId;
+        this.status = StatusEnum.PROGRESS;
+        this.updatedAt = Instant.now();
+    }
+
+    public void resolve(UUID actorId) {
+        if (!this.status.equals(StatusEnum.PROGRESS)) {
+            throw new InvalidTicketStatusException("You cannot resolve this ticket");
+
+        }
+
+        if (!this.assigneeId.equals(actorId)) {
+            throw new TicketOwnerShipException("Ticket not assigned for you");
+        }
+
+        this.status = StatusEnum.RESOLVED;
+        this.updatedAt = Instant.now();
+    }
+
+    public void reopen(UUID actorId) {
+        if(!actorId.equals(this.requesterId)) {
+            throw new TicketOwnerShipException("you not owner of ticket");
+        }
+
+        if(!status.equals(StatusEnum.RESOLVED)) {
+            throw new InvalidTicketStatusException("You cannot reopen this ticket");
+
+        }
+
+        this.status = StatusEnum.PROGRESS;
+        this.updatedAt = Instant.now();
+    }
+
+    public void cancel(UUID actorId) {
+        if(this.status.equals(StatusEnum.RESOLVED) || this.status.equals(StatusEnum.CANCELLED)) {
+            throw new InvalidTicketStatusException("You cannot cancel this ticket");
+        }
+
+        if(!actorId.equals(this.requesterId)) {
+            throw new TicketOwnerShipException("you not owner of ticket");
+        }
+
+        this.status = StatusEnum.CANCELLED;
+        this.updatedAt = Instant.now();
+    }
+
+    public void updateDetails(
+        UUID actorId,
+        String title,
+        String description,
+        PriorityEnum priority,
+        TicketTypeEnum ticketType
+    ) {
+         if(!actorId.equals(this.requesterId)) {
+            throw new TicketOwnerShipException("you not owner of ticket");
+        }
+
+        this.title = title;
+        this.description = description;
+        this.priority = priority;
+        this.ticketType = ticketType;
+        this.updatedAt = Instant.now();
     }
 }

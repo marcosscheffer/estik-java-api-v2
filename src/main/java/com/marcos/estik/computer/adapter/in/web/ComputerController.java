@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +18,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.marcos.estik.computer.adapter.in.web.mapper.ComputerWebMapper;
 import com.marcos.estik.computer.adapter.in.web.request.CreateComputerRequest;
 import com.marcos.estik.computer.adapter.in.web.request.UpdateComputerRequest;
+import com.marcos.estik.computer.adapter.in.web.request.moveComputerRequest;
 import com.marcos.estik.computer.adapter.in.web.response.ComputerResponse;
 import com.marcos.estik.computer.adapter.in.web.response.ComputerSummaryResponse;
 import com.marcos.estik.computer.application.command.SearchComputerCommand;
 import com.marcos.estik.computer.application.ports.in.CreateComputerPort;
+import com.marcos.estik.computer.application.ports.in.DeleteComputerByIdPort;
 import com.marcos.estik.computer.application.ports.in.FindComputerByIdPort;
+import com.marcos.estik.computer.application.ports.in.MoveComputerPort;
 import com.marcos.estik.computer.application.ports.in.SearchComputerPort;
 import com.marcos.estik.computer.application.ports.in.UpdateComputerPort;
 import com.marcos.estik.computer.domain.Computer;
@@ -41,6 +45,8 @@ public class ComputerController {
     private final CreateComputerPort createComputerPort;
     private final ComputerWebMapper computerWebMapper;
     private final UpdateComputerPort updateComputerPort;
+    private final DeleteComputerByIdPort deleteComputerPort;
+    private final MoveComputerPort moveComputerPort;
 
     @GetMapping
     public ResponseEntity<PageResult<ComputerSummaryResponse>> getComputers(
@@ -99,5 +105,20 @@ public class ComputerController {
         return ResponseEntity.ok(computerWebMapper.toResponse(computer));
     }
 
+    @PostMapping("/{id}/move")
+    public ResponseEntity<ComputerResponse> moveComputer(
+        @PathVariable UUID id,
+        @RequestBody moveComputerRequest request
+    ) {
+        Computer computer = moveComputerPort.execute(id, computerWebMapper.toMoveComputerCommand(request));
+        return ResponseEntity.ok(computerWebMapper.toResponse(computer));
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteComputer(
+        @PathVariable UUID id
+    ) {
+        deleteComputerPort.execute(id);
+        return ResponseEntity.noContent().build();
+    }
 }

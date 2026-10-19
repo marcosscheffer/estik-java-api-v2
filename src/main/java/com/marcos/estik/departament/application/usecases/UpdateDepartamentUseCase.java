@@ -20,10 +20,7 @@ public class UpdateDepartamentUseCase implements UpdateDepartamentPort {
     @Override
     public Departament execute(UUID departamentId, UpdateDepartamentCommand command) {
         Departament departament = departamentRepositoryPort.findDepartamentById(departamentId);
-        departament.setCode(command.code());
-        departament.setName(command.name());
-        departament.setFacilityId(command.facilityId());
+        departament.updateInfo(command.name(), command.code());
         return departamentRepositoryPort.save(departament);
-
     }
 }

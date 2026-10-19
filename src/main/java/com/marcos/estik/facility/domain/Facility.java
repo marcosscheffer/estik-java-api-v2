@@ -5,10 +5,8 @@ import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter 
-@Setter 
 @AllArgsConstructor 
 public class Facility {
     private UUID id;
@@ -29,5 +27,14 @@ public class Facility {
             Instant.now(),
             Instant.now()
         );
+    }
+
+    public void updateInfo(
+        String name,
+        String code
+    ) {
+        this.name = name;
+        this.code = code;
+        this.updatedAt = Instant.now();
     }
 }

@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.auth.application.port.in.RefreshPort;
 import com.marcos.estik.auth.application.port.out.LoadUserByIdPort;
@@ -11,38 +12,50 @@ import com.marcos.estik.auth.application.port.out.RefreshTokenRepositoryPort;
 import com.marcos.estik.auth.application.port.out.TokenProviderPort;
 import com.marcos.estik.auth.application.result.AuthTokens;
 import com.marcos.estik.auth.domain.RefreshToken;
+import com.marcos.estik.auth.domain.UserAuth;
+import com.marcos.estik.auth.domain.exception.InvalidRefreshTokenException;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 
-@Service 
-@RequiredArgsConstructor 
+@Service
+@RequiredArgsConstructor
 public class RefreshUseCase implements RefreshPort {
-    
+
     private final RefreshTokenRepositoryPort refreshTokenRepositoryPort;
     private final TokenProviderPort tokenProviderPort;
     private final LoadUserByIdPort loadUserByIdPort;
 
     @Override
+    @Transactional
     public AuthTokens execute(String token) {
-        UUID tokenId = tokenProviderPort.getTokenId(token);
-        System.out.println(tokenId);
-        RefreshToken refreshToken = refreshTokenRepositoryPort.findById(tokenId);
-        if (refreshToken.getRevoked() == false 
-            && refreshToken.getExpiresAt().isBefore(Instant.now())) {
-            refreshToken.setRevoked(true);
-            refreshToken.setCreatedAt(Instant.now());
+        if (!tokenProviderPort.isValidRefreshToken(token)) {
+            throw new InvalidRefreshTokenException("Invalid refresh token");
         }
 
-        if (refreshToken.getRevoked()) {
-            throw new ExpiredJwtException(null, null, "Token expired");
+        UUID tokenId = tokenProviderPort.getTokenId(token);
+        RefreshToken refreshToken = refreshTokenRepositoryPort.findById(tokenId);
+
+        if (Boolean.TRUE.equals(refreshToken.getRevoked())
+            || refreshToken.getExpiresAt().isBefore(Instant.now())) {
+            throw new InvalidRefreshTokenException("Invalid refresh token");
         }
+
+        UserAuth user = loadUserByIdPort.findById(refreshToken.getUserId());
+
+        if (!Boolean.TRUE.equals(user.getActive())) {
+            throw new InvalidRefreshTokenException("Invalid refresh token");
+        }
+
+        refreshToken.setRevoked(true);
+        refreshToken.setRevokedAt(Instant.now());
+        refreshTokenRepositoryPort.save(refreshToken);
+
+        RefreshToken newRefreshToken = RefreshToken.create(UUID.randomUUID(), user.getId());
+        refreshTokenRepositoryPort.save(newRefreshToken);
 
         return new AuthTokens(
-            tokenProviderPort.generateToken(
-                loadUserByIdPort.findById(refreshToken.getUserId())
-            ),
-            token
+            tokenProviderPort.generateToken(user),
+            tokenProviderPort.generateRefreshToken(user, newRefreshToken.getId())
         );
     }
 
