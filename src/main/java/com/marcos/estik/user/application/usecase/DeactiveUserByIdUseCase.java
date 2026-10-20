@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.marcos.estik.user.application.port.in.DeactiveUserByIdPort;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
 import com.marcos.estik.user.domain.User;
-import com.marcos.estik.user.domain.exception.CannotDeactiveSelfException;
 
 import lombok.RequiredArgsConstructor;
 

@@ -85,7 +85,7 @@ public class ComputerController {
         Computer computer = createComputerPort.execute(computerWebMapper.toCreateComputerCommand(request));
         
         URI uri = uriBuilder
-            .path("/computer/{id}")
+            .path("/computers/{id}")
             .buildAndExpand(computer.getId())
             .toUri();
 
