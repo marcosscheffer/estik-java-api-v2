@@ -1,9 +1,13 @@
 package com.marcos.estik.item.adapter.in.web.request;
 
+import java.util.UUID;
+
 public record CreateItemRequest(
     String name,
     String description,
-    String code
+    String sku,
+    Long minimum,
+    UUID categoryId
 ) {
     
 }

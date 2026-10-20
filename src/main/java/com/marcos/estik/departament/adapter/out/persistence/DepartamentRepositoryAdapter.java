@@ -31,7 +31,7 @@ public class DepartamentRepositoryAdapter implements DepartamentRepositoryPort {
     }
 
     @Override
-    public Departament findDepartamentById(UUID id) {
+    public Departament findById(UUID id) {
         return departamentPersistenceMapper.toDomain(
             jpaDepartamentRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new)
@@ -61,13 +61,13 @@ public class DepartamentRepositoryAdapter implements DepartamentRepositoryPort {
     }
 
     @Override
-    public Boolean existsDepartamentById(UUID id) {
-        return jpaDepartamentRepository.existsById(id);
+    public void deleteById(UUID id) {
+        jpaDepartamentRepository.deleteById(id);
     }
 
     @Override
-    public void deleteDepartamentById(UUID id) {
-        jpaDepartamentRepository.deleteById(id);
+    public Boolean existsById(UUID id) {
+        return jpaDepartamentRepository.existsById(id);
     }
     
 }

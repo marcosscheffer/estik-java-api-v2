@@ -18,6 +18,6 @@ public class FindFacilityByIdUseCase implements FindFacilityByIdPort {
 
     @Override
     public Facility execute(UUID id) {
-        return facilityRepositoryPort.findFacilityById(id);
+        return facilityRepositoryPort.findById(id);
     }
 }

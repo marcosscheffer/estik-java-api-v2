@@ -29,7 +29,7 @@ public class FacilityRepositoryAdapter implements FacilityRepositoryPort{
     }
 
     @Override
-    public Facility findFacilityById(UUID id) {
+    public Facility findById(UUID id) {
         return jpaFacilityRepository.findById(id)
             .map(facilityPersistenceMapper::toDomain)
             .orElseThrow(() -> new EntityNotFoundException("Facility not found"));
@@ -59,7 +59,7 @@ public class FacilityRepositoryAdapter implements FacilityRepositoryPort{
     }
 
     @Override
-    public void deleteFacilityById(UUID id) {
+    public void deleteById(UUID id) {
         jpaFacilityRepository.deleteById(id);
     }
 }

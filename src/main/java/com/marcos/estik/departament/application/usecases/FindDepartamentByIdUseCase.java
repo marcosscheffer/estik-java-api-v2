@@ -18,7 +18,7 @@ public class FindDepartamentByIdUseCase implements FindDepartamentByIdPort {
 
     @Override
     public Departament execute(UUID id) {
-        return departamentRepositoryPort.findDepartamentById(id);
+        return departamentRepositoryPort.findById(id);
     }
     
 }

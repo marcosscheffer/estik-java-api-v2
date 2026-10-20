@@ -17,7 +17,7 @@ public class DeleteDepartamentUseCase implements DeleteDepartamentByIdPort {
 
     @Override
     public void execute(UUID id) {
-        departamentRepositoryPort.deleteDepartamentById(id);
+        departamentRepositoryPort.deleteById(id);
     }
 
     

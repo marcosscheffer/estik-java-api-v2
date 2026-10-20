@@ -37,10 +37,11 @@ public class ItemRepositoryAdapter implements ItemRepositoryPort {
     }
 
     @Override
-    public PageResult<Item> SearchItem(String name, String code, PageQuery page) {
+    public PageResult<Item> SearchItem(String name, String code, UUID categoryId, PageQuery page) {
         Specification<ItemEntity> specs = Specification.allOf(
             ItemSpecification.nameContain(name),
-            ItemSpecification.codeContaim(code)
+            ItemSpecification.skuContain(code),
+            ItemSpecification.categoryIs(categoryId)
         );
 
         Page<ItemEntity> items = jpaItemRepository.findAll(

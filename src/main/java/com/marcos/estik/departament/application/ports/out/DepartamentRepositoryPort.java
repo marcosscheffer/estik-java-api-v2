@@ -10,13 +10,13 @@ public interface DepartamentRepositoryPort {
 
     Departament save(Departament departament);
 
-    Departament findDepartamentById(UUID id);
+    Departament findById(UUID id);
 
     PageResult<Departament> searchDepartaments(String name, String code, 
         UUID facilityId, PageQuery page);
 
-    Boolean existsDepartamentById(UUID id);
+    Boolean existsById(UUID id);
 
-    void deleteDepartamentById(UUID id);
+    void deleteById(UUID id);
     
 }

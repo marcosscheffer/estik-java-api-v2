@@ -15,6 +15,7 @@ public interface ItemRepositoryPort {
     PageResult<Item> SearchItem(
         String name,
         String code,
+        UUID categoryId,
         PageQuery page
     );
 

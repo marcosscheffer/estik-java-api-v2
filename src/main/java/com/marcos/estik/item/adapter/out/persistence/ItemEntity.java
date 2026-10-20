@@ -23,7 +23,9 @@ public class ItemEntity {
 
     private String name;
     private String description;
-    private String code;
+    private String sku;
+    private Long minimum;
+    private UUID categoryId;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

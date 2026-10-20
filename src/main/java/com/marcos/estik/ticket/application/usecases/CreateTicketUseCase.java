@@ -7,9 +7,10 @@ import org.springframework.stereotype.Service;
 import com.marcos.estik.ticket.application.command.CreateTicketCommand;
 import com.marcos.estik.ticket.application.ports.in.CreateTicketPort;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
-import com.marcos.estik.ticket.application.ports.out.VerifyFacilityExistsPort;
+import com.marcos.estik.ticket.application.ports.out.LoadExistsFacilityByIdPort;
 import com.marcos.estik.ticket.domain.Ticket;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service 
@@ -17,11 +18,13 @@ import lombok.RequiredArgsConstructor;
 public class CreateTicketUseCase implements CreateTicketPort {
     
     private final TicketRepositoryPort ticketRepositoryPort;
-    private final VerifyFacilityExistsPort verifyFacilityExistsPort;
+    private final LoadExistsFacilityByIdPort loadExistsFacilityByIdPort;
 
     @Override
     public Ticket execute(CreateTicketCommand command, UUID requesterId) {
-        verifyFacilityExistsPort.existsById(command.facilityId());
+        if(loadExistsFacilityByIdPort.existsById(command.facilityId())) {
+            throw new EntityNotFoundException("Facility not found");
+        }
         Ticket ticket = Ticket.create(
             command.title(),
             command.description(),

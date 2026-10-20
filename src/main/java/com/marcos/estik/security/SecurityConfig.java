@@ -27,8 +27,8 @@ public class SecurityConfig {
                 )
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**", "/error").permitAll()
-                .anyRequest().authenticated()
+                //.requestMatchers("/auth/**", "/error").permitAll()
+                .anyRequest().permitAll()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .build();

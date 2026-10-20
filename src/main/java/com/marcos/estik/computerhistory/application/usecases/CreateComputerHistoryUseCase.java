@@ -2,12 +2,13 @@ package com.marcos.estik.computerhistory.application.usecases;
 
 import org.springframework.stereotype.Service;
 
+import com.marcos.estik.computerhistory.adapter.out.departament.LoadComputerHistoryExistsDepartamentByIdAdapter;
 import com.marcos.estik.computerhistory.application.command.CreateComputerHistoryCommand;
 import com.marcos.estik.computerhistory.application.ports.in.CreateComputerHistoryPort;
 import com.marcos.estik.computerhistory.application.ports.out.ComputerHistoryRepositoryPort;
-import com.marcos.estik.computerhistory.application.ports.out.LoadComputerHistoryVerifyDepartamentExistsByIdPort;
 import com.marcos.estik.computerhistory.domain.ComputerHistory;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service 
@@ -15,11 +16,14 @@ import lombok.RequiredArgsConstructor;
 public class CreateComputerHistoryUseCase implements CreateComputerHistoryPort {
 
     private final ComputerHistoryRepositoryPort computerHistoryRepositoryPort;
-    private final LoadComputerHistoryVerifyDepartamentExistsByIdPort loadVerifyDepartamentExistsByIdPort;
+    private final LoadComputerHistoryExistsDepartamentByIdAdapter loadComputerHistoryExistsDepartamentByIdPort;
+
 
     @Override
     public ComputerHistory execute(CreateComputerHistoryCommand command) {
-        loadVerifyDepartamentExistsByIdPort.existsById(command.departamentId());
+        if(!loadComputerHistoryExistsDepartamentByIdPort.existsById(command.departamentId())) {
+            throw new EntityNotFoundException("Departament not found");
+        }
         ComputerHistory computerHistory = ComputerHistory.create(
             command.serviceDescription(), 
             command.direction(), 

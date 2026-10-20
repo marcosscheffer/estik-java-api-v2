@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class UpdateTicketUseCase implements UpdateTicketPort {
 
     private final TicketRepositoryPort ticketRepositoryPort;
+    
     @Override
     public Ticket execute(UpdateTicketCommand command, UUID ticketId, AuthenticatedUser principal) {
         Ticket ticket = ticketRepositoryPort.findTicketById(ticketId);

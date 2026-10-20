@@ -53,6 +53,7 @@ public class ItemController {
     public ResponseEntity<PageResult<ItemSummaryResponse>> getItems(
         @RequestParam(defaultValue = "") String name,
         @RequestParam(defaultValue = "") String code,
+        @RequestParam(required = false) UUID categoryId,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
@@ -60,6 +61,7 @@ public class ItemController {
             new SearchItemCommand(
                 name,
                 code,
+                categoryId,
                 new PageQuery(page, size)
             )
         );

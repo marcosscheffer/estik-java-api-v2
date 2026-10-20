@@ -5,7 +5,7 @@ import java.util.UUID;
 public record ItemSummaryResponse(
     UUID id,
     String name,
-    String code
+    String sku
 ) {
     
 }

@@ -17,7 +17,7 @@ public class DeleteFacilityByIdUseCase implements DeleteFacilityByIdPort {
 
     @Override
     public void execute(UUID id) {
-        facilityRepositoryPort.deleteFacilityById(id);
+        facilityRepositoryPort.deleteById(id);
     }
     
 }

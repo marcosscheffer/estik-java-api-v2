@@ -9,12 +9,12 @@ import com.marcos.estik.shared.application.pagination.PageResult;
 public interface FacilityRepositoryPort {
     Facility save(Facility facility);
 
-    Facility findFacilityById(UUID id);
+    Facility findById(UUID id);
 
     PageResult<Facility> SearchFacilityByName(String name, PageQuery page);
 
     Boolean existsById(UUID id);
 
-    void deleteFacilityById(UUID id);
+    void deleteById(UUID id);
 
 }

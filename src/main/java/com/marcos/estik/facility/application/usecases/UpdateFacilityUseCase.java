@@ -19,7 +19,7 @@ public class UpdateFacilityUseCase implements UpdateFacilityPort {
 
     @Override
     public Facility execute(UpdateFacilityCommand command, UUID facilityId) {
-        Facility facility = facilityRepositoryPort.findFacilityById(facilityId);
+        Facility facility = facilityRepositoryPort.findById(facilityId);
         facility.updateInfo(command.name(), command.code());
         return facilityRepositoryPort.save(facility);
     }

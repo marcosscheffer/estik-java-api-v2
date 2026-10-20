@@ -20,7 +20,8 @@ public class SearchItemUseCase implements SearchItemPort {
     public PageResult<Item> execute(SearchItemCommand command) {
         return itemRepositoryPort.SearchItem(
             command.name(), 
-            command.code(), 
+            command.sku(),
+            command.categoryId(),
             command.page()
         );
     }
