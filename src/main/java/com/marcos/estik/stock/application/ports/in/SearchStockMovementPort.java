@@ -1,0 +1,9 @@
+package com.marcos.estik.stock.application.ports.in;
+
+import com.marcos.estik.shared.application.pagination.PageResult;
+import com.marcos.estik.stock.application.command.SearchStockMovementCommand;
+import com.marcos.estik.stock.domain.StockMovement;
+
+public interface SearchStockMovementPort {
+    PageResult<StockMovement> execute(SearchStockMovementCommand command);
+}
