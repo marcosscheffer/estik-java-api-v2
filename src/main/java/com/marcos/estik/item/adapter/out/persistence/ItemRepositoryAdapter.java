@@ -57,4 +57,9 @@ public class ItemRepositoryAdapter implements ItemRepositoryPort {
             items.getTotalPages()
         );
     }
+
+    @Override
+    public Boolean existsById(UUID id) {
+        return jpaItemRepository.existsById(id);
+    }
 }

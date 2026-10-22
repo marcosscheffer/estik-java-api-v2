@@ -12,6 +12,8 @@ public interface ItemRepositoryPort {
 
     Item findById(UUID id);
 
+    Boolean existsById(UUID id);
+
     PageResult<Item> SearchItem(
         String name,
         String code,

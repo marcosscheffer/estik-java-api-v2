@@ -33,7 +33,7 @@ public class CreateStockBalanceUseCase implements CreateStockBalancePort {
             throw new ItemAlreadyExistsException("item already exists in this facility or departament");
         }
 
-        if(!loadStockBalanceExistsDepartamentByIdPort.existsById(command.departamentId())) {
+        if(! loadStockBalanceExistsDepartamentByIdPort.existsById(command.departamentId())) {
             throw new EntityNotFoundException("departament invalid");
         }
 
@@ -44,7 +44,6 @@ public class CreateStockBalanceUseCase implements CreateStockBalancePort {
         if(!loadStockBalanceExistsItemByIdPort.existsById(command.itemId())) {
             throw new EntityNotFoundException("item invalid");
         }
-
 
         StockBalance stockBalance = StockBalance.create(
             command.facilityId(),
