@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public record DepartamentSummaryResponse(
     UUID id,
-    UUID facilityId,
+    DepartamentFacilitySummaryResponse facility,
     String name,
     String code
 ) {

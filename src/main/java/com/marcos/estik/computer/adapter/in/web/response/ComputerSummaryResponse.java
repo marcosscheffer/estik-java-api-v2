@@ -6,8 +6,8 @@ import java.util.UUID;
 public record ComputerSummaryResponse(
     UUID id,
     String name,
-    UUID facilityId,
-    UUID departamentId,
+    ComputerDepartamentSummaryResponse departament,
+    ComputerFacilitySummaryResponse facility,
     Instant createdAt,
     Instant updatedAt
 ) {

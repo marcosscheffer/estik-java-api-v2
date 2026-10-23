@@ -8,9 +8,9 @@ import com.marcos.estik.stock.domain.TypeMovementEnum;
 public record StockMovementSummaryResponse(
     UUID id,
     TypeMovementEnum type,
-    UUID facilitySource,
-    UUID facilityDestination,
-    UUID itemId,
+    StockFacilityResponse facilitySource,
+    StockFacilityResponse facilityDestination,
+    StockItemResponse item,
     Long quantity,
     Instant createdAt
 ) {

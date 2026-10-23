@@ -8,11 +8,13 @@ import com.marcos.estik.computer.application.command.LoadCreateComputerHistoryCo
 import com.marcos.estik.computer.application.ports.in.CreateComputerPort;
 import com.marcos.estik.computer.application.ports.out.ComputerRepositoryPort;
 import com.marcos.estik.computer.application.ports.out.LoadComputerCreateComputerHistoryPort;
-import com.marcos.estik.computer.application.ports.out.LoadComputerExistsDepartamentByIdPort;
-import com.marcos.estik.computer.application.ports.out.LoadComputerExistsFacilityByIdPort;
+import com.marcos.estik.computer.application.ports.out.LoadComputerFindDepartamentByIdPort;
+import com.marcos.estik.computer.application.ports.out.LoadComputerFindFacilityByIdPort;
+import com.marcos.estik.computer.application.view.ComputerDepartamentInfo;
+import com.marcos.estik.computer.application.view.ComputerFacilityInfo;
+import com.marcos.estik.computer.application.view.ComputerView;
 import com.marcos.estik.computer.domain.Computer;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service 
@@ -20,19 +22,15 @@ import lombok.RequiredArgsConstructor;
 public class CreateComputerUseCase implements CreateComputerPort {
 
     private final ComputerRepositoryPort computerRepositoryPort;
-    private final LoadComputerExistsDepartamentByIdPort loadComputerExistsDepartamentByIdPort;
-    private final LoadComputerExistsFacilityByIdPort loadComputerExistsFacilityByIdPort;
+    private final LoadComputerFindDepartamentByIdPort loadComputerFindDepartamentByIdPort;
+    private final LoadComputerFindFacilityByIdPort loadComputerFindFacilityByIdPort;
     private final LoadComputerCreateComputerHistoryPort loadComputerCreateComputerHistoryPort;
 
     @Override
     @Transactional
-    public Computer execute(CreateComputerCommand command) {
-        if(!loadComputerExistsDepartamentByIdPort.existsById(command.departamentId())) {
-            throw new EntityNotFoundException("Departament not found");
-        }
-        if(!loadComputerExistsFacilityByIdPort.existsById(command.facilityId())) {
-            throw new EntityNotFoundException("Facility not found");
-        }
+    public ComputerView execute(CreateComputerCommand command) {
+        ComputerDepartamentInfo departamentInfo = loadComputerFindDepartamentByIdPort.execute(command.departamentId());
+        ComputerFacilityInfo facilityInfo = loadComputerFindFacilityByIdPort.execute(command.facilityId());
 
         Computer computer = Computer.create(
             command.name(),
@@ -56,6 +54,10 @@ public class CreateComputerUseCase implements CreateComputerPort {
             )
         );
 
-        return computer;
+        return new ComputerView(
+            computer,
+            facilityInfo,
+            departamentInfo
+        );
     }
 }

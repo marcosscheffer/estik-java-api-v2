@@ -2,8 +2,8 @@ package com.marcos.estik.item.application.ports.in;
 
 import java.util.UUID;
 
-import com.marcos.estik.item.domain.Item;
+import com.marcos.estik.item.application.view.ItemView;
 
 public interface FindItemByIdPort {
-    Item execute(UUID id);
+    ItemView execute(UUID id);
 }

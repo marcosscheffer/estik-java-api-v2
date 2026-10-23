@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 import com.marcos.estik.ticket.application.command.CreateTicketCommand;
 import com.marcos.estik.ticket.application.ports.in.CreateTicketPort;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
-import com.marcos.estik.ticket.application.ports.out.LoadExistsFacilityByIdPort;
+import com.marcos.estik.ticket.application.view.TicketFacilityInfo;
+import com.marcos.estik.ticket.application.view.TicketView;
+import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
+import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
 import com.marcos.estik.ticket.domain.Ticket;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service 
@@ -18,13 +20,12 @@ import lombok.RequiredArgsConstructor;
 public class CreateTicketUseCase implements CreateTicketPort {
     
     private final TicketRepositoryPort ticketRepositoryPort;
-    private final LoadExistsFacilityByIdPort loadExistsFacilityByIdPort;
+    private final LoadTicketFindFacilityByIdPort loadTicketFindFacilityByIdPort;
+    private final LoadTicketFindUserByIdPort loadTicketFindUserByIdPort;
 
     @Override
-    public Ticket execute(CreateTicketCommand command, UUID requesterId) {
-        if(loadExistsFacilityByIdPort.existsById(command.facilityId())) {
-            throw new EntityNotFoundException("Facility not found");
-        }
+    public TicketView execute(CreateTicketCommand command, UUID requesterId) {
+        TicketFacilityInfo facilityInfo = loadTicketFindFacilityByIdPort.execute(command.facilityId());
         Ticket ticket = Ticket.create(
             command.title(),
             command.description(),
@@ -36,6 +37,11 @@ public class CreateTicketUseCase implements CreateTicketPort {
 
         ticketRepositoryPort.save(ticket);
 
-        return ticket;
+        return new TicketView(
+            ticket,
+            loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
+            loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
+            facilityInfo
+        );
     }
 }

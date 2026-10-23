@@ -14,8 +14,8 @@ public record ComputerResponse(
     OsEnum os,
     StorageTypeEnum storageType,
     String storage,
-    UUID facilityId,
-    UUID departamentId,
+    ComputerFacilitySummaryResponse facility,
+    ComputerDepartamentSummaryResponse departament,
     Instant createdAt,
     Instant updatedAt
 ) {

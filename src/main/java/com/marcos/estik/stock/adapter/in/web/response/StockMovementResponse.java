@@ -7,11 +7,11 @@ import com.marcos.estik.stock.domain.TypeMovementEnum;
 
 public record StockMovementResponse(
     UUID id,
-    UUID facilitySource,
-    UUID facilityDestination,
-    UUID departamentSource,
-    UUID departamentDestination,
-    UUID itemId,
+    StockFacilityResponse facilitySource,
+    StockFacilityResponse facilityDestination,
+    StockDepartamentResponse departamentSource,
+    StockDepartamentResponse departamentDestination,
+    StockItemResponse item,
     String description,
     TypeMovementEnum type,
     Long quantity,

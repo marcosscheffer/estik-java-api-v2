@@ -9,7 +9,7 @@ import com.marcos.estik.ticket.domain.TicketTypeEnum;
 
 public record TicketSummaryResponse(
     UUID id,
-    UUID facilityId,
+    TicketFacilityResponse facility,
     String title,
     TicketTypeEnum ticketType,
     PriorityEnum priority,

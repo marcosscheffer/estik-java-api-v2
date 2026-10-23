@@ -19,6 +19,4 @@ public class DeleteDepartamentUseCase implements DeleteDepartamentByIdPort {
     public void execute(UUID id) {
         departamentRepositoryPort.deleteById(id);
     }
-
-    
 }

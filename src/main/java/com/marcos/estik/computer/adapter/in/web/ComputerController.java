@@ -28,7 +28,7 @@ import com.marcos.estik.computer.application.ports.in.FindComputerByIdPort;
 import com.marcos.estik.computer.application.ports.in.MoveComputerPort;
 import com.marcos.estik.computer.application.ports.in.SearchComputerPort;
 import com.marcos.estik.computer.application.ports.in.UpdateComputerPort;
-import com.marcos.estik.computer.domain.Computer;
+import com.marcos.estik.computer.application.view.ComputerView;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 
@@ -56,7 +56,7 @@ public class ComputerController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
-        PageResult<Computer> computers = searchComputerPort.execute(
+        PageResult<ComputerView> computers = searchComputerPort.execute(
             new SearchComputerCommand(
                 name,
                 facilityId,
@@ -72,7 +72,7 @@ public class ComputerController {
     public ResponseEntity<ComputerResponse> getComputer(
         @PathVariable UUID id
     ) {
-        Computer computer = findComputerByIdPort.execute(id);
+        ComputerView computer = findComputerByIdPort.execute(id);
 
         return ResponseEntity.ok(computerWebMapper.toResponse(computer));
     }
@@ -82,11 +82,11 @@ public class ComputerController {
         @RequestBody @Valid CreateComputerRequest request,
         UriComponentsBuilder uriBuilder
     ) {
-        Computer computer = createComputerPort.execute(computerWebMapper.toCreateComputerCommand(request));
+        ComputerView computer = createComputerPort.execute(computerWebMapper.toCreateComputerCommand(request));
         
         URI uri = uriBuilder
             .path("/computers/{id}")
-            .buildAndExpand(computer.getId())
+            .buildAndExpand(computer.computer().getId())
             .toUri();
 
         return ResponseEntity.created(uri).body(computerWebMapper.toResponse(computer));
@@ -97,7 +97,7 @@ public class ComputerController {
         @PathVariable UUID id,
         @RequestBody @Valid  UpdateComputerRequest request
     ) {
-        Computer computer = updateComputerPort.execute(
+        ComputerView computer = updateComputerPort.execute(
             computerWebMapper.toUpdateComputerCommand(request),
             id
         );
@@ -110,7 +110,7 @@ public class ComputerController {
         @PathVariable UUID id,
         @RequestBody moveComputerRequest request
     ) {
-        Computer computer = moveComputerPort.execute(id, computerWebMapper.toMoveComputerCommand(request));
+        ComputerView computer = moveComputerPort.execute(id, computerWebMapper.toMoveComputerCommand(request));
         return ResponseEntity.ok(computerWebMapper.toResponse(computer));
     }
 

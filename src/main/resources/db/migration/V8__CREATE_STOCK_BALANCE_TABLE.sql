@@ -14,10 +14,10 @@ CREATE TABLE stock_movement (
     item_id UUID NOT NULL REFERENCES items(id) ON DELETE CASCADE,
     type VARCHAR(50) NOT NULL,
     quantity BIGINT NOT NULL DEFAULT 0,
-    facility_source UUID NOT NULL REFERENCES facilities(id) ON DELETE CASCADE,
-    facility_destination UUID REFERENCES facilities(id) ON DELETE CASCADE,
-    departament_source UUID NOT NULL REFERENCES departaments(id) ON DELETE CASCADE,
-    departament_destination UUID REFERENCES departaments(id) ON DELETE CASCADE,
+    facility_source_id UUID NOT NULL REFERENCES facilities(id) ON DELETE CASCADE,
+    facility_destination_id UUID REFERENCES facilities(id) ON DELETE CASCADE,
+    departament_source_id UUID NOT NULL REFERENCES departaments(id) ON DELETE CASCADE,
+    departament_destination_id UUID REFERENCES departaments(id) ON DELETE CASCADE,
     description VARCHAR(255), 
     created_at TIMESTAMP NOT NULL DEFAULT now()
 );
@@ -27,7 +27,7 @@ CREATE INDEX idx_stock_balance_facility_id ON stock_balance(facility_id);
 CREATE INDEX idx_stock_balance_departament_id ON stock_balance(departament_id);
 
 CREATE INDEX idx_stock_movement_item_id ON stock_movement(item_id);
-CREATE INDEX idx_stock_movement_facility_source ON stock_movement(facility_source);
-CREATE INDEX idx_stock_movement_facility_destination ON stock_movement(facility_destination);
-CREATE INDEX idx_stock_movement_departament_source ON stock_movement(departament_source);
-CREATE INDEX idx_stock_movement_departament_destination ON stock_movement(departament_destination);
+CREATE INDEX idx_stock_movement_facility_source ON stock_movement(facility_source_id);
+CREATE INDEX idx_stock_movement_facility_destination ON stock_movement(facility_destination_id);
+CREATE INDEX idx_stock_movement_departament_source ON stock_movement(departament_source_id);
+CREATE INDEX idx_stock_movement_departament_destination ON stock_movement(departament_destination_id);

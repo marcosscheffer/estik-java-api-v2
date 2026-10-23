@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.marcos.estik.item.application.ports.in.FindItemByIdPort;
 import com.marcos.estik.item.application.ports.out.ItemRepositoryPort;
+import com.marcos.estik.item.application.ports.out.LoadItemFindCategoryByIdPort;
+import com.marcos.estik.item.application.view.ItemView;
 import com.marcos.estik.item.domain.Item;
 
 import lombok.RequiredArgsConstructor;
@@ -15,10 +17,14 @@ import lombok.RequiredArgsConstructor;
 public class FindItemByIdUseCase implements FindItemByIdPort {
     
     private final ItemRepositoryPort itemRepositoryPort;
+    private final LoadItemFindCategoryByIdPort loadItemFindCategoryByIdPort;
 
     @Override
-    public Item execute(UUID id) {
-        return itemRepositoryPort.findById(id);
+    public ItemView execute(UUID id) {
+        Item item = itemRepositoryPort.findById(id);
+        return new ItemView(
+            item,
+            loadItemFindCategoryByIdPort.execute(item.getCategoryId())
+        );
     }
-    
 }

@@ -2,9 +2,9 @@ package com.marcos.estik.departament.application.ports.in;
 
 import java.util.UUID;
 
-import com.marcos.estik.departament.domain.Departament;
+import com.marcos.estik.departament.application.view.DepartamentView;
 
 public interface FindDepartamentByIdPort {
     
-    Departament execute(UUID id);
+    DepartamentView execute(UUID id);
 }

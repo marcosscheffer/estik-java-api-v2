@@ -26,7 +26,7 @@ import com.marcos.estik.departament.application.ports.in.DeleteDepartamentByIdPo
 import com.marcos.estik.departament.application.ports.in.FindDepartamentByIdPort;
 import com.marcos.estik.departament.application.ports.in.SearchDepartamentPort;
 import com.marcos.estik.departament.application.ports.in.UpdateDepartamentPort;
-import com.marcos.estik.departament.domain.Departament;
+import com.marcos.estik.departament.application.view.DepartamentView;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 
@@ -48,7 +48,7 @@ public class DepartamentController {
     public ResponseEntity<DepartamentResponse> getDepartament(
         @PathVariable UUID id
     ) {
-        Departament departament = findDepartamentByIdPort.execute(id);
+        DepartamentView departament = findDepartamentByIdPort.execute(id);
 
         return ResponseEntity.ok(departamentWebMapper.toResponse(departament));
     }
@@ -61,7 +61,7 @@ public class DepartamentController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
-        PageResult<Departament> departaments = searchDepartamentPort.execute(
+        PageResult<DepartamentView> departaments = searchDepartamentPort.execute(
             new SearchDepartamentCommand(
                 name,
                 code,
@@ -78,13 +78,13 @@ public class DepartamentController {
         @RequestBody CreateDepartamentRequest request,
         UriComponentsBuilder uriBuilder
     ) {
-        Departament departament = createDepartamentPort.execute(
+        DepartamentView departament = createDepartamentPort.execute(
             departamentWebMapper.toCreateDepartamentCommand(request)
         );
 
         URI uri = uriBuilder
             .path("/departaments/{id}")
-            .buildAndExpand(departament.getId())
+            .buildAndExpand(departament.departament().getId())
             .toUri();
 
         return ResponseEntity.created(uri).body(departamentWebMapper.toResponse(departament));
@@ -95,7 +95,7 @@ public class DepartamentController {
         @PathVariable UUID id,
         @RequestBody UpdateDepartamentRequest request
     ) {
-        Departament departament = updateDepartamentPort.execute(
+        DepartamentView departament = updateDepartamentPort.execute(
             id,
             departamentWebMapper.toUpdateDepartamentCommand(request)
         );

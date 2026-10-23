@@ -3,8 +3,8 @@ package com.marcos.estik.ticket.application.ports.in;
 import java.util.UUID;
 
 import com.marcos.estik.security.AuthenticatedUser;
-import com.marcos.estik.ticket.domain.Ticket;
+import com.marcos.estik.ticket.application.view.TicketView;
 
 public interface AssumeTicketPort {
-    Ticket execute(UUID ticketId, AuthenticatedUser principal);
+    TicketView execute(UUID ticketId, AuthenticatedUser principal);
 }

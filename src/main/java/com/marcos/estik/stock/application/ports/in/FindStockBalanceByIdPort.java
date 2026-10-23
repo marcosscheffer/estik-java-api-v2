@@ -2,8 +2,10 @@ package com.marcos.estik.stock.application.ports.in;
 
 import java.util.UUID;
 
-import com.marcos.estik.stock.domain.StockBalance;
+import com.marcos.estik.stock.application.view.StockBalanceView;
 
 public interface FindStockBalanceByIdPort {
-    StockBalance execute(UUID id);
+
+    StockBalanceView execute(UUID id);
+
 }

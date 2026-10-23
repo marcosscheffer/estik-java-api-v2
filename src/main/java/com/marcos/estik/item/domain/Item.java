@@ -11,14 +11,14 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor 
 public class Item {
-    UUID id;
-    String name;
-    String description;
-    String sku;
-    Long minimum;
-    UUID categoryId;
-    Instant createdAt;
-    Instant updatedAt;
+    private UUID id;
+    private String name;
+    private String description;
+    private String sku;
+    private Long minimum;
+    private UUID categoryId;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     public static Item create(
         String name,

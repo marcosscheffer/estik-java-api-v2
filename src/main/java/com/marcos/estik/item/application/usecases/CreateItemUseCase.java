@@ -5,25 +5,23 @@ import org.springframework.stereotype.Service;
 import com.marcos.estik.item.application.command.CreateItemCommand;
 import com.marcos.estik.item.application.ports.in.CreateItemPort;
 import com.marcos.estik.item.application.ports.out.ItemRepositoryPort;
-import com.marcos.estik.item.application.ports.out.LoadItemExistsCategoryByIdPort;
+import com.marcos.estik.item.application.ports.out.LoadItemFindCategoryByIdPort;
+import com.marcos.estik.item.application.view.ItemCategoryInfo;
+import com.marcos.estik.item.application.view.ItemView;
 import com.marcos.estik.item.domain.Item;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-
 
 @Service 
 @RequiredArgsConstructor 
 public class CreateItemUseCase implements CreateItemPort {
 
     private final ItemRepositoryPort itemRepositoryPort;
-    private final LoadItemExistsCategoryByIdPort loadItemExistsCategoryByIdPort;
+    private final LoadItemFindCategoryByIdPort loadItemFindCategoryByIdPort;
 
     @Override
-    public Item execute(CreateItemCommand command) {
-        if(!loadItemExistsCategoryByIdPort.existsById(command.categoryId())) {
-            throw new EntityNotFoundException("Category not found");
-        }
+    public ItemView execute(CreateItemCommand command) {
+        ItemCategoryInfo categoryInfo = loadItemFindCategoryByIdPort.execute(command.categoryId());
         
         Item item = Item.create(
             command.name(), 
@@ -32,7 +30,12 @@ public class CreateItemUseCase implements CreateItemPort {
             command.minimum(),
             command.categoryId()
         );
-        return itemRepositoryPort.save(item);
+
+        itemRepositoryPort.save(item);
+
+        return new ItemView(
+            item,
+            categoryInfo
+        );
     }
-    
 }

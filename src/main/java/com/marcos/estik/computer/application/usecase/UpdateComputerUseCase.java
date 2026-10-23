@@ -10,6 +10,9 @@ import com.marcos.estik.computer.application.command.UpdateComputerCommand;
 import com.marcos.estik.computer.application.ports.in.UpdateComputerPort;
 import com.marcos.estik.computer.application.ports.out.ComputerRepositoryPort;
 import com.marcos.estik.computer.application.ports.out.LoadComputerCreateComputerHistoryPort;
+import com.marcos.estik.computer.application.ports.out.LoadComputerFindDepartamentByIdPort;
+import com.marcos.estik.computer.application.ports.out.LoadComputerFindFacilityByIdPort;
+import com.marcos.estik.computer.application.view.ComputerView;
 import com.marcos.estik.computer.domain.Computer;
 
 import lombok.RequiredArgsConstructor;
@@ -19,11 +22,13 @@ import lombok.RequiredArgsConstructor;
 public class UpdateComputerUseCase implements UpdateComputerPort {
     
     private final LoadComputerCreateComputerHistoryPort loadCreateComputerHistoryPort;
+    private final LoadComputerFindDepartamentByIdPort loadComputerFindDepartamentByIdPort;
+    private final LoadComputerFindFacilityByIdPort loadComputerFindFacilityByIdPort;
     private final ComputerRepositoryPort computerRepositoryPort;
 
     @Override
     @Transactional
-    public Computer execute(UpdateComputerCommand command, UUID computerId) {
+    public ComputerView execute(UpdateComputerCommand command, UUID computerId) {
         Computer computer = computerRepositoryPort.findComputerById(computerId);
 
         computer.updateSpecs(
@@ -43,7 +48,12 @@ public class UpdateComputerUseCase implements UpdateComputerPort {
             )
         );
 
-        return computerRepositoryPort.save(computer);
+        computerRepositoryPort.save(computer);
+
+        return new ComputerView(
+            computer,
+            loadComputerFindFacilityByIdPort.execute(computer.getFacilityId()),
+            loadComputerFindDepartamentByIdPort.execute(computer.getDepartamentId())
+        );
     }
-    
 }

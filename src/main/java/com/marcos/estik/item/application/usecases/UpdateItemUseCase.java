@@ -7,10 +7,11 @@ import org.springframework.stereotype.Service;
 import com.marcos.estik.item.application.command.UpdateItemCommand;
 import com.marcos.estik.item.application.ports.in.UpdateItemPort;
 import com.marcos.estik.item.application.ports.out.ItemRepositoryPort;
-import com.marcos.estik.item.application.ports.out.LoadItemExistsCategoryByIdPort;
+import com.marcos.estik.item.application.ports.out.LoadItemFindCategoryByIdPort;
+import com.marcos.estik.item.application.view.ItemCategoryInfo;
+import com.marcos.estik.item.application.view.ItemView;
 import com.marcos.estik.item.domain.Item;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service 
@@ -18,13 +19,11 @@ import lombok.RequiredArgsConstructor;
 public class UpdateItemUseCase implements UpdateItemPort {
     
     private final ItemRepositoryPort itemRepositoryPort;
-    private final LoadItemExistsCategoryByIdPort loadItemExistsCategoryByIdPort;
+    private final LoadItemFindCategoryByIdPort loadItemFindCategoryByIdPort;
 
     @Override
-    public Item execute(UUID id, UpdateItemCommand command) {
-        if(!loadItemExistsCategoryByIdPort.existsById(command.categoryId())) {
-            throw new EntityNotFoundException("Category not found");
-        }
+    public ItemView execute(UUID id, UpdateItemCommand command) {
+        ItemCategoryInfo categoryInfo = loadItemFindCategoryByIdPort.execute(command.categoryId());
 
         Item item = itemRepositoryPort.findById(id);
         item.updateInfo(
@@ -34,6 +33,11 @@ public class UpdateItemUseCase implements UpdateItemPort {
             command.minimum(),
             command.categoryId()
         );
-        return itemRepositoryPort.save(item);
+        itemRepositoryPort.save(item);
+
+        return new ItemView(
+            item,
+            categoryInfo
+        );
     }
 }

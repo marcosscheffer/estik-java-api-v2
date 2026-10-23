@@ -4,8 +4,8 @@ import java.util.UUID;
 
 public record StockBalanceSummaryResponse(
     UUID id,
-    UUID itemId,
-    UUID facilityId,
+    StockItemResponse item,
+    StockFacilityResponse facility,
     Long quantity
 ) {
 

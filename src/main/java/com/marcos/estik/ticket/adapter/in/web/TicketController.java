@@ -31,9 +31,9 @@ import com.marcos.estik.ticket.application.ports.in.ReopenTicketPort;
 import com.marcos.estik.ticket.application.ports.in.ResolveTicketPort;
 import com.marcos.estik.ticket.application.ports.in.SearchTicketsPort;
 import com.marcos.estik.ticket.application.ports.in.UpdateTicketPort;
+import com.marcos.estik.ticket.application.view.TicketView;
 import com.marcos.estik.ticket.domain.PriorityEnum;
 import com.marcos.estik.ticket.domain.StatusEnum;
-import com.marcos.estik.ticket.domain.Ticket;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -71,7 +71,7 @@ public class TicketController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
-        PageResult<Ticket> tickets = searchTicketsPort.execute(
+        PageResult<TicketView> tickets = searchTicketsPort.execute(
             new SearchTicketsCommand(
                 title,
                 status,
@@ -90,7 +90,7 @@ public class TicketController {
     public ResponseEntity<TicketResponse> getTicket(
         @PathVariable UUID id
     ) {
-        Ticket ticket = findTicketByIdPort.execute(id);
+        TicketView ticket = findTicketByIdPort.execute(id);
         return ResponseEntity.ok(
             ticketWebMapper.toResponse(ticket)
         );
@@ -103,10 +103,10 @@ public class TicketController {
         UriComponentsBuilder uriBuilder
     ) {
         CreateTicketCommand command = ticketWebMapper.toCreateTicketCommand(request);
-        Ticket ticket = createTicketPort.execute(command, principal.id());
+        TicketView ticket = createTicketPort.execute(command, principal.id());
         URI uri = uriBuilder
             .path("/tickets/{id}")
-            .buildAndExpand(ticket.getId())
+            .buildAndExpand(ticket.ticket().getId())
             .toUri();
         
         return ResponseEntity.created(uri).body(ticketWebMapper.toResponse(ticket));
@@ -117,7 +117,7 @@ public class TicketController {
         @PathVariable UUID id,
         @AuthenticationPrincipal AuthenticatedUser principal
     ) {
-        Ticket ticket = assumeTicketPort.execute(id, principal);
+        TicketView ticket = assumeTicketPort.execute(id, principal);
 
         return ResponseEntity.ok(ticketWebMapper.toResponse(ticket));
     }
@@ -127,7 +127,7 @@ public class TicketController {
         @PathVariable UUID id,
         @AuthenticationPrincipal AuthenticatedUser principal
     ) {
-        Ticket ticket = resolveTicketPort.execute(id, principal);
+        TicketView ticket = resolveTicketPort.execute(id, principal);
         return ResponseEntity.ok(ticketWebMapper.toResponse(ticket));
 
     }
@@ -137,7 +137,7 @@ public class TicketController {
         @PathVariable UUID id,
         @AuthenticationPrincipal AuthenticatedUser principal
     ){
-        Ticket ticket = reopenTicketPort.execute(id, principal);
+        TicketView ticket = reopenTicketPort.execute(id, principal);
         return ResponseEntity.ok(ticketWebMapper.toResponse(ticket));
     }
 
@@ -146,7 +146,7 @@ public class TicketController {
         @PathVariable UUID id,
         @AuthenticationPrincipal AuthenticatedUser principal
     ){
-        Ticket ticket = cancelTicketPort.execute(id, principal);
+        TicketView ticket = cancelTicketPort.execute(id, principal);
         return ResponseEntity.ok(ticketWebMapper.toResponse(ticket));
     }
 
@@ -157,7 +157,7 @@ public class TicketController {
         @RequestBody UpdateTicketRequest request,
         @AuthenticationPrincipal AuthenticatedUser principal
     ) {
-        Ticket ticket = updateTicketPort.execute(
+        TicketView ticket = updateTicketPort.execute(
             ticketWebMapper.toUpdateTicketCommand(request), 
             id, 
             principal

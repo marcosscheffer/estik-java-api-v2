@@ -5,9 +5,9 @@ import java.util.UUID;
 
 public record StockBalanceResponse (
     UUID id,
-    UUID itemId,
-    UUID facilityId,
-    UUID departamentId,
+    StockItemResponse item,
+    StockFacilityResponse facility,
+    StockDepartamentResponse departament,
     Long quantity,
     Instant updatedAt
 ) {

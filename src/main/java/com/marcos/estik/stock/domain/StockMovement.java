@@ -11,10 +11,10 @@ import lombok.Getter;
 public class StockMovement {
     private UUID id;
     private UUID itemId;
-    private UUID facilitySource;
-    private UUID facilityDestination;
-    private UUID departamentSource;
-    private UUID departamentDestination;
+    private UUID facilitySourceId;
+    private UUID facilityDestinationId;
+    private UUID departamentSourceId;
+    private UUID departamentDestinationId;
     private Long quantity;
     private String description;
     private TypeMovementEnum type;
@@ -22,17 +22,17 @@ public class StockMovement {
 
     public static StockMovement in(
         UUID itemId,
-        UUID facilitySource,
-        UUID departamentSource,
+        UUID facilitySourceId,
+        UUID departamentSourceId,
         Long quantity,
         String description
     ) {
         return new StockMovement(
             UUID.randomUUID(), 
             itemId, 
-            facilitySource,
+            facilitySourceId,
             null,
-            departamentSource,
+            departamentSourceId,
             null, 
             quantity, 
             description, 
@@ -43,17 +43,17 @@ public class StockMovement {
 
     public static StockMovement out(
         UUID itemId,
-        UUID facilitySource,
-        UUID departamentSource,
+        UUID facilitySourceId,
+        UUID departamentSourceId,
         Long quantity,
         String description
     ) {
         return new StockMovement(
             UUID.randomUUID(), 
             itemId, 
-            facilitySource,
+            facilitySourceId,
             null,
-            departamentSource,
+            departamentSourceId,
             null, 
             quantity, 
             description, 
@@ -64,17 +64,17 @@ public class StockMovement {
 
     public static StockMovement adjust(
         UUID itemId,
-        UUID facilitySource,
-        UUID departamentSource,
+        UUID facilitySourceId,
+        UUID departamentSourceId,
         Long quantity,
         String description
     ) {
         return new StockMovement(
             UUID.randomUUID(), 
             itemId, 
-            facilitySource,
+            facilitySourceId,
             null,
-            departamentSource,
+            departamentSourceId,
             null, 
             quantity, 
             description, 
@@ -85,20 +85,20 @@ public class StockMovement {
 
     public static StockMovement transfer(
         UUID itemId,
-        UUID facilitySource,
-        UUID departamentSource,
-        UUID facilityDestination,
-        UUID departamentDestination,
+        UUID facilitySourceId,
+        UUID departamentSourceId,
+        UUID facilityDestinationId,
+        UUID departamentDestinationId,
         Long quantity,
         String description
     ) {
         return new StockMovement(
             UUID.randomUUID(), 
             itemId, 
-            facilitySource,
-            facilityDestination,
-            departamentSource,
-            departamentDestination, 
+            facilitySourceId,
+            facilityDestinationId,
+            departamentSourceId,
+            departamentDestinationId, 
             quantity, 
             description, 
             TypeMovementEnum.TRANSFER, 

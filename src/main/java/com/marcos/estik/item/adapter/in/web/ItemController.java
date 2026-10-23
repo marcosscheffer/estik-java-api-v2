@@ -24,7 +24,7 @@ import com.marcos.estik.item.application.ports.in.CreateItemPort;
 import com.marcos.estik.item.application.ports.in.FindItemByIdPort;
 import com.marcos.estik.item.application.ports.in.SearchItemPort;
 import com.marcos.estik.item.application.ports.in.UpdateItemPort;
-import com.marcos.estik.item.domain.Item;
+import com.marcos.estik.item.application.view.ItemView;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 
@@ -45,7 +45,7 @@ public class ItemController {
     public ResponseEntity<ItemResponse> getItem(
         @PathVariable UUID id
     ) {
-        Item item = findItemByIdPort.execute(id);
+        ItemView item = findItemByIdPort.execute(id);
         return ResponseEntity.ok(itemWebMapper.toResponse(item));
     }
 
@@ -57,7 +57,7 @@ public class ItemController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
-        PageResult<Item> items = searchItemPort.execute(
+        PageResult<ItemView> items = searchItemPort.execute(
             new SearchItemCommand(
                 name,
                 code,
@@ -76,10 +76,10 @@ public class ItemController {
         @RequestBody CreateItemRequest request,
         UriComponentsBuilder uriBuilder
     ) {
-        Item item = createItemPort.execute(itemWebMapper.toCreateItemCommand(request));
+        ItemView item = createItemPort.execute(itemWebMapper.toCreateItemCommand(request));
         URI uri = uriBuilder
             .path("items/{id}")
-            .buildAndExpand(item.getId())
+            .buildAndExpand(item.item().getId())
             .toUri();
         return ResponseEntity.created(uri).body(itemWebMapper.toResponse(item));
     }
@@ -89,7 +89,7 @@ public class ItemController {
         @PathVariable UUID id,
         @RequestBody UpdateItemRequest request
     ) {
-        Item item = updateItemPort.execute(
+        ItemView item = updateItemPort.execute(
             id,
             itemWebMapper.toUpdateItemCommand(request)
          );

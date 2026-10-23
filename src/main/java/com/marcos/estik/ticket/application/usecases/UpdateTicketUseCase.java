@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.ticket.application.command.UpdateTicketCommand;
 import com.marcos.estik.ticket.application.ports.in.UpdateTicketPort;
+import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
+import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
+import com.marcos.estik.ticket.application.view.TicketView;
 import com.marcos.estik.ticket.domain.Ticket;
 
 import lombok.RequiredArgsConstructor;
@@ -17,9 +20,11 @@ import lombok.RequiredArgsConstructor;
 public class UpdateTicketUseCase implements UpdateTicketPort {
 
     private final TicketRepositoryPort ticketRepositoryPort;
+    private final LoadTicketFindFacilityByIdPort loadTicketFindFacilityByIdPort;
+    private final LoadTicketFindUserByIdPort loadTicketFindUserByIdPort;
     
     @Override
-    public Ticket execute(UpdateTicketCommand command, UUID ticketId, AuthenticatedUser principal) {
+    public TicketView execute(UpdateTicketCommand command, UUID ticketId, AuthenticatedUser principal) {
         Ticket ticket = ticketRepositoryPort.findTicketById(ticketId);
         ticket.updateDetails(
             principal.id(),
@@ -28,7 +33,12 @@ public class UpdateTicketUseCase implements UpdateTicketPort {
             command.priority(), 
             command.ticketType()
         );
-
-        return ticketRepositoryPort.save(ticket);
+        ticketRepositoryPort.save(ticket);
+        return new TicketView(
+            ticket,
+            loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
+            loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
+            loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId())
+        );
     }
 }

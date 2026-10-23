@@ -10,11 +10,13 @@ import com.marcos.estik.computer.application.command.MoveComputerCommand;
 import com.marcos.estik.computer.application.ports.in.MoveComputerPort;
 import com.marcos.estik.computer.application.ports.out.ComputerRepositoryPort;
 import com.marcos.estik.computer.application.ports.out.LoadComputerCreateComputerHistoryPort;
-import com.marcos.estik.computer.application.ports.out.LoadComputerExistsDepartamentByIdPort;
-import com.marcos.estik.computer.application.ports.out.LoadComputerExistsFacilityByIdPort;
+import com.marcos.estik.computer.application.ports.out.LoadComputerFindDepartamentByIdPort;
+import com.marcos.estik.computer.application.ports.out.LoadComputerFindFacilityByIdPort;
+import com.marcos.estik.computer.application.view.ComputerDepartamentInfo;
+import com.marcos.estik.computer.application.view.ComputerFacilityInfo;
+import com.marcos.estik.computer.application.view.ComputerView;
 import com.marcos.estik.computer.domain.Computer;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service 
@@ -23,18 +25,14 @@ import lombok.RequiredArgsConstructor;
 public class MoveComputerUseCase implements MoveComputerPort {
 
     private final ComputerRepositoryPort computerRepositoryPort;
-    private final LoadComputerExistsDepartamentByIdPort loadComputerExistsDepartamentByIdPort;
-    private final LoadComputerExistsFacilityByIdPort loadComputerExistsFacilityByIdPort;
+    private final LoadComputerFindFacilityByIdPort loadComputerFindFacilityByIdPort;
+    private final LoadComputerFindDepartamentByIdPort loadComputerFindDepartamentByIdPort;
     private final LoadComputerCreateComputerHistoryPort loadComputerCreateComputerHistoryPort;
 
     @Override
-    public Computer execute(UUID computerId, MoveComputerCommand command) {
-        if(!loadComputerExistsDepartamentByIdPort.existsById(command.departamentId())) {
-            throw new EntityNotFoundException("Departament not found");
-        }
-        if(!loadComputerExistsFacilityByIdPort.existsById(command.facilityId())) {
-            throw new EntityNotFoundException("Facility not found");
-        }
+    public ComputerView execute(UUID computerId, MoveComputerCommand command) {
+        ComputerDepartamentInfo departamentInfo = loadComputerFindDepartamentByIdPort.execute(command.departamentId());
+        ComputerFacilityInfo facilityInfo = loadComputerFindFacilityByIdPort.execute(command.facilityId());
 
         Computer computer = computerRepositoryPort.findComputerById(computerId);
         computer.moveTo(command.facilityId(), command.departamentId());
@@ -48,7 +46,10 @@ public class MoveComputerUseCase implements MoveComputerPort {
             )
         );
         
-        return computerRepositoryPort.save(computer);
+        return new ComputerView(
+            computer,
+            facilityInfo,
+            departamentInfo
+        );
     }
-    
 }

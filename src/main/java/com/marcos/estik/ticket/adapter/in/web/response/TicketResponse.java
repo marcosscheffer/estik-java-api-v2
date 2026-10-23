@@ -9,9 +9,9 @@ import com.marcos.estik.ticket.domain.TicketTypeEnum;
 
 public record TicketResponse(
     UUID id,
-    UUID facilityId,
-    UUID requesterId,
-    UUID assigneeId,
+    TicketFacilityResponse facility,
+    TicketUserResponse requester,
+    TicketUserResponse assignee,
     TicketTypeEnum ticketType,
     String title,
     String description,

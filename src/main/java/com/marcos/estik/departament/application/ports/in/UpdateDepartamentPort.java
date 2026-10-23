@@ -3,8 +3,10 @@ package com.marcos.estik.departament.application.ports.in;
 import java.util.UUID;
 
 import com.marcos.estik.departament.application.command.UpdateDepartamentCommand;
-import com.marcos.estik.departament.domain.Departament;
+import com.marcos.estik.departament.application.view.DepartamentView;
 
 public interface UpdateDepartamentPort {
-    Departament execute(UUID departamentId, UpdateDepartamentCommand command);
+
+    DepartamentView execute(UUID departamentId, UpdateDepartamentCommand command);
+    
 }

@@ -17,7 +17,7 @@ import com.marcos.estik.stock.adapter.in.web.response.StockBalanceSummaryRespons
 import com.marcos.estik.stock.application.command.SearchStockBalanceCommand;
 import com.marcos.estik.stock.application.ports.in.FindStockBalanceByIdPort;
 import com.marcos.estik.stock.application.ports.in.SearchStockBalancePort;
-import com.marcos.estik.stock.domain.StockBalance;
+import com.marcos.estik.stock.application.view.StockBalanceView;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +38,7 @@ public class StockBalanceController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
-        PageResult<StockBalance> stockBalancePage = searchStockBalancePort.execute(
+        PageResult<StockBalanceView> stockBalancePage = searchStockBalancePort.execute(
             new SearchStockBalanceCommand(
                 facilityId,
                 departamentId,
@@ -53,7 +53,7 @@ public class StockBalanceController {
     public ResponseEntity<StockBalanceResponse> getStockBalance(
         @PathVariable UUID id
     ) {
-        StockBalance stockBalance = findStockBalanceByIdPort.execute(id);
+        StockBalanceView stockBalance = findStockBalanceByIdPort.execute(id);
         return ResponseEntity.ok(stockBalanceWebMapper.toResponse(stockBalance));
     }
 }

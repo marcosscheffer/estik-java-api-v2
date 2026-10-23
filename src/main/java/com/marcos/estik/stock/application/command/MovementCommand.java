@@ -9,5 +9,4 @@ public record MovementCommand(
     Long quantity,
     String description
 ) {
-    
 }

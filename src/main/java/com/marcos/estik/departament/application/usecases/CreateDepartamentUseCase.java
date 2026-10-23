@@ -5,10 +5,11 @@ import org.springframework.stereotype.Service;
 import com.marcos.estik.departament.application.command.CreateDepartamentCommand;
 import com.marcos.estik.departament.application.ports.in.CreateDepartamentPort;
 import com.marcos.estik.departament.application.ports.out.DepartamentRepositoryPort;
-import com.marcos.estik.departament.application.ports.out.LoadDepartamentExistsFacilityByIdPort;
+import com.marcos.estik.departament.application.ports.out.LoadDepartamentFindFacilityByIdPort;
+import com.marcos.estik.departament.application.view.DepartamentFacilityInfo;
+import com.marcos.estik.departament.application.view.DepartamentView;
 import com.marcos.estik.departament.domain.Departament;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service 
@@ -16,13 +17,11 @@ import lombok.RequiredArgsConstructor;
 public class CreateDepartamentUseCase implements CreateDepartamentPort {
 
     private final DepartamentRepositoryPort departamentRepositoryPort;
-    private final LoadDepartamentExistsFacilityByIdPort loadDepartamentExistsFacilityByIdPort;
+    private final LoadDepartamentFindFacilityByIdPort loadDepartamentFindFacilityByIdPort;
 
     @Override
-    public Departament execute(CreateDepartamentCommand command) {
-        if (!loadDepartamentExistsFacilityByIdPort.existsById(command.facilityId())) {
-            throw new EntityNotFoundException("Facility not found");
-        }
+    public DepartamentView execute(CreateDepartamentCommand command) {
+        DepartamentFacilityInfo facilityInfo = loadDepartamentFindFacilityByIdPort.execute(command.facilityId());
 
         Departament departament = Departament.create(
             command.facilityId(), 
@@ -32,7 +31,9 @@ public class CreateDepartamentUseCase implements CreateDepartamentPort {
 
         departamentRepositoryPort.save(departament);
 
-        return departament;
+        return new DepartamentView(
+            departament,
+            facilityInfo
+        );
     }
-    
 }

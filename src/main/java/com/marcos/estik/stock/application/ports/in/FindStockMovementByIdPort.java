@@ -2,8 +2,8 @@ package com.marcos.estik.stock.application.ports.in;
 
 import java.util.UUID;
 
-import com.marcos.estik.stock.domain.StockMovement;
+import com.marcos.estik.stock.application.view.StockMovementView;
 
 public interface FindStockMovementByIdPort {
-    StockMovement execute(UUID id);
+    StockMovementView execute(UUID id);
 }

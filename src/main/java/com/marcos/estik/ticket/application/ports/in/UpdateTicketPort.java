@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.ticket.application.command.UpdateTicketCommand;
-import com.marcos.estik.ticket.domain.Ticket;
+import com.marcos.estik.ticket.application.view.TicketView;
 
 public interface UpdateTicketPort {
-    Ticket execute(UpdateTicketCommand command, UUID ticketId, AuthenticatedUser principal);
+    TicketView execute(UpdateTicketCommand command, UUID ticketId, AuthenticatedUser principal);
 }
