@@ -5,11 +5,13 @@ import java.util.UUID;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.ticket.domain.PriorityEnum;
 import com.marcos.estik.ticket.domain.StatusEnum;
+import com.marcos.estik.ticket.domain.TicketTypeEnum;
 
 public record SearchTicketsCommand(
     String title,
     StatusEnum status,
     PriorityEnum priority,
+    TicketTypeEnum type,
     UUID facilityId,
     UUID requesterId,
     UUID assigneeId,

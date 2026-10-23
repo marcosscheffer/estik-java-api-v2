@@ -29,6 +29,7 @@ public class SearchTicketsUseCase implements SearchTicketsPort {
             command.requesterId(),
             command.assigneeId(),
             command.priority(),
+            command.type(),
             command.status(),
             command.page()
         );

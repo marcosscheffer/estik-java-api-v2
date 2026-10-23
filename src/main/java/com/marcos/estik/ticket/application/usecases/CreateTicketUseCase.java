@@ -3,6 +3,7 @@ package com.marcos.estik.ticket.application.usecases;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.ticket.application.command.CreateTicketCommand;
 import com.marcos.estik.ticket.application.ports.in.CreateTicketPort;
@@ -11,7 +12,10 @@ import com.marcos.estik.ticket.application.view.TicketFacilityInfo;
 import com.marcos.estik.ticket.application.view.TicketView;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
+import com.marcos.estik.ticket.application.ports.out.TicketHistoryRepositoryPort;
+import com.marcos.estik.ticket.domain.StatusEnum;
 import com.marcos.estik.ticket.domain.Ticket;
+import com.marcos.estik.ticket.domain.TicketHistory;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,10 +24,12 @@ import lombok.RequiredArgsConstructor;
 public class CreateTicketUseCase implements CreateTicketPort {
     
     private final TicketRepositoryPort ticketRepositoryPort;
+    private final TicketHistoryRepositoryPort ticketHistoryRepositoryPort;
     private final LoadTicketFindFacilityByIdPort loadTicketFindFacilityByIdPort;
     private final LoadTicketFindUserByIdPort loadTicketFindUserByIdPort;
 
     @Override
+    @Transactional 
     public TicketView execute(CreateTicketCommand command, UUID requesterId) {
         TicketFacilityInfo facilityInfo = loadTicketFindFacilityByIdPort.execute(command.facilityId());
         Ticket ticket = Ticket.create(
@@ -35,12 +41,19 @@ public class CreateTicketUseCase implements CreateTicketPort {
             command.priority()
         );
 
+        TicketHistory ticketHistory = TicketHistory.create(
+            ticket.getId(), 
+            StatusEnum.OPEN, 
+            ticket.getTicketType()
+        );
+
         ticketRepositoryPort.save(ticket);
+        ticketHistoryRepositoryPort.save(ticketHistory);
 
         return new TicketView(
             ticket,
             loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
-            loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
+            null,
             facilityInfo
         );
     }

@@ -14,6 +14,7 @@ import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
 import com.marcos.estik.ticket.domain.PriorityEnum;
 import com.marcos.estik.ticket.domain.StatusEnum;
 import com.marcos.estik.ticket.domain.Ticket;
+import com.marcos.estik.ticket.domain.TicketTypeEnum;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class TicketRepositoryAdapter implements TicketRepositoryPort {
         UUID requesterId,
         UUID assigneeId,
         PriorityEnum priority,
+        TicketTypeEnum type,
         StatusEnum status,
         PageQuery page
     ) {
@@ -49,6 +51,7 @@ public class TicketRepositoryAdapter implements TicketRepositoryPort {
             TicketSpecification.requesterIs(requesterId),
             TicketSpecification.assigneeIs(assigneeId),
             TicketSpecification.priorityIs(priority),
+            TicketSpecification.typeIs(type),
             TicketSpecification.statusIs(status)
         );
 

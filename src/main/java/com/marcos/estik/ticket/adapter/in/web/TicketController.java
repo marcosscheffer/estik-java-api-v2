@@ -15,12 +15,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
+import com.marcos.estik.ticket.adapter.in.web.mapper.TicketHistoryWebMapper;
 import com.marcos.estik.ticket.adapter.in.web.mapper.TicketWebMapper;
 import com.marcos.estik.ticket.adapter.in.web.request.CreateTicketRequest;
 import com.marcos.estik.ticket.adapter.in.web.request.UpdateTicketRequest;
+import com.marcos.estik.ticket.adapter.in.web.response.TicketHistoryResponse;
 import com.marcos.estik.ticket.adapter.in.web.response.TicketResponse;
 import com.marcos.estik.ticket.adapter.in.web.response.TicketSummaryResponse;
 import com.marcos.estik.ticket.application.command.CreateTicketCommand;
+import com.marcos.estik.ticket.application.command.SearchTicketHistoriesCommand;
 import com.marcos.estik.ticket.application.command.SearchTicketsCommand;
 import com.marcos.estik.ticket.application.ports.in.AssumeTicketPort;
 import com.marcos.estik.ticket.application.ports.in.CancelTicketPort;
@@ -29,11 +32,14 @@ import com.marcos.estik.ticket.application.ports.in.DeleteTicketByIdPort;
 import com.marcos.estik.ticket.application.ports.in.FindTicketByIdPort;
 import com.marcos.estik.ticket.application.ports.in.ReopenTicketPort;
 import com.marcos.estik.ticket.application.ports.in.ResolveTicketPort;
+import com.marcos.estik.ticket.application.ports.in.SearchTicketHistoryPort;
 import com.marcos.estik.ticket.application.ports.in.SearchTicketsPort;
 import com.marcos.estik.ticket.application.ports.in.UpdateTicketPort;
 import com.marcos.estik.ticket.application.view.TicketView;
 import com.marcos.estik.ticket.domain.PriorityEnum;
 import com.marcos.estik.ticket.domain.StatusEnum;
+import com.marcos.estik.ticket.domain.TicketHistory;
+import com.marcos.estik.ticket.domain.TicketTypeEnum;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -59,12 +65,15 @@ public class TicketController {
     private final ResolveTicketPort resolveTicketPort;
     private final CancelTicketPort cancelTicketPort;
     private final ReopenTicketPort reopenTicketPort;
+    private final SearchTicketHistoryPort searchTicketHistoryPort;
+    private final TicketHistoryWebMapper ticketHistoryWebMapper;
 
     @GetMapping
     public ResponseEntity<PageResult<TicketSummaryResponse>> getTickets(
         @RequestParam(defaultValue = "") String title,
         @RequestParam(required = false) StatusEnum status,
         @RequestParam(required = false) PriorityEnum priority,
+        @RequestParam(required = false) TicketTypeEnum type,
         @RequestParam(required = false) UUID facilityId,
         @RequestParam(required = false) UUID requesterId,
         @RequestParam(required = false) UUID assigneeId,
@@ -76,6 +85,7 @@ public class TicketController {
                 title,
                 status,
                 priority,
+                type,
                 facilityId,
                 requesterId,
                 assigneeId,
@@ -172,5 +182,25 @@ public class TicketController {
     ) {
         deleteTicketByIdPort.execute(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/histories")
+    public ResponseEntity<PageResult<TicketHistoryResponse>> getTicketHistories(
+        @PathVariable UUID id,
+        @RequestParam(required = false) StatusEnum status,
+        @RequestParam(required = false) TicketTypeEnum type,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "20") int size
+    ) {
+        PageResult<TicketHistory> ticketHistories = searchTicketHistoryPort.execute(
+            id, 
+            new SearchTicketHistoriesCommand(
+                status,
+                type,
+                new PageQuery(page, size)
+            )
+        );
+
+        return ResponseEntity.ok(ticketHistories.map(ticketHistoryWebMapper::toResponse));
     }
 }

@@ -7,6 +7,7 @@ import com.marcos.estik.shared.application.pagination.PageResult;
 import com.marcos.estik.ticket.domain.PriorityEnum;
 import com.marcos.estik.ticket.domain.StatusEnum;
 import com.marcos.estik.ticket.domain.Ticket;
+import com.marcos.estik.ticket.domain.TicketTypeEnum;
 
 public interface TicketRepositoryPort {
     Ticket save(Ticket ticket);
@@ -17,6 +18,7 @@ public interface TicketRepositoryPort {
         UUID requesterId,
         UUID assigneeId,
         PriorityEnum priority,
+        TicketTypeEnum type,
         StatusEnum status,
         PageQuery page
     );

@@ -6,7 +6,7 @@ CREATE TABLE stock_balance (
     quantity BIGINT NOT NULL DEFAULT 0,
     updated_at TIMESTAMP NOT NULL DEFAULT now(),
 
-    CONSTRAINT uq_stock_balanceitem_id_facility_id_departament_id UNIQUE(item_id, facility_id, departament_id)
+    CONSTRAINT uq_stock_balance_item_id_facility_id_departament_id UNIQUE(item_id, facility_id, departament_id)
 );
 
 CREATE TABLE stock_movement (

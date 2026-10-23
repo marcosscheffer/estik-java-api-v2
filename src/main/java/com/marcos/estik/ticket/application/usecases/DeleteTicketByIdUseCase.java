@@ -19,6 +19,4 @@ public class DeleteTicketByIdUseCase implements DeleteTicketByIdPort {
     public void execute(UUID id) {
         ticketRepositoryPort.deleteTicketById(id);
     }
-
-    
 }

@@ -3,14 +3,18 @@ package com.marcos.estik.ticket.application.usecases;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.ticket.application.ports.in.AssumeTicketPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
+import com.marcos.estik.ticket.application.ports.out.TicketHistoryRepositoryPort;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
 import com.marcos.estik.ticket.application.view.TicketView;
+import com.marcos.estik.ticket.domain.StatusEnum;
 import com.marcos.estik.ticket.domain.Ticket;
+import com.marcos.estik.ticket.domain.TicketHistory;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,14 +23,23 @@ import lombok.RequiredArgsConstructor;
 public class AssumeTicketUseCase implements AssumeTicketPort {
 
     private final TicketRepositoryPort ticketRepositoryPort;
+    private final TicketHistoryRepositoryPort ticketHistoryRepositoryPort;
     private final LoadTicketFindFacilityByIdPort loadTicketFindFacilityByIdPort;
     private final LoadTicketFindUserByIdPort loadTicketFindUserByIdPort;
 
     @Override
+    @Transactional 
     public TicketView execute(UUID ticketId, AuthenticatedUser principal) {
         Ticket ticket = ticketRepositoryPort.findTicketById(ticketId);
+        TicketHistory ticketHistory = TicketHistory.create(
+            ticket.getId(), 
+            StatusEnum.PROGRESS, 
+            ticket.getTicketType()
+        );
+
         ticket.assignTo(principal.id());
         ticketRepositoryPort.save(ticket);
+        ticketHistoryRepositoryPort.save(ticketHistory);
         return new TicketView(
             ticket,
             loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
