@@ -32,13 +32,15 @@ public class SearchStockMovementUseCase implements SearchStockMovementPort {
             command.page()
         );
 
+
+
         return stockMovements.map(stockMovement -> new StockMovementView(
             stockMovement,
             loadStockFindItemByIdPort.execute(stockMovement.getItemId()),
             loadStockFindFacilityByIdPort.execute(stockMovement.getFacilitySourceId()),
-            loadStockFindFacilityByIdPort.execute(stockMovement.getFacilityDestinationId()),
+            stockMovement.getFacilityDestinationId() == null ? null : loadStockFindFacilityByIdPort.execute(stockMovement.getFacilityDestinationId()),
             loadStockFindDepartamentByIdPort.execute(stockMovement.getDepartamentSourceId()),
-            loadStockFindDepartamentByIdPort.execute(stockMovement.getDepartamentDestinationId())
+            stockMovement.getDepartamentDestinationId() == null ? null : loadStockFindDepartamentByIdPort.execute(stockMovement.getDepartamentDestinationId())
         ));
     }
 }

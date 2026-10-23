@@ -30,6 +30,7 @@ import com.marcos.estik.departament.application.view.DepartamentView;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController 
@@ -75,7 +76,7 @@ public class DepartamentController {
 
     @PostMapping
     public ResponseEntity<DepartamentResponse> createDepartament(
-        @RequestBody CreateDepartamentRequest request,
+        @RequestBody @Valid CreateDepartamentRequest request,
         UriComponentsBuilder uriBuilder
     ) {
         DepartamentView departament = createDepartamentPort.execute(

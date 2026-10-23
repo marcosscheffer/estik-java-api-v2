@@ -28,6 +28,7 @@ import com.marcos.estik.item.application.view.ItemView;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController 
@@ -73,7 +74,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<ItemResponse> createItem(
-        @RequestBody CreateItemRequest request,
+        @RequestBody @Valid CreateItemRequest request,
         UriComponentsBuilder uriBuilder
     ) {
         ItemView item = createItemPort.execute(itemWebMapper.toCreateItemCommand(request));

@@ -8,6 +8,7 @@ import com.marcos.estik.stock.application.ports.out.LoadStockFindDepartamentById
 import com.marcos.estik.stock.application.ports.out.LoadStockFindFacilityByIdPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindItemByIdPort;
 import com.marcos.estik.stock.application.ports.out.StockBalanceRepositoryPort;
+import com.marcos.estik.stock.application.ports.out.StockMovementRepositoryPort;
 import com.marcos.estik.stock.application.view.StockDepartamentInfo;
 import com.marcos.estik.stock.application.view.StockFacilityInfo;
 import com.marcos.estik.stock.application.view.StockItemInfo;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class TransferStockUseCase implements TransferStockPort {
 
     private final StockBalanceRepositoryPort stockBalanceRepositoryPort;
+    private final StockMovementRepositoryPort stockMovementRepositoryPort;
     private final LoadStockFindFacilityByIdPort loadStockFindFacilityByIdPort;
     private final LoadStockFindDepartamentByIdPort loadStockFindDepartamentByIdPort;
     private final LoadStockFindItemByIdPort loadStockFindItemByIdPort;
@@ -31,10 +33,11 @@ public class TransferStockUseCase implements TransferStockPort {
         StockBalance stockBalanceSource = stockBalanceRepositoryPort.findById(command.stockBalanceId());
         StockFacilityInfo facilitySourceInfo = loadStockFindFacilityByIdPort.execute(stockBalanceSource.getFacilityId());
         StockDepartamentInfo departamentSourceInfo = loadStockFindDepartamentByIdPort.execute(stockBalanceSource.getDepartamentId());
-
+        
         StockFacilityInfo facilityDestinationInfo = loadStockFindFacilityByIdPort.execute(command.facilityDestinationId());
         StockDepartamentInfo departamentDestinationInfo = loadStockFindDepartamentByIdPort.execute(command.departamentDestinationId());
         StockItemInfo itemInfo = loadStockFindItemByIdPort.execute(command.itemId());
+        System.out.println("ola");
         StockBalance stockBalanceDestination;
 
 
@@ -58,21 +61,21 @@ public class TransferStockUseCase implements TransferStockPort {
             );
         }
 
-
         stockBalanceSource.exit(command.quantity());
         stockBalanceDestination.entry(command.quantity());
         StockMovement stockMovement = StockMovement.transfer(
             itemInfo.id(), 
             facilitySourceInfo.id(), 
             departamentSourceInfo.id(), 
-            facilitySourceInfo.id(), 
             facilityDestinationInfo.id(), 
+            departamentDestinationInfo.id(), 
             command.quantity(), 
             command.description()
         );
 
         stockBalanceRepositoryPort.save(stockBalanceSource);
         stockBalanceRepositoryPort.save(stockBalanceDestination);
+        stockMovementRepositoryPort.save(stockMovement);
 
         return new StockMovementView(
             stockMovement,

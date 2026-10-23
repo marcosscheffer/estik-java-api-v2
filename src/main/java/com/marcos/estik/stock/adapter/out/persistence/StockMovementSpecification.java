@@ -12,8 +12,8 @@ public final class StockMovementSpecification {
             ? Specification.unrestricted()
             : (root, q, cb) -> cb.or(
                 cb.equal(
-                    root.get("departamentSource"), departamentId), 
-                    cb.equal(root.get("departamentDestination"), departamentId
+                    root.get("departamentSourceId"), departamentId), 
+                    cb.equal(root.get("departamentDestinationId"), departamentId
                 )
             );
     }
@@ -23,8 +23,8 @@ public final class StockMovementSpecification {
             ? Specification.unrestricted()
             : (root, q, cb) -> cb.or(
                 cb.equal(
-                    root.get("facilitySource"), facilityId), 
-                    cb.equal(root.get("facilityDestination"), facilityId
+                    root.get("facilitySourceId"), facilityId), 
+                    cb.equal(root.get("facilityDestinationId"), facilityId
                 )
             );
     }

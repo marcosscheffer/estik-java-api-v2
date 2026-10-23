@@ -32,7 +32,7 @@ public class StockBalanceController {
 
     @GetMapping
     public ResponseEntity<PageResult<StockBalanceSummaryResponse>> getAllStockBalance(
-        @RequestParam(required = true) UUID facilityId,
+        @RequestParam(required = false) UUID facilityId,
         @RequestParam(required = false) UUID departamentId,
         @RequestParam(required = false) UUID itemId,
         @RequestParam(defaultValue = "0") int page,
