@@ -1,14 +1,17 @@
 package com.marcos.estik.ticket.application.usecases;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.security.AuthenticatedUser;
+import com.marcos.estik.shared.domain.event.TicketStatusChangedEvent;
 import com.marcos.estik.ticket.application.ports.in.AssumeTicketPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
+import com.marcos.estik.ticket.application.ports.out.TicketEventPublisherPort;
 import com.marcos.estik.ticket.application.ports.out.TicketHistoryRepositoryPort;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
 import com.marcos.estik.ticket.application.view.TicketView;
@@ -26,6 +29,7 @@ public class AssumeTicketUseCase implements AssumeTicketPort {
     private final TicketHistoryRepositoryPort ticketHistoryRepositoryPort;
     private final LoadTicketFindFacilityByIdPort loadTicketFindFacilityByIdPort;
     private final LoadTicketFindUserByIdPort loadTicketFindUserByIdPort;
+    private final TicketEventPublisherPort ticketEventPublisherPort;
 
     @Override
     @Transactional 
@@ -40,6 +44,18 @@ public class AssumeTicketUseCase implements AssumeTicketPort {
         ticket.assignTo(principal.id());
         ticketRepositoryPort.save(ticket);
         ticketHistoryRepositoryPort.save(ticketHistory);
+        ticketEventPublisherPort.execute(
+            new TicketStatusChangedEvent(
+                ticket.getId(),
+                ticket.getTitle(),
+                ticket.getRequesterId(),
+                ticket.getAssigneeId(),
+                principal.id(),
+                ticket.getStatus().name(),
+                Instant.now()
+            )
+        );
+
         return new TicketView(
             ticket,
             loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),

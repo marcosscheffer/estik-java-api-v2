@@ -1,10 +1,12 @@
 package com.marcos.estik.ticket.application.usecases;
 
-import java.util.UUID;
+import java.time.Instant;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.marcos.estik.security.AuthenticatedUser;
+import com.marcos.estik.shared.domain.event.TicketStatusChangedEvent;
 import com.marcos.estik.ticket.application.command.CreateTicketCommand;
 import com.marcos.estik.ticket.application.ports.in.CreateTicketPort;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
@@ -12,6 +14,7 @@ import com.marcos.estik.ticket.application.view.TicketFacilityInfo;
 import com.marcos.estik.ticket.application.view.TicketView;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
+import com.marcos.estik.ticket.application.ports.out.TicketEventPublisherPort;
 import com.marcos.estik.ticket.application.ports.out.TicketHistoryRepositoryPort;
 import com.marcos.estik.ticket.domain.StatusEnum;
 import com.marcos.estik.ticket.domain.Ticket;
@@ -27,16 +30,17 @@ public class CreateTicketUseCase implements CreateTicketPort {
     private final TicketHistoryRepositoryPort ticketHistoryRepositoryPort;
     private final LoadTicketFindFacilityByIdPort loadTicketFindFacilityByIdPort;
     private final LoadTicketFindUserByIdPort loadTicketFindUserByIdPort;
+    private final TicketEventPublisherPort ticketEventPublisherPort;
 
     @Override
     @Transactional 
-    public TicketView execute(CreateTicketCommand command, UUID requesterId) {
+    public TicketView execute(CreateTicketCommand command, AuthenticatedUser principal) {
         TicketFacilityInfo facilityInfo = loadTicketFindFacilityByIdPort.execute(command.facilityId());
         Ticket ticket = Ticket.create(
             command.title(),
             command.description(),
             command.ticketType(),
-            requesterId, 
+            principal.id(), 
             command.facilityId(),
             command.priority()
         );
@@ -49,6 +53,18 @@ public class CreateTicketUseCase implements CreateTicketPort {
 
         ticketRepositoryPort.save(ticket);
         ticketHistoryRepositoryPort.save(ticketHistory);
+
+        ticketEventPublisherPort.execute(
+            new TicketStatusChangedEvent(
+                ticket.getId(),
+                ticket.getTitle(),
+                ticket.getRequesterId(),
+                ticket.getAssigneeId(),
+                principal.id(),
+                ticket.getStatus().name(),
+                Instant.now()
+            )
+        );
 
         return new TicketView(
             ticket,

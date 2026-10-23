@@ -113,7 +113,7 @@ public class TicketController {
         UriComponentsBuilder uriBuilder
     ) {
         CreateTicketCommand command = ticketWebMapper.toCreateTicketCommand(request);
-        TicketView ticket = createTicketPort.execute(command, principal.id());
+        TicketView ticket = createTicketPort.execute(command, principal);
         URI uri = uriBuilder
             .path("/tickets/{id}")
             .buildAndExpand(ticket.ticket().getId())
