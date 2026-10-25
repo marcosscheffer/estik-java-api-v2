@@ -11,10 +11,12 @@ public interface NotificationRepositoryPort {
     
     Notification save(Notification notification);
 
+    List<Notification> findByRecipientIdAndNotRead(UUID recipientId);
+
     PageResult<Notification> searchNotification(UUID recipientId, PageQuery page);
 
-    List<Notification> saveAll(UUID recipientId);
+    List<Notification> saveAll(List<Notification> notifications);
 
-    int countUnread(UUID recipientId);
+    Notification findById(UUID notificationId);
     
 }

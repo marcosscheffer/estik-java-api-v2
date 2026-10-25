@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.security.AuthenticatedUser;
-import com.marcos.estik.shared.domain.event.TicketStatusChangedEvent;
+import com.marcos.estik.shared.domain.event.TicketNotifyEvent;
 import com.marcos.estik.ticket.application.command.CreateTicketCommand;
 import com.marcos.estik.ticket.application.ports.in.CreateTicketPort;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
@@ -55,12 +55,13 @@ public class CreateTicketUseCase implements CreateTicketPort {
         ticketHistoryRepositoryPort.save(ticketHistory);
 
         ticketEventPublisherPort.execute(
-            new TicketStatusChangedEvent(
+            new TicketNotifyEvent(
                 ticket.getId(),
                 ticket.getTitle(),
                 ticket.getRequesterId(),
                 ticket.getAssigneeId(),
                 principal.id(),
+                ticket.getTicketType().name(),
                 ticket.getStatus().name(),
                 Instant.now()
             )

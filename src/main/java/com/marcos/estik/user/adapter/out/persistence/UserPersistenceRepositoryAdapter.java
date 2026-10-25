@@ -1,5 +1,6 @@
 package com.marcos.estik.user.adapter.out.persistence;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
+import com.marcos.estik.shared.domain.user.RoleEnum;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
 import com.marcos.estik.user.domain.User;
 
@@ -69,5 +71,10 @@ public class UserPersistenceRepositoryAdapter implements UserRepositoryPort {
     @Override
     public Boolean existsById(UUID id) {
         return jpaUserRepository.existsById(id);
+    }
+
+    @Override
+    public List<User> findByRole(RoleEnum role) {
+        return jpaUserRepository.findByRole(role.name());
     }
 }

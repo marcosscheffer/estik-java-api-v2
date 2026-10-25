@@ -8,6 +8,6 @@ import com.marcos.estik.shared.application.pagination.PageResult;
 
 public interface SearchNotificationsPort {
     
-    PageResult<Notification> execute(UUID recipientId, PageQuery page);
+    PageResult<Notification> execute(UUID principalId, PageQuery page);
 
 }

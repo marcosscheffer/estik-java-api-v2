@@ -1,10 +1,8 @@
 package com.marcos.estik.notification.application.ports.in;
 
-import com.marcos.estik.notification.application.command.CreateNotificationCommand;
+import com.marcos.estik.shared.domain.event.TicketNotifyEvent;
 
 public interface CreateNotificationPort {
 
-    void execute(
-        CreateNotificationCommand command
-    );
+    void execute(TicketNotifyEvent event);
 }

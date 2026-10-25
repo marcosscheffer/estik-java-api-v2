@@ -1,4 +1,4 @@
-CREATE TABLE notification(
+CREATE TABLE notifications(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     recipient_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     type VARCHAR(30) NOT NULL,
