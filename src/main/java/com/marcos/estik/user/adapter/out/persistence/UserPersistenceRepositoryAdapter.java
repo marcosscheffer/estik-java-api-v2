@@ -75,6 +75,6 @@ public class UserPersistenceRepositoryAdapter implements UserRepositoryPort {
 
     @Override
     public List<User> findByRole(RoleEnum role) {
-        return jpaUserRepository.findByRole(role.name());
+        return jpaUserRepository.findByRole(role);
     }
 }

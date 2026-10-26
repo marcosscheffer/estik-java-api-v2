@@ -19,8 +19,7 @@ public class FindUserByRoleUseCase implements FindUserByRolePort {
 
     @Override
     public List<User> execute(RoleEnum role) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'execute'");
+        return userRepositoryPort.findByRole(role);
     }
     
 }
