@@ -14,6 +14,7 @@ import com.marcos.estik.auth.application.port.in.LoginPort;
 import com.marcos.estik.auth.application.port.in.RefreshPort;
 import com.marcos.estik.auth.application.port.in.RegisterPort;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
+@SecurityRequirements()
 @RestController 
 @RequestMapping("/auth")
 @RequiredArgsConstructor 
