@@ -1,6 +1,5 @@
 package com.marcos.estik.security;
 
-import org.apache.tomcat.util.net.DispatchType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -38,6 +37,7 @@ public class SecurityConfig {
                     "/auth/**",
                     "/error", 
                     "/v3/api-docs/**", 
+                    "/ws/**",
                     "/swagger-ui/**", 
                     "/swagger-ui.html"
                 ).permitAll()
@@ -76,7 +76,8 @@ public class SecurityConfig {
                     "/tickets/{id}",
                     "/tickets/{id}/cancel",
                     "/tickets/{id}/histories",
-                    "/tickets/{id}/reopen"
+                    "/tickets/{id}/reopen",
+                    "/tickets/{id}/messages"
                 ).hasRole("USER")
 
                 // facilities for role USER

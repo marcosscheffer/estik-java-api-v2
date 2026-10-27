@@ -2,7 +2,6 @@ package com.marcos.estik.ticket.adapter.out.persistence;
 
 import java.util.UUID;
 
-import org.hibernate.query.SortDirection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
