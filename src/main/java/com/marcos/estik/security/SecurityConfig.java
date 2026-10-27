@@ -1,7 +1,6 @@
 package com.marcos.estik.security;
 
-import java.lang.reflect.Method;
-
+import org.apache.tomcat.util.net.DispatchType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 
 @Configuration 
@@ -32,15 +32,38 @@ public class SecurityConfig {
                 )
             )
             .authorizeHttpRequests(auth -> auth
+                .dispatcherTypeMatchers(DispatcherType.ASYNC, DispatcherType.ERROR).permitAll()
+
                 .requestMatchers(
                     "/auth/**",
-                    "/notifications",
-                    "/notifications/**", 
                     "/error", 
                     "/v3/api-docs/**", 
                     "/swagger-ui/**", 
                     "/swagger-ui.html"
                 ).permitAll()
+
+                .requestMatchers(
+                    "/notifications/**"
+
+                ).hasRole("USER")
+
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/computers/**",
+                    
+                    "/histories/**"
+                ).hasRole("USER")
+
+                // stock for role USER
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/stock/balances/**"
+                ).hasRole("USER")
+                
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/stock/movements/**"
+                ).hasRole("USER")
 
                 // users for role USER
                 .requestMatchers(

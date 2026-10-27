@@ -57,7 +57,7 @@ public class StockBalanceRepositoryAdapter implements StockBalanceRepositoryPort
 
         Page<StockBalanceEntity> stockBalancePage = jpaStockBalanceRepository.findAll(
             spec, 
-            PageRequest.of(page.page(), page.size(), Sort.by("updatedAt"))
+            PageRequest.of(page.page(), page.size(), Sort.by(Sort.Direction.DESC, "updatedAt"))
         );
 
         return new PageResult<StockBalance>(

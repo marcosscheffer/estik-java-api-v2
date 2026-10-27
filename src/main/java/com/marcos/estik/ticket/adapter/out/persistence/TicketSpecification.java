@@ -27,7 +27,7 @@ public final class TicketSpecification {
     public static Specification<TicketEntity> typeIs(TicketTypeEnum type) {
         return type == null
             ? Specification.unrestricted()
-            : (root, q, cb) -> cb.equal(root.get("type"), type);
+            : (root, q, cb) -> cb.equal(root.get("ticketType"), type);
     }
 
     public static Specification<TicketEntity> priorityIs(PriorityEnum priority) {

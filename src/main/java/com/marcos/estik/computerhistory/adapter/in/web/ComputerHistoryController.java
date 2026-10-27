@@ -15,7 +15,7 @@ import com.marcos.estik.computerhistory.adapter.in.web.response.ComputerHistoryS
 import com.marcos.estik.computerhistory.application.command.SearchComputerHistoryCommand;
 import com.marcos.estik.computerhistory.application.ports.in.FindComputerHistoryByIdPort;
 import com.marcos.estik.computerhistory.application.ports.in.SearchComputerHistoryPort;
-import com.marcos.estik.computerhistory.domain.ComputerHistory;
+import com.marcos.estik.computerhistory.application.view.ComputerHistoryView;
 import com.marcos.estik.computerhistory.domain.DirectionEnum;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
@@ -39,7 +39,7 @@ public class ComputerHistoryController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
-        PageResult<ComputerHistory> computerHistories = searchComputerHistoryPort.execute(
+        PageResult<ComputerHistoryView> computerHistories = searchComputerHistoryPort.execute(
             new SearchComputerHistoryCommand(
                 direction,
                 computerId,
@@ -55,7 +55,7 @@ public class ComputerHistoryController {
     public ResponseEntity<ComputerHistoryResponse> getComputerHistory(
         @PathVariable UUID id
     ) {
-        ComputerHistory computerHistory = findComputerHistoryByIdPort.execute(id);
+        ComputerHistoryView computerHistory = findComputerHistoryByIdPort.execute(id);
 
         return ResponseEntity.ok(computerHistoryWebMapper.toResponse(computerHistory));
     }

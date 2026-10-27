@@ -20,6 +20,7 @@ public class MarkReadNotificationUseCase implements MarkReadNotificationPort {
     public void execute(UUID notificationId, UUID principalId) {
         Notification notification = notificationRepositoryPort.findById(notificationId);
         notification.markAsRead(principalId);
+        notificationRepositoryPort.save(notification);
     }
     
 }

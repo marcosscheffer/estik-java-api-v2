@@ -6,6 +6,8 @@ import com.marcos.estik.computerhistory.adapter.out.departament.LoadComputerHist
 import com.marcos.estik.computerhistory.application.command.CreateComputerHistoryCommand;
 import com.marcos.estik.computerhistory.application.ports.in.CreateComputerHistoryPort;
 import com.marcos.estik.computerhistory.application.ports.out.ComputerHistoryRepositoryPort;
+import com.marcos.estik.computerhistory.application.ports.out.LoadComputerHistoryFindComputerByIdPort;
+import com.marcos.estik.computerhistory.application.view.ComputerHistoryView;
 import com.marcos.estik.computerhistory.domain.ComputerHistory;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -17,10 +19,11 @@ public class CreateComputerHistoryUseCase implements CreateComputerHistoryPort {
 
     private final ComputerHistoryRepositoryPort computerHistoryRepositoryPort;
     private final LoadComputerHistoryExistsDepartamentByIdAdapter loadComputerHistoryExistsDepartamentByIdPort;
+    private final LoadComputerHistoryFindComputerByIdPort loadComputerHistoryFindComputerByIdPort;
 
 
     @Override
-    public ComputerHistory execute(CreateComputerHistoryCommand command) {
+    public ComputerHistoryView execute(CreateComputerHistoryCommand command) {
         if(!loadComputerHistoryExistsDepartamentByIdPort.existsById(command.departamentId())) {
             throw new EntityNotFoundException("Departament not found");
         }
@@ -32,6 +35,10 @@ public class CreateComputerHistoryUseCase implements CreateComputerHistoryPort {
         );
 
         computerHistoryRepositoryPort.save(computerHistory);
-        return computerHistory;
+        
+        return new ComputerHistoryView(
+            computerHistory,
+            loadComputerHistoryFindComputerByIdPort.execute(computerHistory.getComputerId())
+        );
     }
 }

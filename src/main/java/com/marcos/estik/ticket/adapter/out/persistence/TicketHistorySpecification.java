@@ -1,5 +1,7 @@
 package com.marcos.estik.ticket.adapter.out.persistence;
 
+import java.util.UUID;
+
 import org.springframework.data.jpa.domain.Specification;
 
 import com.marcos.estik.ticket.domain.StatusEnum;
@@ -17,5 +19,11 @@ public final class TicketHistorySpecification {
         return type == null 
             ? Specification.unrestricted()
             : (root, q, cb) -> cb.equal(root.get("type"), type);
+    }
+
+    public static Specification<TicketHistoryEntity> ticketIs(UUID ticketId) {
+        return ticketId == null 
+            ? Specification.unrestricted()
+            : (root, q, cb) -> cb.equal(root.get("ticketId"), ticketId);
     }
 }

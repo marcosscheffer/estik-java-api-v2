@@ -94,7 +94,7 @@ public class TicketEventListener {
                     event.ticketId(),
                     "TICKET_RESOLVED",
                     "ticket resolved",
-                    "Your ticket '" + event.ticketTitle() + "resolved by " + event.assigneeId(),
+                    "Your ticket '" + event.ticketTitle() + "' resolved by " + event.assigneeId(),
                     event.actorId()
                 );
                 break;

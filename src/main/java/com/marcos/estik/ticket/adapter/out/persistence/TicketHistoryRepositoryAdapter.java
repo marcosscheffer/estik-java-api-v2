@@ -36,12 +36,13 @@ public class TicketHistoryRepositoryAdapter implements TicketHistoryRepositoryPo
             PageQuery page) {
         Specification<TicketHistoryEntity> spec = Specification.allOf(
             TicketHistorySpecification.typeIs(type),
-            TicketHistorySpecification.statusIs(status)
+            TicketHistorySpecification.statusIs(status),
+            TicketHistorySpecification.ticketIs(ticketId)
         );
 
         Page<TicketHistoryEntity> ticketHistories = jpaTicketHistoryRepository.findAll(
             spec, 
-            PageRequest.of(page.page(), page.size(), Sort.by("createdAt"))
+            PageRequest.of(page.page(), page.size(), Sort.by(Sort.Direction.DESC, "createdAt"))
         );
 
         return new PageResult<TicketHistory>(

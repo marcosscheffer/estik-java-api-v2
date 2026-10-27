@@ -2,6 +2,7 @@ package com.marcos.estik.ticket.adapter.out.persistence;
 
 import java.util.UUID;
 
+import org.hibernate.query.SortDirection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -57,7 +58,7 @@ public class TicketRepositoryAdapter implements TicketRepositoryPort {
 
         Page<TicketEntity> tickets = jpaTicketRepository.findAll(
             spec, 
-            PageRequest.of(page.page(), page.size(), Sort.by("createdAt"))
+            PageRequest.of(page.page(), page.size(), Sort.by(Sort.Direction.DESC, "createdAt"))
         );
 
         return new PageResult<Ticket>(

@@ -54,7 +54,7 @@ public class StockMovementRepositoryAdapter implements StockMovementRepositoryPo
 
         Page<StockMovementEntity> stockMovementPage = jpaStockMovementRepository.findAll(
             spec,
-            PageRequest.of(page.page(), page.size(), Sort.by("createdAt"))
+            PageRequest.of(page.page(), page.size(), Sort.by(Sort.Direction.DESC, "createdAt"))
         );
 
         return new PageResult<StockMovement>(

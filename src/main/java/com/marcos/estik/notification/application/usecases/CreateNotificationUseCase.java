@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.notification.application.command.CreateNotificationCommand;
 import com.marcos.estik.notification.application.ports.in.CreateNotificationPort;
+import com.marcos.estik.notification.application.ports.out.NotificationPushPort;
 import com.marcos.estik.notification.application.ports.out.NotificationRepositoryPort;
 import com.marcos.estik.notification.domain.Notification;
 
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class CreateNotificationUseCase implements CreateNotificationPort {
 
     private final NotificationRepositoryPort notificationRepositoryPort;
+    private final NotificationPushPort notificationPushPort;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -39,5 +41,6 @@ public class CreateNotificationUseCase implements CreateNotificationPort {
         );
 
         notificationRepositoryPort.saveAll(notifications);
+        notificationPushPort.push(notifications);
     }
 }

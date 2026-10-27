@@ -45,6 +45,8 @@ public class MoveComputerUseCase implements MoveComputerPort {
                 computer.getDepartamentId()
             )
         );
+
+        computerRepositoryPort.save(computer);
         
         return new ComputerView(
             computer,

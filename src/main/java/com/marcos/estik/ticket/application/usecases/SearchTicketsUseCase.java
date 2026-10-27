@@ -37,7 +37,7 @@ public class SearchTicketsUseCase implements SearchTicketsPort {
         return tickets.map(ticket -> new TicketView(
                 ticket,
                 loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
-                loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
+                ticket.getAssigneeId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
                 loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId())
             )
         );

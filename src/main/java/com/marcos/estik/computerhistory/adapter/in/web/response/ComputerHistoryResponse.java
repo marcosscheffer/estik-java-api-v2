@@ -9,7 +9,7 @@ public record ComputerHistoryResponse(
     UUID id,
     String serviceDescription,
     DirectionEnum direction,
-    UUID computerId,
+    ComputerHistoryComputerResponse computer,
     UUID departamentId,
     Instant createdAt
 ) {

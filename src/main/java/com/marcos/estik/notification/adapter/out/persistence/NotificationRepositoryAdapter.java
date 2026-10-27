@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.marcos.estik.notification.application.ports.out.NotificationRepositoryPort;
@@ -39,7 +40,8 @@ public class NotificationRepositoryAdapter implements NotificationRepositoryPort
     public PageResult<Notification> searchNotification(UUID recipientId, PageQuery page) {
         Page<NotificationEntity> notifications = jpaNotificationRepository.findByRecipientId(
                 recipientId, 
-                PageRequest.of(page.page(), page.size()
+                PageRequest.of(page.page(), page.size(),
+                Sort.by(Sort.Direction.DESC, "createdAt")
             )
         );
         

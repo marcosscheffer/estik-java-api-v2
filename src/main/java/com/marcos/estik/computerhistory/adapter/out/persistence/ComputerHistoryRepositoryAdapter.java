@@ -53,7 +53,7 @@ public class ComputerHistoryRepositoryAdapter implements ComputerHistoryReposito
         );
 
         Page<ComputerHistoryEntity> computerHistories = jpaComputerHistoryRepository
-            .findAll(spec, PageRequest.of(page.page(), page.size(), Sort.by("createdAt")));
+            .findAll(spec, PageRequest.of(page.page(), page.size(), Sort.by(Sort.Direction.DESC, "createdAt")));
         
         return new PageResult<ComputerHistory>(
             computerHistories.getContent().stream().map(computerHistoryPersistenceMapper::toDomain).toList(),

@@ -2,8 +2,8 @@ package com.marcos.estik.computerhistory.application.ports.in;
 
 import java.util.UUID;
 
-import com.marcos.estik.computerhistory.domain.ComputerHistory;
+import com.marcos.estik.computerhistory.application.view.ComputerHistoryView;
 
 public interface FindComputerHistoryByIdPort {
-    ComputerHistory execute(UUID id);
+    ComputerHistoryView execute(UUID id);
 }
