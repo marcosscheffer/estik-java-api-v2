@@ -1,7 +1,7 @@
 package com.marcos.estik.ticket.application.command;
 
-import com.marcos.estik.ticket.domain.PriorityEnum;
-import com.marcos.estik.ticket.domain.TicketTypeEnum;
+import com.marcos.estik.ticket.domain.enums.PriorityEnum;
+import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 public record UpdateTicketCommand(
     String title,

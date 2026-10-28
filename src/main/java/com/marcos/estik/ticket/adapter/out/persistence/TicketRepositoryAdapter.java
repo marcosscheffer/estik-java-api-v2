@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
-import com.marcos.estik.ticket.domain.PriorityEnum;
-import com.marcos.estik.ticket.domain.StatusEnum;
 import com.marcos.estik.ticket.domain.Ticket;
-import com.marcos.estik.ticket.domain.TicketTypeEnum;
+import com.marcos.estik.ticket.domain.enums.PriorityEnum;
+import com.marcos.estik.ticket.domain.enums.StatusEnum;
+import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

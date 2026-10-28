@@ -7,8 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import com.marcos.estik.ticket.domain.PriorityEnum;
-import com.marcos.estik.ticket.domain.StatusEnum;
+import com.marcos.estik.ticket.domain.enums.PriorityEnum;
+import com.marcos.estik.ticket.domain.enums.StatusEnum;
 
 public interface JpaTicketRepository extends JpaRepository<TicketEntity, UUID>, JpaSpecificationExecutor<TicketEntity> {
 

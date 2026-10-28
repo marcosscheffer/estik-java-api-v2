@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.marcos.estik.ticket.domain.PriorityEnum;
-import com.marcos.estik.ticket.domain.StatusEnum;
-import com.marcos.estik.ticket.domain.TicketTypeEnum;
+import com.marcos.estik.ticket.domain.enums.PriorityEnum;
+import com.marcos.estik.ticket.domain.enums.StatusEnum;
+import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

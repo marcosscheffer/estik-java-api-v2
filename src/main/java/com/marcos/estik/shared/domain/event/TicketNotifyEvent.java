@@ -3,7 +3,7 @@ package com.marcos.estik.shared.domain.event;
 import java.time.Instant;
 import java.util.UUID;
 
-public record TicketNotifyEvent(
+public record TicketNotifyEvent (
     UUID ticketId,
     String ticketTitle,
     UUID requesterId,
@@ -12,6 +12,6 @@ public record TicketNotifyEvent(
     String typeTicket,
     String newStatus,
     Instant occurredAt
-) {
+) implements TicketEvent {
     
 }

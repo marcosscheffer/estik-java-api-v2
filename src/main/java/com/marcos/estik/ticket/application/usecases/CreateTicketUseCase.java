@@ -16,9 +16,9 @@ import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdP
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
 import com.marcos.estik.ticket.application.ports.out.TicketEventPublisherPort;
 import com.marcos.estik.ticket.application.ports.out.TicketHistoryRepositoryPort;
-import com.marcos.estik.ticket.domain.StatusEnum;
 import com.marcos.estik.ticket.domain.Ticket;
 import com.marcos.estik.ticket.domain.TicketHistory;
+import com.marcos.estik.ticket.domain.enums.StatusEnum;
 
 import lombok.RequiredArgsConstructor;
 

@@ -36,10 +36,10 @@ import com.marcos.estik.ticket.application.ports.in.SearchTicketHistoryPort;
 import com.marcos.estik.ticket.application.ports.in.SearchTicketsPort;
 import com.marcos.estik.ticket.application.ports.in.UpdateTicketPort;
 import com.marcos.estik.ticket.application.view.TicketView;
-import com.marcos.estik.ticket.domain.PriorityEnum;
-import com.marcos.estik.ticket.domain.StatusEnum;
 import com.marcos.estik.ticket.domain.TicketHistory;
-import com.marcos.estik.ticket.domain.TicketTypeEnum;
+import com.marcos.estik.ticket.domain.enums.PriorityEnum;
+import com.marcos.estik.ticket.domain.enums.StatusEnum;
+import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

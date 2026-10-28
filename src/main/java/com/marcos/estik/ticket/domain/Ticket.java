@@ -3,6 +3,9 @@ package com.marcos.estik.ticket.domain;
 import java.time.Instant;
 import java.util.UUID;
 
+import com.marcos.estik.ticket.domain.enums.PriorityEnum;
+import com.marcos.estik.ticket.domain.enums.StatusEnum;
+import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 import com.marcos.estik.ticket.domain.exception.InvalidTicketStatusException;
 import com.marcos.estik.ticket.domain.exception.TicketAlreadyAssignedException;
 import com.marcos.estik.ticket.domain.exception.TicketNotAssignableException;
@@ -120,5 +123,23 @@ public class Ticket {
         this.priority = priority;
         this.ticketType = ticketType;
         this.updatedAt = Instant.now();
+    }
+
+    public Boolean canAccessChat(UUID actorId) {
+        return actorId.equals(this.requesterId) || actorId.equals(this.assigneeId);
+    }
+
+    public void ensureCanSendMessage(UUID actorId) {
+        if (!canAccessChat(actorId)) {
+            throw new TicketOwnerShipException("you cannot access this ticket chat");
+        }
+
+        if (this.assigneeId == null) {
+            throw new InvalidTicketStatusException("Chat opens when someone assumes the ticket");
+        }
+
+        if (this.status == StatusEnum.CANCELLED || this.status == StatusEnum.RESOLVED) {
+            throw new InvalidTicketStatusException("This ticket chat is read-only");
+        }
     }
 }

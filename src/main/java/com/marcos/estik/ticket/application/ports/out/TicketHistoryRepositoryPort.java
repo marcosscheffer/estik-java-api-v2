@@ -4,9 +4,9 @@ import java.util.UUID;
 
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
-import com.marcos.estik.ticket.domain.StatusEnum;
 import com.marcos.estik.ticket.domain.TicketHistory;
-import com.marcos.estik.ticket.domain.TicketTypeEnum;
+import com.marcos.estik.ticket.domain.enums.StatusEnum;
+import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 public interface TicketHistoryRepositoryPort {
 

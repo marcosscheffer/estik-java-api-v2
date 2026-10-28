@@ -11,6 +11,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import com.marcos.estik.notification.application.command.CreateNotificationCommand;
 import com.marcos.estik.notification.application.ports.in.CreateNotificationPort;
 import com.marcos.estik.notification.application.ports.out.LoadNotificationFindUserByRolePort;
+import com.marcos.estik.shared.domain.event.TicketMessageEvent;
 import com.marcos.estik.shared.domain.event.TicketNotifyEvent;
 import com.marcos.estik.shared.domain.user.RoleEnum;
 
@@ -24,6 +25,24 @@ public class TicketEventListener {
 
     private final CreateNotificationPort createNotificationPort;
     private final LoadNotificationFindUserByRolePort loadNotificationFindUserByRolePort;
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    void onTicketMessageEventListener(TicketMessageEvent event) {
+        UUID recipientsId = event.actorId().equals(event.requesterId())
+            ? event.assigneeId()
+            : event.requesterId();
+
+        createNotificationPort.execute(
+            new CreateNotificationCommand(
+                List.of(recipientsId),
+                event.ticketId(),
+                "TICKET_MESSAGE",
+                "new message",
+                "new message on ticket" + event.ticketTitle(),
+                event.actorId()
+            )
+        );
+    }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     void onTicketStatusChangedEvent(TicketNotifyEvent event) {

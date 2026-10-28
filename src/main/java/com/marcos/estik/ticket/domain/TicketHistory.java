@@ -3,6 +3,9 @@ package com.marcos.estik.ticket.domain;
 import java.time.Instant;
 import java.util.UUID;
 
+import com.marcos.estik.ticket.domain.enums.StatusEnum;
+import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
