@@ -26,6 +26,7 @@ public class Ticket {
     private UUID assigneeId;
     private StatusEnum status;
     private PriorityEnum priority;
+    private Long version;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -36,6 +37,7 @@ public class Ticket {
         UUID requesterId,
         UUID facilityId,
         PriorityEnum priority
+
     ) {
         return new Ticket(
             UUID.randomUUID(),
@@ -46,7 +48,8 @@ public class Ticket {
             facilityId, 
             null,
             StatusEnum.OPEN, 
-            priority, 
+            priority,
+            null,
             Instant.now(), 
             Instant.now()
         );

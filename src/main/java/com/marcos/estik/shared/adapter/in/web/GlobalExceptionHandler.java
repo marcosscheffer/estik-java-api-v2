@@ -3,9 +3,11 @@ package com.marcos.estik.shared.adapter.in.web;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,9 +18,14 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import com.marcos.estik.auth.domain.exception.InvalidCredentialsException;
 import com.marcos.estik.auth.domain.exception.InvalidRefreshTokenException;
 import com.marcos.estik.auth.domain.exception.UserInactiveException;
+import com.marcos.estik.item.domain.exception.ItemMinimumInvalidException;
+import com.marcos.estik.notification.domain.exception.NotificationNotBelongException;
+import com.marcos.estik.notification.domain.exception.NotificationNotFoundException;
 import com.marcos.estik.shared.domain.exception.DomainCannotMovedException;
+import com.marcos.estik.stock.domain.exception.QuantityMovementInvalidException;
 import com.marcos.estik.ticket.domain.exception.InvalidTicketStatusException;
 import com.marcos.estik.ticket.domain.exception.TicketAlreadyAssignedException;
+import com.marcos.estik.ticket.domain.exception.TicketMessageInvalidException;
 import com.marcos.estik.ticket.domain.exception.TicketNotAssignableException;
 import com.marcos.estik.ticket.domain.exception.TicketOwnerShipException;
 import com.marcos.estik.user.domain.exception.CannotAssignSelfException;
@@ -200,6 +207,78 @@ public class GlobalExceptionHandler {
         HttpServletRequest request
     ) {
         return build(HttpStatus.UNAUTHORIZED, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(ItemMinimumInvalidException.class)
+    public ResponseEntity<ErrorResponse> handleItemMinimumInvalid(
+        ItemMinimumInvalidException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.BAD_REQUEST, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(QuantityMovementInvalidException.class)
+    public ResponseEntity<ErrorResponse> handleQuantityMovementInvalid(
+        QuantityMovementInvalidException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.CONFLICT, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(TicketMessageInvalidException.class)
+    public ResponseEntity<ErrorResponse> handleTicketMessageInvalid(
+        TicketMessageInvalidException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.BAD_REQUEST, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(NotificationNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotificationNotFound(
+        NotificationNotFoundException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.NOT_FOUND, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(NotificationNotBelongException.class)
+    public ResponseEntity<ErrorResponse> handleNotificationNotBelong(
+        NotificationNotBelongException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.FORBIDDEN, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(
+        IllegalArgumentException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.BAD_REQUEST, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<ErrorResponse> handleObjectOptimisticLockingFailure(
+        ObjectOptimisticLockingFailureException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.CONFLICT, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(
+        DataIntegrityViolationException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.CONFLICT, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(
+        Exception exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.BAD_GATEWAY, exception.getMessage(), request);
     }
 
     private ResponseEntity<ErrorResponse> build(
