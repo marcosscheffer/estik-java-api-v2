@@ -1,6 +1,7 @@
 package com.marcos.estik.stock.application.usecases;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.stock.application.command.TransferCommand;
 import com.marcos.estik.stock.application.ports.in.TransferStockPort;
@@ -29,6 +30,7 @@ public class TransferStockUseCase implements TransferStockPort {
     private final LoadStockFindItemByIdPort loadStockFindItemByIdPort;
 
     @Override
+    @Transactional 
     public StockMovementView execute(TransferCommand command) {
         StockBalance stockBalanceSource = stockBalanceRepositoryPort.findById(command.stockBalanceId());
         StockFacilityInfo facilitySourceInfo = loadStockFindFacilityByIdPort.execute(stockBalanceSource.getFacilityId());
@@ -37,7 +39,6 @@ public class TransferStockUseCase implements TransferStockPort {
         StockFacilityInfo facilityDestinationInfo = loadStockFindFacilityByIdPort.execute(command.facilityDestinationId());
         StockDepartamentInfo departamentDestinationInfo = loadStockFindDepartamentByIdPort.execute(command.departamentDestinationId());
         StockItemInfo itemInfo = loadStockFindItemByIdPort.execute(command.itemId());
-        System.out.println("ola");
         StockBalance stockBalanceDestination;
 
 

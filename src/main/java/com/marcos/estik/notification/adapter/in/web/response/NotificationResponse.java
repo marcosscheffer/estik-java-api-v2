@@ -9,6 +9,7 @@ public record NotificationResponse(
     String message,
     Boolean read,
     String type,
+    UUID referencesId,
     Instant createdAt
 ) {
     

@@ -77,7 +77,8 @@ public class SecurityConfig {
                     "/tickets/{id}/cancel",
                     "/tickets/{id}/histories",
                     "/tickets/{id}/reopen",
-                    "/tickets/{id}/messages"
+                    "/tickets/{id}/messages",
+                    "/tickets/{id}/messages/stream"
                 ).hasRole("USER")
 
                 // facilities for role USER

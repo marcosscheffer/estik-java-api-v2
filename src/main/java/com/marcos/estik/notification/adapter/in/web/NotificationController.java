@@ -19,7 +19,6 @@ import com.marcos.estik.shared.application.pagination.PageResult;
 
 import lombok.RequiredArgsConstructor;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.http.MediaType;
@@ -62,15 +61,9 @@ public class NotificationController {
         @AuthenticationPrincipal AuthenticatedUser principal
     ) {
         SseEmitter emitter = SseNotificationEmitter.createEmitter(principal.id());
-
+        SseNotificationEmitter.connect(principal.id(), emitter);
         Long countUnread = countUnreadNotificationsPort.execute(principal.id());
-
-        try {
-            emitter.send(SseEmitter.event().name("unread-count").data(new UnreadNotificationsResponse(countUnread)));
-        } catch (IOException exception) {
-            emitter.completeWithError(exception);
-        }
-
+        SseNotificationEmitter.sendTo(principal.id(), "unread-count", new UnreadNotificationsResponse(countUnread));
         return emitter;
     }
 

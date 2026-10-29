@@ -33,7 +33,7 @@ public class SseTicketMessageEmitter {
     private static void send(UUID ticketId, SseEmitter emitter, SseEmitter.SseEventBuilder payload) {
         try {
             emitter.send(payload);
-        } catch (IOException exception) {
+        } catch (IOException | IllegalStateException exception) {
             remove(ticketId, emitter);
         }
     }
@@ -45,5 +45,17 @@ public class SseTicketMessageEmitter {
                 ? null
                 : value;
         });
+    }
+
+    public static void heartbeat() {
+        emitters.forEach(
+            (ticketId, ticketEmitters) -> ticketEmitters.forEach(
+                emitter -> send(ticketId, emitter, SseEmitter.event().comment("ping"))
+            )
+        );
+    }
+
+    public static void connect(UUID ticketId, SseEmitter emitter) {
+        send(ticketId, emitter, SseEmitter.event().comment("connect"));
     }
 }

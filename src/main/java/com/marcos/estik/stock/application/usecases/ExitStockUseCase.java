@@ -1,6 +1,7 @@
 package com.marcos.estik.stock.application.usecases;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.stock.application.command.MovementCommand;
 import com.marcos.estik.stock.application.ports.in.ExitStockPort;
@@ -27,6 +28,7 @@ public class ExitStockUseCase implements ExitStockPort {
     private final LoadStockFindItemByIdPort loadStockBalanceFindItemByIdPort;
 
     @Override
+    @Transactional 
     public StockMovementView execute(MovementCommand command) {
         StockFacilityInfo facilityInfo = loadStockBalanceFindFacilityByIdPort.execute(command.facilityId());
         StockDepartamentInfo departamentInfo = loadStockBalanceFindDepartamentByIdPort.execute(command.departamentId());

@@ -32,10 +32,14 @@ public class SseNotificationEmitter {
         userEmitters.forEach(emitter -> send(userId, emitter, SseEmitter.event().name(name).data(payload)));
     }
 
+    public static void connect(UUID userId, SseEmitter emitter) {
+        send(userId, emitter, SseEmitter.event().comment("connected"));
+    }
+
     private static void send(UUID userId, SseEmitter emitter, SseEmitter.SseEventBuilder event) {
         try {
             emitter.send(event);
-        } catch(IOException exception) {
+        } catch(IOException | IllegalStateException exception) {
             remove(userId, emitter);
         }
     }
@@ -45,5 +49,12 @@ public class SseNotificationEmitter {
             value.remove(emitter);
             return value.isEmpty() ? null : value;
         });
+    }
+
+    public static void heartbeat() {
+        emitters.forEach(
+            (userId, userEmitters) -> userEmitters.forEach(
+                emitter -> send(userId, emitter, SseEmitter.event().comment("ping")))
+        );
     }
 }

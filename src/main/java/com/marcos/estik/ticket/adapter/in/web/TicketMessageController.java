@@ -68,6 +68,7 @@ public class TicketMessageController {
     ) {
         checkTicketMessagePort.execute(id, principal);
         SseEmitter emitter = SseTicketMessageEmitter.createEmitter(id);
+        SseTicketMessageEmitter.connect(id, emitter);
         return emitter;
     }
     
