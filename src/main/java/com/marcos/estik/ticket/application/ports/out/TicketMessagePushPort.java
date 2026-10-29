@@ -4,6 +4,6 @@ import com.marcos.estik.ticket.application.view.TicketMessageView;
 
 public interface TicketMessagePushPort {
 
-    void push(TicketMessageView ticketMessage);
+    void execute(TicketMessageView ticketMessage);
     
 }

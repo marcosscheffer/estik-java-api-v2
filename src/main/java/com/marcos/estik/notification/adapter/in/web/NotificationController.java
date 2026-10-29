@@ -4,10 +4,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import com.marcos.estik.notification.adapter.in.sse.SseNotificationEmitter;
 import com.marcos.estik.notification.adapter.in.web.mapper.NotificationWebMapper;
 import com.marcos.estik.notification.adapter.in.web.response.NotificationResponse;
 import com.marcos.estik.notification.adapter.in.web.response.UnreadNotificationsResponse;
-import com.marcos.estik.notification.adapter.sse.SseEmitterRegistry;
 import com.marcos.estik.notification.application.ports.in.CountUnreadNotificationsPort;
 import com.marcos.estik.notification.application.ports.in.MarkAllReadNotificationPort;
 import com.marcos.estik.notification.application.ports.in.MarkReadNotificationPort;
@@ -20,7 +20,6 @@ import com.marcos.estik.shared.application.pagination.PageResult;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.UUID;
 
 import org.springframework.http.MediaType;
@@ -42,10 +41,7 @@ public class NotificationController {
     private final MarkReadNotificationPort markReadNotificationPort;
     private final MarkAllReadNotificationPort markAllReadNotificationPort;
     private final NotificationWebMapper notificationWebMapper;
-
-    private static final Duration STREAM_TIMEOUT = Duration.ofMinutes(15);
-
-    private final SseEmitterRegistry sseEmitterRegistry;
+    
 
     @GetMapping
     public ResponseEntity<PageResult<NotificationResponse>> getNotifications(
@@ -61,31 +57,29 @@ public class NotificationController {
         return ResponseEntity.ok(notifications.map(notificationWebMapper::toSummaryResponse));
     }
 
+    @GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter getStream(
+        @AuthenticationPrincipal AuthenticatedUser principal
+    ) {
+        SseEmitter emitter = SseNotificationEmitter.createEmitter(principal.id());
+
+        Long countUnread = countUnreadNotificationsPort.execute(principal.id());
+
+        try {
+            emitter.send(SseEmitter.event().name("unread-count").data(new UnreadNotificationsResponse(countUnread)));
+        } catch (IOException exception) {
+            emitter.completeWithError(exception);
+        }
+
+        return emitter;
+    }
+
     @GetMapping("/unread")
     public ResponseEntity<UnreadNotificationsResponse> getUnreadNotifications(
         @AuthenticationPrincipal AuthenticatedUser principal
     ) {
         Long quantity = countUnreadNotificationsPort.execute(principal.id());
         return ResponseEntity.ok(new UnreadNotificationsResponse(quantity));
-    }
-
-    @GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter stream(
-        @AuthenticationPrincipal AuthenticatedUser principal
-    ) {
-        SseEmitter emitter = sseEmitterRegistry.register(principal.id(), STREAM_TIMEOUT);
-
-        Long unread = countUnreadNotificationsPort.execute(principal.id());
-        try {
-            emitter.send(SseEmitter.event()
-                .name("unread-count")
-                .data(new UnreadNotificationsResponse(unread))
-            );
-        } catch(IOException ex) {
-            emitter.completeWithError(ex);
-        }
-
-        return emitter;
     }
 
     @PatchMapping("/{id}/read")

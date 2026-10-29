@@ -41,6 +41,6 @@ public class CreateNotificationUseCase implements CreateNotificationPort {
         );
 
         notificationRepositoryPort.saveAll(notifications);
-        notificationPushPort.push(notifications);
+        notifications.forEach(notification -> notificationPushPort.execute(notification));
     }
 }

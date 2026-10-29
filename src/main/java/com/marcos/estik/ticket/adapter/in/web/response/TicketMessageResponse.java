@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public record TicketMessageResponse(
     UUID id,
-    TicketUserResponse user,
+    TicketUserResponse author,
     String body,
     Instant createdAt
 ) {

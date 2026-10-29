@@ -3,12 +3,14 @@ package com.marcos.estik.ticket.application.usecases;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.shared.domain.event.TicketMessageEvent;
 import com.marcos.estik.ticket.application.ports.in.SendTicketMessagePort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
 import com.marcos.estik.ticket.application.ports.out.TicketEventPublisherPort;
+import com.marcos.estik.ticket.application.ports.out.TicketMessagePushPort;
 import com.marcos.estik.ticket.application.ports.out.TicketMessageRepositoryPort;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
 import com.marcos.estik.ticket.application.view.TicketMessageView;
@@ -23,10 +25,12 @@ public class SendTicketMessageUseCase implements SendTicketMessagePort {
 
     private final TicketRepositoryPort ticketRepositoryPort;
     private final TicketMessageRepositoryPort ticketMessageRepositoryPort;
+    private final TicketMessagePushPort ticketMessagePushPort;
     private final LoadTicketFindUserByIdPort loadTicketFindUserByIdPort;
     private final TicketEventPublisherPort ticketEventPublisherPort;
 
     @Override
+    @Transactional 
     public TicketMessageView execute(UUID ticketId, String body, AuthenticatedUser principal) {
         Ticket ticket = ticketRepositoryPort.findTicketById(ticketId);
         ticket.ensureCanSendMessage(principal.id());
@@ -49,6 +53,8 @@ public class SendTicketMessageUseCase implements SendTicketMessagePort {
                 ticketMessage.getCreatedAt()
             )
         );
+
+        ticketMessagePushPort.execute(ticketMessageView);
 
         return ticketMessageView;
     }

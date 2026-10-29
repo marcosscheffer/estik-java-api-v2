@@ -1,9 +1,9 @@
-package com.marcos.estik.notification.adapter.sse;
+package com.marcos.estik.notification.adapter.out.sse;
 
 import java.time.Instant;
 import java.util.UUID;
 
-public record NotificationStreamPayload(
+public record NotificationStreamPayload( 
     UUID id,
     String type,
     String title,
@@ -11,6 +11,4 @@ public record NotificationStreamPayload(
     UUID referencesId,
     Instant createdAt
 ) {
-
 }
-

@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.marcos.estik.shared.application.pagination.PageQuery;
@@ -31,7 +32,7 @@ public class TicketMessageRepositoryAdapter implements TicketMessageRepositoryPo
     public PageResult<TicketMessage> searchTicketMessage(UUID ticketId, PageQuery pageQuery) {
         Page<TicketMessageEntity> ticketMessages = jpaTicketMessageRepository.findByTicketId(
             ticketId, 
-            PageRequest.of(pageQuery.page(), pageQuery.size())
+            PageRequest.of(pageQuery.page(), pageQuery.size(), Sort.by(Sort.Direction.DESC,"createdAt"))
         );
 
         return new PageResult<TicketMessage>(
