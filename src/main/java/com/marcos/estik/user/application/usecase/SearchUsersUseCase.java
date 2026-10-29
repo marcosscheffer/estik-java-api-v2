@@ -17,7 +17,13 @@ public class SearchUsersUseCase implements SearchUsersPort {
 
     @Override
     public PageResult<User> execute(SearchUsersCommand command) {
-        return userRepositoryPort.SearchUsers(command.facilityId(), command.username(), command.page());
+        return userRepositoryPort.SearchUsers(
+            command.facilityId(), 
+            command.username(),
+            command.function(),
+            command.role(), 
+            command.page()
+        );
     }
 
 }

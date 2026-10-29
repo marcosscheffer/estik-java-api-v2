@@ -14,6 +14,8 @@ public record SearchTicketsCommand(
     TicketTypeEnum type,
     UUID facilityId,
     UUID requesterId,
+    UUID regulatorId,
+    UUID forwardedId,
     UUID assigneeId,
     PageQuery page
 ) {

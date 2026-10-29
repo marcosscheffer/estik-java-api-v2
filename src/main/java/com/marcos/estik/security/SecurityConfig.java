@@ -70,6 +70,11 @@ public class SecurityConfig {
                     "/users/{id}"
                 ).hasRole("USER")
 
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/users"
+                ).hasRole("REGULATOR")
+
                 // tickets for role USER
                 .requestMatchers(
                     "/tickets",
@@ -96,14 +101,30 @@ public class SecurityConfig {
                 ).hasRole("USER")
 
                 .requestMatchers(
-                    "/users"
-                ).hasRole("ARCH")
+                    "/tickets/{id}/forward"
+                ).hasRole("REGULATOR")
 
                 .requestMatchers(
                     "/tickets/**"
-                ).hasRole("ARCH")
+                ).hasRole("TECHNICIAN")
 
-                .anyRequest().hasRole("IT")
+                .requestMatchers(
+                    "/stock/"
+                ).hasRole("TECHNICIAN")
+
+                .requestMatchers(
+                    "/items/**"
+                ).hasRole("TECHNICIAN")
+
+                .requestMatchers(
+                    "/computers/**"
+                ).hasRole("TECHNICIAN")
+
+                .requestMatchers(
+                    "/categories/**"
+                ).hasRole("TECHNICIAN")
+
+                .anyRequest().hasRole("ADMINISTRATOR")
 
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -113,9 +134,9 @@ public class SecurityConfig {
     @Bean 
     public RoleHierarchy roleHierarchy() {
         return RoleHierarchyImpl.withDefaultRolePrefix()
-            .role("IT").implies("ARCH")
-            .role("ARCH").implies("USER")
+            .role("ADMINISTRATOR").implies("TECHNICIAN")
+            .role("TECHNICIAN").implies("REGULATOR")
+            .role("REGULATOR").implies("USER")
             .build();
     }
-
 }

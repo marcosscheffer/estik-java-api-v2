@@ -50,6 +50,7 @@ public class ReopenTicketUseCase implements ReopenTicketPort {
                 ticket.getId(),
                 ticket.getTitle(),
                 ticket.getRequesterId(),
+                null,
                 ticket.getAssigneeId(),
                 principal.id(),
                 ticket.getTicketType().name(),
@@ -61,6 +62,8 @@ public class ReopenTicketUseCase implements ReopenTicketPort {
         return new TicketView(
             ticket,
             loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
+            loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
+            loadTicketFindUserByIdPort.execute(ticket.getForwardedId()),
             loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
             loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId())
         );

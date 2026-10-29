@@ -11,6 +11,8 @@ public record TicketResponse(
     UUID id,
     TicketFacilityResponse facility,
     TicketUserResponse requester,
+    TicketUserResponse forwarded,
+    TicketUserResponse regulator,
     TicketUserResponse assignee,
     TicketTypeEnum ticketType,
     String title,

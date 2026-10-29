@@ -18,6 +18,7 @@ import com.marcos.estik.shared.application.pagination.PageResult;
 import com.marcos.estik.ticket.adapter.in.web.mapper.TicketHistoryWebMapper;
 import com.marcos.estik.ticket.adapter.in.web.mapper.TicketWebMapper;
 import com.marcos.estik.ticket.adapter.in.web.request.CreateTicketRequest;
+import com.marcos.estik.ticket.adapter.in.web.request.ForwardRequest;
 import com.marcos.estik.ticket.adapter.in.web.request.UpdateTicketRequest;
 import com.marcos.estik.ticket.adapter.in.web.response.TicketHistoryResponse;
 import com.marcos.estik.ticket.adapter.in.web.response.TicketResponse;
@@ -30,6 +31,7 @@ import com.marcos.estik.ticket.application.ports.in.CancelTicketPort;
 import com.marcos.estik.ticket.application.ports.in.CreateTicketPort;
 import com.marcos.estik.ticket.application.ports.in.DeleteTicketByIdPort;
 import com.marcos.estik.ticket.application.ports.in.FindTicketByIdPort;
+import com.marcos.estik.ticket.application.ports.in.ForwardTicketPort;
 import com.marcos.estik.ticket.application.ports.in.ReopenTicketPort;
 import com.marcos.estik.ticket.application.ports.in.ResolveTicketPort;
 import com.marcos.estik.ticket.application.ports.in.SearchTicketHistoryPort;
@@ -65,6 +67,7 @@ public class TicketController {
     private final ResolveTicketPort resolveTicketPort;
     private final CancelTicketPort cancelTicketPort;
     private final ReopenTicketPort reopenTicketPort;
+    private final ForwardTicketPort forwardTicketPort;
     private final SearchTicketHistoryPort searchTicketHistoryPort;
     private final TicketHistoryWebMapper ticketHistoryWebMapper;
 
@@ -76,6 +79,8 @@ public class TicketController {
         @RequestParam(required = false) TicketTypeEnum type,
         @RequestParam(required = false) UUID facilityId,
         @RequestParam(required = false) UUID requesterId,
+        @RequestParam(required = false) UUID regulatorId,
+        @RequestParam(required = false) UUID forwardedId,
         @RequestParam(required = false) UUID assigneeId,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
@@ -88,6 +93,8 @@ public class TicketController {
                 type,
                 facilityId,
                 requesterId,
+                regulatorId,
+                forwardedId,
                 assigneeId,
                 new PageQuery(page, size)
             )
@@ -148,6 +155,21 @@ public class TicketController {
         @AuthenticationPrincipal AuthenticatedUser principal
     ){
         TicketView ticket = reopenTicketPort.execute(id, principal);
+        return ResponseEntity.ok(ticketWebMapper.toResponse(ticket));
+    }
+
+    @PostMapping("/{id}/forward")
+    public ResponseEntity<TicketResponse> forwardTicket(
+        @PathVariable UUID id,
+        @RequestBody @Valid ForwardRequest request,
+        @AuthenticationPrincipal AuthenticatedUser principal
+    ) {
+        TicketView ticket = forwardTicketPort.execute(
+            id, 
+            ticketWebMapper.toForwardCommand(request), 
+            principal
+        );
+
         return ResponseEntity.ok(ticketWebMapper.toResponse(ticket));
     }
 

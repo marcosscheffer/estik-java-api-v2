@@ -40,14 +40,24 @@ public final class TicketSpecification {
         return requesterId == null 
             ? Specification.unrestricted() 
             : (root, q, cb) -> cb.equal(root.get("requesterId"), requesterId);
+    }
 
+    public static Specification<TicketEntity> forwardedIs(UUID forwardedId) {
+        return forwardedId == null
+            ? Specification.unrestricted()
+            : (root, q, cb) -> cb.equal(root.get("forwardedId"), forwardedId);
     }
 
     public static Specification<TicketEntity> assigneeIs(UUID assigneeId) {
         return assigneeId == null 
             ? Specification.unrestricted() 
             : (root, q, cb) -> cb.equal(root.get("assigneeId"), assigneeId);
+    }
 
+    public static Specification<TicketEntity> regulatorIs(UUID regulatorId) {
+        return regulatorId == null
+            ? Specification.unrestricted()
+            : (root, q, cb) -> cb.equal(root.get("regulatorId"), regulatorId);
     }
 
     public static Specification<TicketEntity> titleContains(String title) {

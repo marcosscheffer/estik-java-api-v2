@@ -10,21 +10,20 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.marcos.estik.notification.application.command.CreateNotificationCommand;
 import com.marcos.estik.notification.application.ports.in.CreateNotificationPort;
-import com.marcos.estik.notification.application.ports.out.LoadNotificationFindUserByRolePort;
+import com.marcos.estik.notification.application.ports.out.LoadNotificationFindUserByRoleAndFunctionPort;
 import com.marcos.estik.shared.domain.event.TicketMessageEvent;
 import com.marcos.estik.shared.domain.event.TicketNotifyEvent;
+import com.marcos.estik.shared.domain.user.FunctionEnum;
 import com.marcos.estik.shared.domain.user.RoleEnum;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Component 
-@Slf4j 
 @RequiredArgsConstructor 
 public class TicketEventListener {
 
     private final CreateNotificationPort createNotificationPort;
-    private final LoadNotificationFindUserByRolePort loadNotificationFindUserByRolePort;
+    private final LoadNotificationFindUserByRoleAndFunctionPort loadNotificationFindUserByRoleAndFunctionPort;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     void onTicketMessageEventListener(TicketMessageEvent event) {
@@ -51,11 +50,15 @@ public class TicketEventListener {
 
         switch (event.newStatus()) {
             case "OPEN":
-                recipientsId = new ArrayList<>(
-                    event.typeTicket().equals("IT") 
-                        ? loadNotificationFindUserByRolePort.execute(RoleEnum.IT)
-                        : loadNotificationFindUserByRolePort.execute(RoleEnum.ARCH)
-                );
+                if (event.forwarded() != null) {
+                    recipientsId = List.of(event.forwarded());
+                } else {
+                    recipientsId = new ArrayList<>(
+                        event.typeTicket().equals("IT")
+                        ? loadNotificationFindUserByRoleAndFunctionPort.execute(RoleEnum.REGULATOR, FunctionEnum.IT)
+                        : loadNotificationFindUserByRoleAndFunctionPort.execute(RoleEnum.REGULATOR, FunctionEnum.MAINTENANCE)
+                    );
+                }
                 command = new CreateNotificationCommand(
                     recipientsId,
                     event.ticketId(),
@@ -94,8 +97,8 @@ public class TicketEventListener {
             case "CANCELLED":
                 recipientsId = new ArrayList<>(
                     event.typeTicket().equals("IT")
-                        ? loadNotificationFindUserByRolePort.execute(RoleEnum.IT)
-                        : loadNotificationFindUserByRolePort.execute(RoleEnum.ARCH)
+                        ? loadNotificationFindUserByRoleAndFunctionPort.execute(RoleEnum.REGULATOR, FunctionEnum.IT)
+                        : loadNotificationFindUserByRoleAndFunctionPort.execute(RoleEnum.REGULATOR, FunctionEnum.MAINTENANCE)
                 );
                 command = new CreateNotificationCommand(
                     recipientsId,

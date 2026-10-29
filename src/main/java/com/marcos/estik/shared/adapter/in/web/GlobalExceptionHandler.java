@@ -23,6 +23,7 @@ import com.marcos.estik.notification.domain.exception.NotificationNotBelongExcep
 import com.marcos.estik.notification.domain.exception.NotificationNotFoundException;
 import com.marcos.estik.shared.domain.exception.DomainCannotMovedException;
 import com.marcos.estik.stock.domain.exception.QuantityMovementInvalidException;
+import com.marcos.estik.ticket.domain.exception.ForwardedRoleInvalidException;
 import com.marcos.estik.ticket.domain.exception.InvalidTicketStatusException;
 import com.marcos.estik.ticket.domain.exception.TicketAlreadyAssignedException;
 import com.marcos.estik.ticket.domain.exception.TicketMessageInvalidException;
@@ -271,6 +272,14 @@ public class GlobalExceptionHandler {
         HttpServletRequest request
     ) {
         return build(HttpStatus.CONFLICT, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(ForwardedRoleInvalidException.class)
+    public ResponseEntity<ErrorResponse> handleForwardedRoleInvalid(
+        ForwardedRoleInvalidException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.BAD_REQUEST, exception.getMessage(), request);
     }
 
     @ExceptionHandler(Exception.class)

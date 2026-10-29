@@ -27,6 +27,8 @@ public class SearchTicketsUseCase implements SearchTicketsPort {
             command.title(),
             command.facilityId(),
             command.requesterId(),
+            command.regulatorId(),
+            command.forwardedId(),
             command.assigneeId(),
             command.priority(),
             command.type(),
@@ -37,6 +39,8 @@ public class SearchTicketsUseCase implements SearchTicketsPort {
         return tickets.map(ticket -> new TicketView(
                 ticket,
                 loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
+                ticket.getRegulatorId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
+                ticket.getForwardedId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getForwardedId()),
                 ticket.getAssigneeId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
                 loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId())
             )

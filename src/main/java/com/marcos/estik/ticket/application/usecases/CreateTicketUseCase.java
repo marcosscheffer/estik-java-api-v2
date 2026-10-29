@@ -59,6 +59,7 @@ public class CreateTicketUseCase implements CreateTicketPort {
                 ticket.getId(),
                 ticket.getTitle(),
                 ticket.getRequesterId(),
+                null,
                 ticket.getAssigneeId(),
                 principal.id(),
                 ticket.getTicketType().name(),
@@ -70,6 +71,8 @@ public class CreateTicketUseCase implements CreateTicketPort {
         return new TicketView(
             ticket,
             loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
+            null,
+            null,
             null,
             facilityInfo
         );

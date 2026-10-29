@@ -24,6 +24,8 @@ public class Ticket {
     private UUID requesterId;
     private UUID facilityId;
     private UUID assigneeId;
+    private UUID regulatorId;
+    private UUID forwardedId;
     private StatusEnum status;
     private PriorityEnum priority;
     private Long version;
@@ -47,6 +49,8 @@ public class Ticket {
             requesterId, 
             facilityId, 
             null,
+            null,
+            null,
             StatusEnum.OPEN, 
             priority,
             null,
@@ -55,14 +59,36 @@ public class Ticket {
         );
     }
 
+    public void forward(UUID actorId, UUID userId, PriorityEnum priority) {
+        if (!this.status.equals(StatusEnum.OPEN) && !this.status.equals(StatusEnum.PROGRESS)) {
+            throw new InvalidTicketStatusException("Ticket status invalid for this operation");
+        }
+
+        this.priority = priority;
+        this.regulatorId = actorId;
+        this.forwardedId = userId;
+        this.assigneeId = null;
+        this.status = StatusEnum.OPEN;
+        this.updatedAt = Instant.now();
+    }
+
     public void assignTo(UUID userId) {
-        if (status.equals(StatusEnum.CANCELLED) || status.equals(StatusEnum.RESOLVED)) {
+        if (this.status.equals(StatusEnum.CANCELLED) || this.status.equals(StatusEnum.RESOLVED)) {
             throw new TicketNotAssignableException(id);
         }
 
-        if (assigneeId != null) {
+        if (this.assigneeId != null) {
             throw new TicketAlreadyAssignedException(id);
         }
+
+        if (this.forwardedId == null) {
+            throw new InvalidTicketStatusException("Ticket not forwaded");
+        }
+
+        if (!this.forwardedId.equals(userId)) {
+            throw new TicketOwnerShipException("Ticket not forwaded for you");
+        }
+
 
         this.assigneeId = userId;
         this.status = StatusEnum.PROGRESS;
@@ -72,7 +98,6 @@ public class Ticket {
     public void resolve(UUID actorId) {
         if (!this.status.equals(StatusEnum.PROGRESS)) {
             throw new InvalidTicketStatusException("You cannot resolve this ticket");
-
         }
 
         if (!this.assigneeId.equals(actorId)) {
@@ -88,9 +113,8 @@ public class Ticket {
             throw new TicketOwnerShipException("you not owner of ticket");
         }
 
-        if(!status.equals(StatusEnum.RESOLVED)) {
+        if(!this.status.equals(StatusEnum.RESOLVED)) {
             throw new InvalidTicketStatusException("You cannot reopen this ticket");
-
         }
 
         this.status = StatusEnum.PROGRESS;
@@ -114,7 +138,6 @@ public class Ticket {
         UUID actorId,
         String title,
         String description,
-        PriorityEnum priority,
         TicketTypeEnum ticketType
     ) {
          if(!actorId.equals(this.requesterId)) {
@@ -123,7 +146,6 @@ public class Ticket {
 
         this.title = title;
         this.description = description;
-        this.priority = priority;
         this.ticketType = ticketType;
         this.updatedAt = Instant.now();
     }

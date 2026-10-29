@@ -4,10 +4,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.marcos.estik.ticket.adapter.in.web.request.CreateTicketRequest;
+import com.marcos.estik.ticket.adapter.in.web.request.ForwardRequest;
 import com.marcos.estik.ticket.adapter.in.web.request.UpdateTicketRequest;
 import com.marcos.estik.ticket.adapter.in.web.response.TicketResponse;
 import com.marcos.estik.ticket.adapter.in.web.response.TicketSummaryResponse;
 import com.marcos.estik.ticket.application.command.CreateTicketCommand;
+import com.marcos.estik.ticket.application.command.ForwardCommand;
 import com.marcos.estik.ticket.application.command.UpdateTicketCommand;
 import com.marcos.estik.ticket.application.view.TicketView;
 
@@ -23,4 +25,6 @@ public interface TicketWebMapper {
     TicketSummaryResponse toSummaryResponse(TicketView ticket);
 
     UpdateTicketCommand toUpdateTicketCommand(UpdateTicketRequest request);
+
+    ForwardCommand toForwardCommand(ForwardRequest request);
 }

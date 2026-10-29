@@ -30,14 +30,15 @@ public class UpdateTicketUseCase implements UpdateTicketPort {
             principal.id(),
             command.title(),
             command.description(), 
-            command.priority(), 
             command.ticketType()
         );
         ticketRepositoryPort.save(ticket);
         return new TicketView(
             ticket,
             loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
-            loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
+            ticket.getRegulatorId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
+            ticket.getForwardedId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getForwardedId()),
+            ticket.getAssigneeId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
             loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId())
         );
     }

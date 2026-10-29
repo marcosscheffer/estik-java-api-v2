@@ -6,6 +6,7 @@ import com.marcos.estik.user.domain.User;
 
 @Mapper(componentModel = "spring")
 public interface UserPersistenceMapper {
+    
     User toDomain(UserEntity userEntity);
 
     UserEntity toEntity(User user);

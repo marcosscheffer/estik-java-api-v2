@@ -27,6 +27,8 @@ public class FindTicketByIdUseCase implements FindTicketByIdPort {
         return new TicketView(
             ticket,
             loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
+            ticket.getRegulatorId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
+            ticket.getForwardedId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getForwardedId()),
             ticket.getAssigneeId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
             loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId())
         );

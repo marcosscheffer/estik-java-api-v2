@@ -37,6 +37,10 @@ public class TicketEntity {
     private UUID facilityId;
     @Column(name = "assignee_id")
     private UUID assigneeId;
+    @Column(name = "regulator_id")
+    private UUID regulatorId;
+    @Column(name = "forwarded_id")
+    private UUID forwardedId;
 
     @Enumerated(EnumType.STRING)
     private StatusEnum status;

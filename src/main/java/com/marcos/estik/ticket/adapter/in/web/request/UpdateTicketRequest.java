@@ -1,7 +1,6 @@
 package com.marcos.estik.ticket.adapter.in.web.request;
 
 
-import com.marcos.estik.ticket.domain.enums.PriorityEnum;
 import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 import jakarta.validation.constraints.NotBlank;
@@ -13,9 +12,7 @@ public record UpdateTicketRequest(
     @NotBlank
     String description,
     @NotNull 
-    TicketTypeEnum ticketType,
-    @NotNull
-    PriorityEnum priority
+    TicketTypeEnum ticketType
 ) {
     
 }
