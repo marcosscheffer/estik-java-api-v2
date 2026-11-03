@@ -12,7 +12,7 @@ public final class TicketSpecification {
 
     private TicketSpecification() {}
 
-    public static Specification<TicketEntity> facilityIs(UUID facilityId) {
+    public static Specification<TicketEntity> facilityIdIs(UUID facilityId) {
         return facilityId == null 
             ? Specification.unrestricted() 
             : (root, q, cb) -> cb.equal(root.get("facilityId"), facilityId);
@@ -36,13 +36,13 @@ public final class TicketSpecification {
             : (root, q, cb) -> cb.equal(root.get("priority"), priority);
     }
 
-    public static Specification<TicketEntity> requesterIs(UUID requesterId) {
+    public static Specification<TicketEntity> requesterIdIs(UUID requesterId) {
         return requesterId == null 
             ? Specification.unrestricted() 
             : (root, q, cb) -> cb.equal(root.get("requesterId"), requesterId);
     }
 
-    public static Specification<TicketEntity> forwardedIs(UUID forwardedId) {
+    public static Specification<TicketEntity> forwardedIdIs(UUID forwardedId) {
         return forwardedId == null
             ? Specification.unrestricted()
             : (root, q, cb) -> cb.equal(root.get("forwardedId"), forwardedId);
@@ -64,5 +64,11 @@ public final class TicketSpecification {
         return (title == null || title.isBlank()) 
             ? Specification.unrestricted() 
             : (root, q, cb) -> cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%");
+    }
+
+    public static Specification<TicketEntity> forwardedIs(Boolean forwarded) {
+        return forwarded == null 
+            ? Specification.unrestricted()
+            : (root, q, cb) -> cb.isNull(root.get("forwardedId"));
     }
 }

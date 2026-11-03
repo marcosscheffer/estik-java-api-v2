@@ -81,6 +81,7 @@ public class TicketController {
         @RequestParam(required = false) UUID requesterId,
         @RequestParam(required = false) UUID regulatorId,
         @RequestParam(required = false) UUID forwardedId,
+        @RequestParam(required = false) Boolean forwarded,
         @RequestParam(required = false) UUID assigneeId,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
@@ -95,6 +96,7 @@ public class TicketController {
                 requesterId,
                 regulatorId,
                 forwardedId,
+                forwarded,
                 assigneeId,
                 new PageQuery(page, size)
             )

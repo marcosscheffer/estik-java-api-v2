@@ -3,7 +3,6 @@ package com.marcos.estik.user.domain;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.marcos.estik.shared.domain.exception.DomainCannotMovedException;
 import com.marcos.estik.shared.domain.user.FunctionEnum;
 import com.marcos.estik.shared.domain.user.RoleEnum;
 import com.marcos.estik.user.domain.exception.CannotAssignSelfException;
@@ -71,9 +70,6 @@ public class User {
     }
 
     public void moveTo(UUID facilityId) {
-        if(this.facilityId.equals(facilityId)) {
-            throw new DomainCannotMovedException("failed to move");
-        }
         this.facilityId = facilityId;
         this.updatedAt = Instant.now();
     }

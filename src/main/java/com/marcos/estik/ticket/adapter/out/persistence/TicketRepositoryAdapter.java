@@ -40,6 +40,7 @@ public class TicketRepositoryAdapter implements TicketRepositoryPort {
         UUID requesterId,
         UUID regulatorId,
         UUID forwardedId,
+        Boolean forwarded,
         UUID assigneeId,
         PriorityEnum priority,
         TicketTypeEnum type,
@@ -49,9 +50,10 @@ public class TicketRepositoryAdapter implements TicketRepositoryPort {
 
         Specification<TicketEntity> spec = Specification.allOf(
             TicketSpecification.titleContains(title),
-            TicketSpecification.facilityIs(facilityId),
-            TicketSpecification.requesterIs(requesterId),
-            TicketSpecification.forwardedIs(forwardedId),
+            TicketSpecification.facilityIdIs(facilityId),
+            TicketSpecification.requesterIdIs(requesterId),
+            TicketSpecification.forwardedIdIs(forwardedId),
+            TicketSpecification.forwardedIs(forwarded),
             TicketSpecification.regulatorIs(regulatorId),
             TicketSpecification.assigneeIs(assigneeId),
             TicketSpecification.priorityIs(priority),

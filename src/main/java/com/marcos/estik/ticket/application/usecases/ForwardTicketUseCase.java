@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.security.AuthenticatedUser;
-import com.marcos.estik.shared.domain.event.TicketEvent;
 import com.marcos.estik.shared.domain.event.TicketNotifyEvent;
 import com.marcos.estik.shared.domain.user.RoleEnum;
 import com.marcos.estik.ticket.application.command.ForwardCommand;
@@ -38,7 +37,7 @@ public class ForwardTicketUseCase implements ForwardTicketPort {
         TicketUserInfo forwardUser = loadTicketFindUserByIdPort.execute(command.userId());
         Ticket ticket = ticketRepositoryPort.findTicketById(ticketId);
 
-        if (!forwardUser.role().equals(RoleEnum.TECHNICIAN)) {
+        if (!forwardUser.role().equals(RoleEnum.TECHNICIAN) && !forwardUser.role().equals(RoleEnum.ADMINISTRATOR)) {
             throw new ForwardedRoleInvalidException("Role forwarded invalid");
         }
 

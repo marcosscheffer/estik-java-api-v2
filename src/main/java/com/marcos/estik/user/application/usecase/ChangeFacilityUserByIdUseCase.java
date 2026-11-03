@@ -24,6 +24,7 @@ public class ChangeFacilityUserByIdUseCase implements ChangeFacilityUserByIdPort
         if (!loadUserExistsFacilityByIdPort.existsById(facilityId)) {
             throw new EntityNotFoundException("Facility not found");
         }
+        System.out.println(123);
         User user = userRepositoryPort.findById(userId);
         user.moveTo(facilityId);
         return userRepositoryPort.save(user);

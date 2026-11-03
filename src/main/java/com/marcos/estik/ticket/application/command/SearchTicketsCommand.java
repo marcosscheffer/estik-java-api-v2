@@ -16,6 +16,7 @@ public record SearchTicketsCommand(
     UUID requesterId,
     UUID regulatorId,
     UUID forwardedId,
+    Boolean forwarded,
     UUID assigneeId,
     PageQuery page
 ) {

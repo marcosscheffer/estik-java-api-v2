@@ -18,6 +18,7 @@ public interface TicketRepositoryPort {
         UUID requesterId,
         UUID regulatorId,
         UUID forwardedId,
+        Boolean forwarded,
         UUID assigneeId,
         PriorityEnum priority,
         TicketTypeEnum type,
