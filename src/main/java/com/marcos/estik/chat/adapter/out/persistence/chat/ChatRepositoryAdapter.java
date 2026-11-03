@@ -2,12 +2,15 @@ package com.marcos.estik.chat.adapter.out.persistence.chat;
 
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
+
 import com.marcos.estik.chat.application.ports.out.ChatRepositoryPort;
 import com.marcos.estik.chat.domain.Chat;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
+@Component 
 @RequiredArgsConstructor 
 public class ChatRepositoryAdapter implements ChatRepositoryPort {
     

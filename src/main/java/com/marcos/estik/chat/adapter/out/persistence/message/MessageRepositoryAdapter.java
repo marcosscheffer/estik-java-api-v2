@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Component;
 
 import com.marcos.estik.chat.application.ports.out.MessageRepositoryPort;
 import com.marcos.estik.chat.domain.Message;
@@ -13,6 +14,7 @@ import com.marcos.estik.shared.application.pagination.PageResult;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
+@Component 
 @RequiredArgsConstructor 
 public class MessageRepositoryAdapter implements MessageRepositoryPort {
     
@@ -34,7 +36,7 @@ public class MessageRepositoryAdapter implements MessageRepositoryPort {
     }
 
     @Override
-    public PageResult<Message> SearchByChatId(UUID chatId, PageQuery page) {
+    public PageResult<Message> searchByChatId(UUID chatId, PageQuery page) {
         Page<MessageEntity> messages = jpaMessageRepository.findByChatId(chatId, PageRequest.of(page.page(), page.size()));
         return new PageResult<Message>(
             messages.getContent().stream()

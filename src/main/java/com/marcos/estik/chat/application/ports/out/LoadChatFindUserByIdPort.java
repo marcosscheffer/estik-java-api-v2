@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import com.marcos.estik.chat.application.view.ChatUserInfo;
 
-public interface ChatFindUserByIdPort {
+public interface LoadChatFindUserByIdPort {
     
     ChatUserInfo execute(UUID id);
     

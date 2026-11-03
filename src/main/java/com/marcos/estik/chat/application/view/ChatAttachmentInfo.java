@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public record ChatAttachmentInfo(
     UUID id,
+    UUID messageId,
     String fileName,
     String fileType,
     Long fileSize,

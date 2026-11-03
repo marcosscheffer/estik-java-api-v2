@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public record ChatParticipantInfo(
     UUID id,
+    UUID chatId,
     ChatUserInfo userId,
     Instant joinedAt
 ) {

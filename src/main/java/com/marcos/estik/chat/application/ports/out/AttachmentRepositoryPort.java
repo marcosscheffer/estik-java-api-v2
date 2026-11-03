@@ -11,4 +11,7 @@ public interface AttachmentRepositoryPort {
     Attachment save(Attachment attachment);
 
     List<Attachment> findByMessageIds(Collection<UUID> messageIds);
+
+    List<Attachment> saveAll(Collection<Attachment> attachments);
+
 }

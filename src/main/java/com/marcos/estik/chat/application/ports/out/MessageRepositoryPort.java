@@ -12,6 +12,6 @@ public interface MessageRepositoryPort {
 
     Message findById(UUID id);
 
-    PageResult<Message> SearchByChatId(UUID chatId, PageQuery page);
+    PageResult<Message> searchByChatId(UUID chatId, PageQuery page);
     
 }

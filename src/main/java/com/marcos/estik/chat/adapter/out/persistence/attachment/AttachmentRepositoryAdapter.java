@@ -4,11 +4,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
+
 import com.marcos.estik.chat.application.ports.out.AttachmentRepositoryPort;
 import com.marcos.estik.chat.domain.Attachment;
 
 import lombok.RequiredArgsConstructor;
 
+@Component 
 @RequiredArgsConstructor 
 public class AttachmentRepositoryAdapter implements AttachmentRepositoryPort {
 
@@ -25,8 +28,15 @@ public class AttachmentRepositoryAdapter implements AttachmentRepositoryPort {
     public List<Attachment> findByMessageIds(Collection<UUID> messageIds) {
         List<AttachmentEntity> attachments = jpaAttachmentRepository.findByMessageIds(messageIds);
         return attachments
-        .stream()
+            .stream()
             .map(attachmentPersistenceMapper::toDomain)
             .toList();
+    }
+    @Override
+    public List<Attachment> saveAll(Collection<Attachment> attachments) {
+        List<AttachmentEntity> attachmentEntities = 
+            attachments.stream().map(attachmentPersistenceMapper::toEntity).toList();
+        List<AttachmentEntity> attachmentEntitiesSaved = jpaAttachmentRepository.saveAll(attachmentEntities);
+        return attachmentEntitiesSaved.stream().map(attachmentPersistenceMapper::toDomain).toList();
     }    
 }
