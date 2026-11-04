@@ -14,10 +14,13 @@ import com.marcos.estik.ticket.application.ports.in.ForwardTicketPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
 import com.marcos.estik.ticket.application.ports.out.TicketEventPublisherPort;
+import com.marcos.estik.ticket.application.ports.out.TicketHistoryRepositoryPort;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
 import com.marcos.estik.ticket.application.view.TicketUserInfo;
 import com.marcos.estik.ticket.application.view.TicketView;
 import com.marcos.estik.ticket.domain.Ticket;
+import com.marcos.estik.ticket.domain.TicketHistory;
+import com.marcos.estik.ticket.domain.enums.StatusEnum;
 import com.marcos.estik.ticket.domain.exception.ForwardedRoleInvalidException;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +32,7 @@ public class ForwardTicketUseCase implements ForwardTicketPort {
     private final TicketRepositoryPort ticketRepositoryPort;
     private final LoadTicketFindUserByIdPort loadTicketFindUserByIdPort;
     private final TicketEventPublisherPort ticketEventPublisherPort;
+    private final TicketHistoryRepositoryPort ticketHistoryRepositoryPort;
     private final LoadTicketFindFacilityByIdPort loadTicketFindFacilityByIdPort;
     
     @Override
@@ -43,17 +47,22 @@ public class ForwardTicketUseCase implements ForwardTicketPort {
 
         ticket.forward(principal.id(), forwardUser.id(), command.priority());
         ticketRepositoryPort.save(ticket);
-        ticketEventPublisherPort.execute(new TicketNotifyEvent(
-            ticketId, 
-            ticket.getTitle(), 
-            ticket.getRequesterId(),
-            ticket.getForwardedId(),
-            ticket.getAssigneeId(),
-            principal.id(),
-            ticket.getTicketType().name(), 
-            ticket.getStatus().name(), 
-            Instant.now()
-        ));
+        ticketEventPublisherPort.execute(
+            new TicketNotifyEvent(
+                ticketId, 
+                ticket.getTitle(), 
+                ticket.getRequesterId(),
+                ticket.getForwardedId(),
+                ticket.getAssigneeId(),
+                principal.id(),
+                ticket.getTicketType().name(), 
+                ticket.getStatus().name(), 
+                Instant.now()
+            )
+        );
+
+        TicketHistory ticketHistory = TicketHistory.create(ticketId, StatusEnum.FORWARDED, ticket.getTicketType());
+        ticketHistoryRepositoryPort.save(ticketHistory);
 
         return new TicketView(
             ticket,

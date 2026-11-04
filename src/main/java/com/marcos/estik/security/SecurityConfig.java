@@ -49,6 +49,12 @@ public class SecurityConfig {
                 ).hasRole("USER")
 
                 .requestMatchers(
+                    "/chat/{id}",
+                    "/chats/{id}/messages",
+                    "/chats/{id}/stream"
+                ).hasRole("USER")
+
+                .requestMatchers(
                     HttpMethod.GET,
                     "/computers/**",
                     

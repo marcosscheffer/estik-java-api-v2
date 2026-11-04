@@ -21,6 +21,7 @@ public class Ticket {
     private String title;
     private String description;
     private TicketTypeEnum ticketType;
+    private UUID chatId;
     private UUID requesterId;
     private UUID facilityId;
     private UUID assigneeId;
@@ -46,6 +47,7 @@ public class Ticket {
             title, 
             description, 
             ticketType,
+            null,
             requesterId, 
             facilityId, 
             null,
@@ -60,21 +62,29 @@ public class Ticket {
     }
 
     public void forward(UUID actorId, UUID userId, PriorityEnum priority) {
-        if (!this.status.equals(StatusEnum.OPEN) && !this.status.equals(StatusEnum.PROGRESS)) {
+        if (!this.status.equals(StatusEnum.OPEN) && !this.status.equals(StatusEnum.FORWARDED)) {
             throw new InvalidTicketStatusException("Ticket status invalid for this operation");
+        }
+
+        if (this.requesterId.equals(userId)) {
+            throw new TicketOwnerShipException("Ticket not forwaded for you");
         }
 
         this.priority = priority;
         this.regulatorId = actorId;
         this.forwardedId = userId;
         this.assigneeId = null;
-        this.status = StatusEnum.OPEN;
+        this.status = StatusEnum.FORWARDED;
         this.updatedAt = Instant.now();
     }
 
-    public void assignTo(UUID userId) {
+    public void assignTo(UUID userId, UUID chatId) {
         if (this.status.equals(StatusEnum.CANCELLED) || this.status.equals(StatusEnum.RESOLVED)) {
             throw new TicketNotAssignableException(id);
+        }
+
+        if(this.requesterId.equals(userId)) {
+            throw new TicketOwnerShipException("Ticket not be assumed");
         }
 
         if (this.assigneeId != null) {
@@ -89,8 +99,8 @@ public class Ticket {
             throw new TicketOwnerShipException("Ticket not forwaded for you");
         }
 
-
         this.assigneeId = userId;
+        this.chatId = chatId;
         this.status = StatusEnum.PROGRESS;
         this.updatedAt = Instant.now();
     }
@@ -154,17 +164,4 @@ public class Ticket {
         return actorId.equals(this.requesterId) || actorId.equals(this.assigneeId);
     }
 
-    public void ensureCanSendMessage(UUID actorId) {
-        if (!canAccessChat(actorId)) {
-            throw new TicketOwnerShipException("you cannot access this ticket chat");
-        }
-
-        if (this.assigneeId == null) {
-            throw new InvalidTicketStatusException("Chat opens when someone assumes the ticket");
-        }
-
-        if (this.status == StatusEnum.CANCELLED || this.status == StatusEnum.RESOLVED) {
-            throw new InvalidTicketStatusException("This ticket chat is read-only");
-        }
-    }
 }

@@ -30,7 +30,6 @@ import com.marcos.estik.stock.domain.exception.QuantityMovementInvalidException;
 import com.marcos.estik.ticket.domain.exception.ForwardedRoleInvalidException;
 import com.marcos.estik.ticket.domain.exception.InvalidTicketStatusException;
 import com.marcos.estik.ticket.domain.exception.TicketAlreadyAssignedException;
-import com.marcos.estik.ticket.domain.exception.TicketMessageInvalidException;
 import com.marcos.estik.ticket.domain.exception.TicketNotAssignableException;
 import com.marcos.estik.ticket.domain.exception.TicketOwnerShipException;
 import com.marcos.estik.user.domain.exception.CannotAssignSelfException;
@@ -228,14 +227,6 @@ public class GlobalExceptionHandler {
         HttpServletRequest request
     ) {
         return build(HttpStatus.CONFLICT, exception.getMessage(), request);
-    }
-
-    @ExceptionHandler(TicketMessageInvalidException.class)
-    public ResponseEntity<ErrorResponse> handleTicketMessageInvalid(
-        TicketMessageInvalidException exception,
-        HttpServletRequest request
-    ) {
-        return build(HttpStatus.BAD_REQUEST, exception.getMessage(), request);
     }
 
     @ExceptionHandler(NotificationNotFoundException.class)

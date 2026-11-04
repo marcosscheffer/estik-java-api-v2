@@ -37,6 +37,8 @@ public class TicketEntity {
     private UUID facilityId;
     @Column(name = "assignee_id")
     private UUID assigneeId;
+    @Column(name = "chat_id")
+    private UUID chatId;
     @Column(name = "regulator_id")
     private UUID regulatorId;
     @Column(name = "forwarded_id")

@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.shared.domain.event.TicketNotifyEvent;
 import com.marcos.estik.ticket.application.ports.in.AssumeTicketPort;
+import com.marcos.estik.ticket.application.ports.out.LoadTicketCreateChatPort;
+import com.marcos.estik.ticket.application.ports.out.LoadTicketCreateParticipantPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
 import com.marcos.estik.ticket.application.ports.out.TicketEventPublisherPort;
@@ -29,6 +31,8 @@ public class AssumeTicketUseCase implements AssumeTicketPort {
     private final TicketHistoryRepositoryPort ticketHistoryRepositoryPort;
     private final LoadTicketFindFacilityByIdPort loadTicketFindFacilityByIdPort;
     private final LoadTicketFindUserByIdPort loadTicketFindUserByIdPort;
+    private final LoadTicketCreateParticipantPort loadTicketCreateParticipantPort;
+    private final LoadTicketCreateChatPort loadTicketCreateChatPort;
     private final TicketEventPublisherPort ticketEventPublisherPort;
 
     @Override
@@ -41,7 +45,11 @@ public class AssumeTicketUseCase implements AssumeTicketPort {
             ticket.getTicketType()
         );
 
-        ticket.assignTo(principal.id());
+        UUID chatId = loadTicketCreateChatPort.execute();
+        ticket.assignTo(principal.id(), chatId);
+        loadTicketCreateParticipantPort.execute(ticket.getAssigneeId(), chatId);
+        loadTicketCreateParticipantPort.execute(ticket.getRequesterId(), chatId);
+
         ticketRepositoryPort.save(ticket);
         ticketHistoryRepositoryPort.save(ticketHistory);
         ticketEventPublisherPort.execute(

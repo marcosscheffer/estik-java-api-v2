@@ -79,7 +79,7 @@ public class SearchMessagesUseCase implements SearchMessagesPort {
                         loadChatFindUserByIdPort.execute(participant.getUserId()),
                         participant.getJoinedAt()
                     ),
-                    attachmentsMap.getOrDefault(message.getId(), null)
+                    attachmentsMap.getOrDefault(message.getId(), List.of())
                 );
             }
         );

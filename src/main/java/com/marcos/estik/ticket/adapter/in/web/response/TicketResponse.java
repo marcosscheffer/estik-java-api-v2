@@ -9,6 +9,7 @@ import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 public record TicketResponse(
     UUID id,
+    UUID chatId,
     TicketFacilityResponse facility,
     TicketUserResponse requester,
     TicketUserResponse forwarded,

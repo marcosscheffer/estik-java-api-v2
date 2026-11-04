@@ -37,10 +37,10 @@ public class ItemRepositoryAdapter implements ItemRepositoryPort {
     }
 
     @Override
-    public PageResult<Item> SearchItem(String name, String code, UUID categoryId, PageQuery page) {
+    public PageResult<Item> SearchItem(String name, String sku, UUID categoryId, PageQuery page) {
         Specification<ItemEntity> specs = Specification.allOf(
             ItemSpecification.nameContain(name),
-            ItemSpecification.skuContain(code),
+            ItemSpecification.skuContain(sku),
             ItemSpecification.categoryIs(categoryId)
         );
 
