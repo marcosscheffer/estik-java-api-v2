@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JpaAttachmentRepository extends JpaRepository<AttachmentEntity, UUID> {
 
-    List<AttachmentEntity> findByMessageIds(Collection<UUID> messageIds);
+    List<AttachmentEntity> findByMessageIdIn(Collection<UUID> messageIds);
     
 }

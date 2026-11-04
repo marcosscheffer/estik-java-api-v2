@@ -33,7 +33,7 @@ public class SseNotificationEmitter {
     }
 
     public static void connect(UUID userId, SseEmitter emitter) {
-        send(userId, emitter, SseEmitter.event().comment("connected"));
+        send(userId, emitter, SseEmitter.event().comment(":connect"));
     }
 
     private static void send(UUID userId, SseEmitter emitter, SseEmitter.SseEventBuilder event) {
@@ -44,7 +44,7 @@ public class SseNotificationEmitter {
         }
     }
 
-    private static  Set<SseEmitter> remove(UUID userId, SseEmitter emitter) {
+    private static Set<SseEmitter> remove(UUID userId, SseEmitter emitter) {
         return emitters.computeIfPresent(userId, (key, value) -> {
             value.remove(emitter);
             return value.isEmpty() ? null : value;
@@ -54,7 +54,7 @@ public class SseNotificationEmitter {
     public static void heartbeat() {
         emitters.forEach(
             (userId, userEmitters) -> userEmitters.forEach(
-                emitter -> send(userId, emitter, SseEmitter.event().comment("ping")))
+                emitter -> send(userId, emitter, SseEmitter.event().comment(":ping")))
         );
     }
 }

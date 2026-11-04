@@ -21,7 +21,7 @@ CREATE TABLE messages(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     chat_id UUID NOT NULL REFERENCES chats(id) ON DELETE CASCADE,
     sender_id UUID NOT NULL REFERENCES participants(id) ON DELETE CASCADE,
-    reply_to_id UUID REFERENCES messages(id) DEFAULT NULL ON DELETE SET NULL,
+    reply_to_id UUID REFERENCES messages(id) ON DELETE SET NULL DEFAULT NULL,
     content VARCHAR(2000) NOT NULL,
     created_at TIMESTAMP DEFAULT now(),
     updated_at TIMESTAMP DEFAULT now()

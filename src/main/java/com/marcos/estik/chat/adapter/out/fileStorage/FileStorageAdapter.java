@@ -12,10 +12,7 @@ import org.springframework.stereotype.Component;
 import com.marcos.estik.chat.application.command.FileUpload;
 import com.marcos.estik.chat.application.ports.out.FileStoragePort;
 
-import lombok.RequiredArgsConstructor;
-
 @Component 
-@RequiredArgsConstructor 
 public class FileStorageAdapter implements FileStoragePort {
 
     private final Path path;

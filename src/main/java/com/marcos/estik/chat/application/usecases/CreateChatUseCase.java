@@ -21,7 +21,6 @@ public class CreateChatUseCase implements CreateChatPort {
         chatRepositoryPort.save(chat);
         return new ChatView(
             chat,
-            null,
             null
         );
     }

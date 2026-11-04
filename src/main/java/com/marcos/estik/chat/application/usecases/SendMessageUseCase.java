@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.chat.application.command.FileUpload;
 import com.marcos.estik.chat.application.command.SendMessageCommand;
@@ -14,11 +15,13 @@ import com.marcos.estik.chat.application.ports.out.ChatRepositoryPort;
 import com.marcos.estik.chat.application.ports.out.FileStoragePort;
 import com.marcos.estik.chat.application.ports.out.FileTypeDetectorPort;
 import com.marcos.estik.chat.application.ports.out.LoadChatFindUserByIdPort;
+import com.marcos.estik.chat.application.ports.out.MessagePushPort;
 import com.marcos.estik.chat.application.ports.out.MessageRepositoryPort;
 import com.marcos.estik.chat.application.ports.out.ParticipantRepositoryPort;
 import com.marcos.estik.chat.application.view.ChatAttachmentInfo;
-import com.marcos.estik.chat.application.view.ChatMessageInfo;
+import com.marcos.estik.chat.application.view.MessageView;
 import com.marcos.estik.chat.application.view.ChatParticipantInfo;
+import com.marcos.estik.chat.application.view.MessageInfo;
 import com.marcos.estik.chat.domain.Attachment;
 import com.marcos.estik.chat.domain.Chat;
 import com.marcos.estik.chat.domain.Message;
@@ -42,10 +45,12 @@ public class SendMessageUseCase implements SendMessagePort {
     private final AttachmentRepositoryPort attachmentRepositoryPort;
     private final FileTypeDetectorPort fileTypeDetectorPort;
     private final LoadChatFindUserByIdPort loadChatFindUserByIdPort;
+    private final MessagePushPort messagePushPort;
     private final FileStoragePort fileStoragePort;
 
     @Override
-    public ChatMessageInfo execute(UUID chatId, SendMessageCommand command, AuthenticatedUser principal) {
+    @Transactional()
+    public MessageView execute(UUID chatId, SendMessageCommand command, AuthenticatedUser principal) {
         Chat chat = chatRepositoryPort.findById(chatId);
         Participant participant = participantRepositoryPort.findByUserIdAndChatId(principal.id(), chat.getId());
         Message message = Message.create(
@@ -57,20 +62,32 @@ public class SendMessageUseCase implements SendMessagePort {
 
         List<Attachment> attachments = command.files()
             .stream()
-            .map(file -> toAttachment(file, chatId, chatId))
+            .map(file -> toAttachment(file, message.getId(), chat.getId()))
             .toList();
         messageRepositoryPort.save(message);
         attachmentRepositoryPort.saveAll(attachments);
 
-        return new ChatMessageInfo(
-            message.getId(),
-            chat.getId(),
+        MessageView messageView = new MessageView(
+            message,
+            message.getReplyToId() == null ? null : getReplyInfo(message.getReplyToId()),
             toParticipantInfo(participant),
-            attachments.stream().map(this::toAttachmentInfo).toList(),
-            message.getReplyToId(),
-            message.getContent(),
-            message.getCreatedAt(),
-            message.getUpdatedAt()
+            attachments.stream().map(this::toAttachmentInfo).toList()
+        );
+
+        messagePushPort.execute(messageView);
+        return messageView;
+    }
+
+
+    private MessageInfo getReplyInfo(UUID id) {
+        Message reply = messageRepositoryPort.findById(id);
+        return new MessageInfo(
+            reply.getId(),
+            reply.getChatId(),
+            reply.getContent(),
+            reply.getReplyToId(),
+            reply.getCreatedAt(),
+            reply.getUpdatedAt()
         );
     }
 
@@ -109,5 +126,4 @@ public class SendMessageUseCase implements SendMessagePort {
                 path
             );
     }
-    
 }

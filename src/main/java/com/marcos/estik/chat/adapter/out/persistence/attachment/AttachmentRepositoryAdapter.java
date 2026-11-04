@@ -26,7 +26,7 @@ public class AttachmentRepositoryAdapter implements AttachmentRepositoryPort {
     }
     @Override
     public List<Attachment> findByMessageIds(Collection<UUID> messageIds) {
-        List<AttachmentEntity> attachments = jpaAttachmentRepository.findByMessageIds(messageIds);
+        List<AttachmentEntity> attachments = jpaAttachmentRepository.findByMessageIdIn(messageIds);
         return attachments
             .stream()
             .map(attachmentPersistenceMapper::toDomain)

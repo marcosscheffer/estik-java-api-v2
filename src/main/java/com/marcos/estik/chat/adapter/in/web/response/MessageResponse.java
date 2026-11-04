@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record MessageResponse(
     UUID id,
-    ParticipantResponse senderId,
+    ParticipantResponse sender,
     List<AttachmentResponse> attachments,
     UUID replyToId,
     String content,

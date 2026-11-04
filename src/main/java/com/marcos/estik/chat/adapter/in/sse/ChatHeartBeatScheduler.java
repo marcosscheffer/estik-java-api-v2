@@ -1,14 +1,14 @@
-package com.marcos.estik.ticket.adapter.in.sse;
+package com.marcos.estik.chat.adapter.in.sse;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component 
-public class TicketMessageHeartbeatScheduler {
-    
+public class ChatHeartBeatScheduler {
+
     @Scheduled(fixedRate = 25000)
     public void ping() {
-        SseTicketMessageEmitter.heartbeat();
+        SseChatEmitter.heartbeat();
     }
-
+    
 }

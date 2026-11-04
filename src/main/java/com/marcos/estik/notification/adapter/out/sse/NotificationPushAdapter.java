@@ -18,23 +18,21 @@ public class NotificationPushAdapter implements NotificationPushPort {
 
     @Override
     public void execute(Notification notification) {
-        if(TransactionSynchronizationManager.isSynchronizationActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    send(notification);
-                }
-            });
-        } else{
-            send(notification);
-        }
-    }
-
-    public void send(Notification notification) {
-        SseNotificationEmitter.sendTo(
+        Runnable send = () -> SseNotificationEmitter.sendTo(
             notification.getRecipientId(),
             "notification",
             notificationSseMapper.toPayload(notification)    
         );
+
+        if(TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    send.run();
+                }
+            });
+        } else{
+            send.run();
+        }
     }
 }
