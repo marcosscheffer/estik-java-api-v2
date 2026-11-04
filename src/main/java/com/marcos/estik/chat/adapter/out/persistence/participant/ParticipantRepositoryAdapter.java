@@ -35,12 +35,26 @@ public class ParticipantRepositoryAdapter implements ParticipantRepositoryPort {
 
     @Override
     public Boolean existsByUserIdAndChatId(UUID userId, UUID chatId) {
-        return jpaParticipantRepository.existsByUserId(userId);
+        return jpaParticipantRepository.existsByUserIdAndChatId(userId, chatId);
     }
 
     @Override
     public Participant findByUserIdAndChatId(UUID userId, UUID chatId) {
-        return jpaParticipantRepository.findByUserId(userId).orElseThrow(EntityNotFoundException::new);
+        return participantPersistenceMapper.toDomain(
+            jpaParticipantRepository.findByUserIdAndChatId(userId, chatId)
+                .orElseThrow(
+                    EntityNotFoundException::new
+                )
+        );
     }
 
+    @Override
+    public Participant findById(UUID id) {
+        return participantPersistenceMapper.toDomain(
+            jpaParticipantRepository.findById(id)
+                .orElseThrow(
+                    EntityNotFoundException::new
+                )
+        );
+    }
 }

@@ -105,9 +105,9 @@ public class SendMessageUseCase implements SendMessagePort {
 
     private Attachment toAttachment(FileUpload file, UUID messageId, UUID chatId) {
         ChatFileInfo fileInfo = loadChatStoreFilePort.execute("chat/" + chatId, file);
-            return Attachment.create(
-                messageId,
-                fileInfo.id()
-            );
+        return Attachment.create(
+            messageId,
+            fileInfo.id()
+        );
     }
 }

@@ -106,7 +106,7 @@ public class ChatController {
     private FileUpload toFileUpload(MultipartFile file) {
         try {
             return new FileUpload(
-                file.getName(),
+                file.getOriginalFilename(),
                 file.getSize(),
                 file.getBytes()
             );

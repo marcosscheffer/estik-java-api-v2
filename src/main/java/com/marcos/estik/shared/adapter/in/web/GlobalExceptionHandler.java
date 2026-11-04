@@ -20,6 +20,8 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import com.marcos.estik.auth.domain.exception.InvalidCredentialsException;
 import com.marcos.estik.auth.domain.exception.InvalidRefreshTokenException;
 import com.marcos.estik.auth.domain.exception.UserInactiveException;
+import com.marcos.estik.chat.domain.exception.ChatForbiddenException;
+import com.marcos.estik.files.domain.exception.FileMimeTypeInvalidException;
 import com.marcos.estik.item.domain.exception.ItemMinimumInvalidException;
 import com.marcos.estik.notification.domain.exception.NotificationNotBelongException;
 import com.marcos.estik.notification.domain.exception.NotificationNotFoundException;
@@ -294,6 +296,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.noContent().build();
     }
 
+    @ExceptionHandler(FileMimeTypeInvalidException.class)
+    public ResponseEntity<ErrorResponse> handleFileMimeTypeInvalid(
+        FileMimeTypeInvalidException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.BAD_REQUEST, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(ChatForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleChatForbidden(
+        ChatForbiddenException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.FORBIDDEN, exception.getMessage(), request);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(
         Exception exception,
@@ -301,6 +319,7 @@ public class GlobalExceptionHandler {
     ) {
         return build(HttpStatus.BAD_GATEWAY, exception.getMessage(), request);
     }
+
 
     private ResponseEntity<ErrorResponse> build(
         HttpStatus status, 

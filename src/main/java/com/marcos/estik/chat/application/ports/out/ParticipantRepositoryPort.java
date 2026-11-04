@@ -9,6 +9,8 @@ public interface ParticipantRepositoryPort {
     
     Participant save(Participant participant);
 
+    Participant findById(UUID id);
+
     List<Participant> findByChatId(UUID chatId);
 
     Boolean existsByUserIdAndChatId(UUID userId, UUID chatId);

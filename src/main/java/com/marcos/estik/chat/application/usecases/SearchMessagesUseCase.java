@@ -23,6 +23,7 @@ import com.marcos.estik.chat.domain.Attachment;
 import com.marcos.estik.chat.domain.Chat;
 import com.marcos.estik.chat.domain.Message;
 import com.marcos.estik.chat.domain.Participant;
+import com.marcos.estik.chat.domain.exception.ChatForbiddenException;
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
@@ -44,7 +45,11 @@ public class SearchMessagesUseCase implements SearchMessagesPort {
     @Transactional(readOnly = true)
     public PageResult<MessageView> execute(UUID chatId, AuthenticatedUser principal, PageQuery page) {
         Chat chat = chatRepositoryPort.findById(chatId);
-        Participant participant = participantRepositoryPort.findByUserIdAndChatId(principal.id(), chat.getId());
+
+        if (!participantRepositoryPort.existsByUserIdAndChatId(principal.id(), chat.getId())) {
+            throw new ChatForbiddenException("you cannot access this chat");
+        }
+        
         PageResult<Message> messages = messageRepositoryPort.searchByChatId(chat.getId(), page);
         List<Attachment> attachments = attachmentRepositoryPort.findByMessageIds(
             messages.items().stream().map(message -> message.getId()).toList()
@@ -63,17 +68,20 @@ public class SearchMessagesUseCase implements SearchMessagesPort {
             .collect(Collectors.groupingBy(ChatAttachmentInfo::messageId));
 
         return messages.map(
-            message -> new MessageView(
-                message,
-                message.getReplyToId() == null ? null : getReplyInfo(message.getReplyToId()),
-                new ChatParticipantInfo(
-                    participant.getId(),
-                    participant.getChatId(),
-                    loadChatFindUserByIdPort.execute(participant.getUserId()),
-                    participant.getJoinedAt()
-                ),
-                attachmentsMap.getOrDefault(message.getId(), null)
-            )
+            message -> {
+                Participant participant = participantRepositoryPort.findById(message.getSenderId());
+                return new MessageView(
+                    message,
+                    message.getReplyToId() == null ? null : getReplyInfo(message.getReplyToId()),
+                    new ChatParticipantInfo(
+                        participant.getId(),
+                        participant.getChatId(),
+                        loadChatFindUserByIdPort.execute(participant.getUserId()),
+                        participant.getJoinedAt()
+                    ),
+                    attachmentsMap.getOrDefault(message.getId(), null)
+                );
+            }
         );
     }
     

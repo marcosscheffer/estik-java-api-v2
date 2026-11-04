@@ -4,7 +4,10 @@ import java.util.UUID;
 
 public record ChatFileInfo(
     UUID id,
-    String fileUrl
+    String fileUrl,
+    String fileType,
+    Long fileSize,
+    String fileName
 ) {
     
 }

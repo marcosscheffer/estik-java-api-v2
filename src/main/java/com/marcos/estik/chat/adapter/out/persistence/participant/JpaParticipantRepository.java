@@ -10,10 +10,12 @@ import com.marcos.estik.chat.domain.Participant;
 
 public interface JpaParticipantRepository extends JpaRepository<ParticipantEntity, UUID> {
 
-    List<ParticipantEntity> findByChatId(UUID chatId);
+    Optional<ParticipantEntity> findByUserIdAndChatId(UUID userId, UUID chatId);
 
-    Boolean existsByUserId(UUID userId);
+    Boolean existsByUserIdAndChatId(UUID userId, UUID chatId);
 
     Optional<Participant> findByUserId(UUID userId);
+
+    List<ParticipantEntity> findByChatId(UUID chatId);
     
 }
