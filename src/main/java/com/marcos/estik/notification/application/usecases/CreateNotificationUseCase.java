@@ -34,7 +34,9 @@ public class CreateNotificationUseCase implements CreateNotificationPort {
                         command.type(), 
                         command.title(), 
                         command.message(),
-                        command.referenceId()
+                        command.referenceId(),
+                        command.referenceLabel(),
+                        command.actorId()
                     )
                 ).filter(notification -> !notification.getRecipientId().equals(command.actorId()))
                 .toList()

@@ -1,13 +1,12 @@
 package com.marcos.estik.ticket.application.usecases;
 
-import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.security.AuthenticatedUser;
-import com.marcos.estik.shared.domain.event.TicketNotifyEvent;
+import com.marcos.estik.shared.domain.event.TicketAssumedNotifyEvent;
 import com.marcos.estik.ticket.application.ports.in.AssumeTicketPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketCreateChatPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketCreateParticipantPort;
@@ -53,16 +52,11 @@ public class AssumeTicketUseCase implements AssumeTicketPort {
         ticketRepositoryPort.save(ticket);
         ticketHistoryRepositoryPort.save(ticketHistory);
         ticketEventPublisherPort.execute(
-            new TicketNotifyEvent(
+            new TicketAssumedNotifyEvent (
                 ticket.getId(),
                 ticket.getTitle(),
                 ticket.getRequesterId(),
-                null,
-                ticket.getAssigneeId(),
-                principal.id(),
-                ticket.getTicketType().name(),
-                ticket.getStatus().name(),
-                Instant.now()
+                principal.id()
             )
         );
 

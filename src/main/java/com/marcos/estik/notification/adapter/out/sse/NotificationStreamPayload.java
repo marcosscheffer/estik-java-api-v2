@@ -8,7 +8,9 @@ public record NotificationStreamPayload(
     String type,
     String title,
     String message,
-    UUID referencesId,
+    UUID referenceId,
+    String referenceLabel,
+    UUID actorId,
     Instant createdAt
 ) {
 }

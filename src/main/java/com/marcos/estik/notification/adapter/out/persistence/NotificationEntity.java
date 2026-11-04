@@ -26,8 +26,10 @@ public class NotificationEntity {
     private String title;
     private String message;
 
-    @Column(name = "references_id")
-    private UUID referencesId;
+    @Column(name = "reference_id")
+    private UUID referenceId;
+    @Column(name = "reference_label")
+    private String referenceLabel;
     private Boolean read;
 
     @Column(name = "read_at", nullable = true, updatable = true)

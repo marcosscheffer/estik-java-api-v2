@@ -5,17 +5,16 @@ import java.util.UUID;
 
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
-import com.marcos.estik.shared.domain.user.FunctionEnum;
 import com.marcos.estik.shared.domain.user.RoleEnum;
 import com.marcos.estik.user.domain.User;
 
 public interface UserRepositoryPort {
 
-    List<User> findByRoleAndFunction(RoleEnum role, FunctionEnum function);
+    List<User> findByRole(RoleEnum role);
 
     User findByUsername(String username);
 
-    PageResult<User> SearchUsers(UUID facilityId, String username, FunctionEnum function, RoleEnum role, PageQuery page);
+    PageResult<User> SearchUsers(UUID facilityId, String username, RoleEnum role, PageQuery page);
 
     User findById(UUID id);
 

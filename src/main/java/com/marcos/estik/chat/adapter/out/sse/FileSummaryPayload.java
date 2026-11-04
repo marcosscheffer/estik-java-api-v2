@@ -5,7 +5,8 @@ import java.util.UUID;
 public record FileSummaryPayload(
     UUID id,
     String fileUrl,
-    String fileType
+    String fileType,
+    String fileName
 ) {
     
 }

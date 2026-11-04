@@ -3,7 +3,6 @@ package com.marcos.estik.user.domain;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.marcos.estik.shared.domain.user.FunctionEnum;
 import com.marcos.estik.shared.domain.user.RoleEnum;
 import com.marcos.estik.user.domain.exception.CannotAssignSelfException;
 import com.marcos.estik.user.domain.exception.CannotDeactiveSelfException;
@@ -20,7 +19,6 @@ public class User {
     private String email;
     private String password;
     private RoleEnum role;
-    private FunctionEnum function;
     private Instant createdAt;
     private Instant updatedAt;
     private Boolean active;
@@ -33,7 +31,6 @@ public class User {
             email,
             password,
             RoleEnum.USER,
-            FunctionEnum.USER,
             Instant.now(),
             Instant.now(),
             Boolean.FALSE,
@@ -80,14 +77,6 @@ public class User {
         }
 
         this.role = role;
-        this.updatedAt = Instant.now();
-    }
-
-    public void changeFunction(UUID actorId, FunctionEnum function) {
-        if (this.id.equals(actorId)) {
-            throw new CannotAssignSelfException("cannot assign to self");
-        }
-        this.function = function;
         this.updatedAt = Instant.now();
     }
 }

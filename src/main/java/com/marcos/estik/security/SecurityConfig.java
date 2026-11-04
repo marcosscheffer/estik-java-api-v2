@@ -77,11 +77,6 @@ public class SecurityConfig {
                     "/users/{id}"
                 ).hasRole("USER")
 
-                .requestMatchers(
-                    HttpMethod.GET,
-                    "/users"
-                ).hasRole("REGULATOR")
-
                 // tickets for role USER
                 .requestMatchers(
                     "/tickets",
@@ -106,10 +101,10 @@ public class SecurityConfig {
                     "/departaments",
                     "/departaments/{id}"
                 ).hasRole("USER")
-
+                
                 .requestMatchers(
                     "/tickets/{id}/forward"
-                ).hasRole("REGULATOR")
+                ).hasRole("ADMINISTRATOR")
 
                 .requestMatchers(
                     "/tickets/**"
@@ -131,6 +126,8 @@ public class SecurityConfig {
                     "/categories/**"
                 ).hasRole("TECHNICIAN")
 
+                
+
                 .anyRequest().hasRole("ADMINISTRATOR")
 
             )
@@ -142,8 +139,7 @@ public class SecurityConfig {
     public RoleHierarchy roleHierarchy() {
         return RoleHierarchyImpl.withDefaultRolePrefix()
             .role("ADMINISTRATOR").implies("TECHNICIAN")
-            .role("TECHNICIAN").implies("REGULATOR")
-            .role("REGULATOR").implies("USER")
+            .role("TECHNICIAN").implies("USER")
             .build();
     }
 }

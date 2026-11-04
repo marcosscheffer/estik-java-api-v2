@@ -16,12 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
-import com.marcos.estik.shared.domain.user.FunctionEnum;
 import com.marcos.estik.shared.domain.user.RoleEnum;
 import com.marcos.estik.user.adapter.in.web.mapper.UserWebMapper;
 import com.marcos.estik.user.adapter.in.web.request.AssignUserRequest;
 import com.marcos.estik.user.adapter.in.web.request.ChangeFacilityRequest;
-import com.marcos.estik.user.adapter.in.web.request.ChangeFunctionRequest;
 import com.marcos.estik.user.adapter.in.web.request.UpdateUserRequest;
 import com.marcos.estik.user.adapter.in.web.response.PageResponse;
 import com.marcos.estik.user.adapter.in.web.response.UserResponse;
@@ -30,7 +28,6 @@ import com.marcos.estik.user.application.command.SearchUsersCommand;
 import com.marcos.estik.user.application.port.in.ActiveUserByIdPort;
 import com.marcos.estik.user.application.port.in.AssignUserByIdPort;
 import com.marcos.estik.user.application.port.in.ChangeFacilityUserByIdPort;
-import com.marcos.estik.user.application.port.in.ChangeFunctionPort;
 import com.marcos.estik.user.application.port.in.DeactiveUserByIdPort;
 import com.marcos.estik.user.application.port.in.FindUserByIdPort;
 import com.marcos.estik.user.application.port.in.SearchUsersPort;
@@ -51,7 +48,6 @@ public class UserController {
     private final DeactiveUserByIdPort deactiveUserByIdPort;
     private final ActiveUserByIdPort activeUserByIdPort;
     private final AssignUserByIdPort assignUserByIdPort;
-    private final ChangeFunctionPort changeFunctionPort;
     private final ChangeFacilityUserByIdPort changeFacilityUserByIdPort;
 
     @GetMapping
@@ -59,7 +55,6 @@ public class UserController {
         @RequestParam(defaultValue = "") String username,
         @RequestParam(required = false) UUID facilityId,
         @RequestParam(required = false) RoleEnum role,
-        @RequestParam(required = false) FunctionEnum function,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
@@ -67,7 +62,6 @@ public class UserController {
             new SearchUsersCommand (
                 username,
                 facilityId,
-                function,
                 role,
                 new PageQuery(page, size)
             )
@@ -129,17 +123,6 @@ public class UserController {
         @RequestBody AssignUserRequest request
     ) {
         User user = assignUserByIdPort.execute(id, principal.id(), request.role());
-
-        return ResponseEntity.ok(userWebMapper.toResponse(user));
-    }
-
-    @PostMapping("{id}/function")
-    public ResponseEntity<UserResponse> changeFunction(
-        @PathVariable UUID id,
-        @AuthenticationPrincipal AuthenticatedUser principal,
-        @RequestBody ChangeFunctionRequest request
-    ) {
-        User user = changeFunctionPort.execute(id, request.function(), principal);
 
         return ResponseEntity.ok(userWebMapper.toResponse(user));
     }

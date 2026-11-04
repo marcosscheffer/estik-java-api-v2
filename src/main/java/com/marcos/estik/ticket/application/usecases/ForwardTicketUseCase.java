@@ -1,13 +1,12 @@
 package com.marcos.estik.ticket.application.usecases;
 
-import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.security.AuthenticatedUser;
-import com.marcos.estik.shared.domain.event.TicketNotifyEvent;
+import com.marcos.estik.shared.domain.event.TicketForwardedNotifyEvent;
 import com.marcos.estik.shared.domain.user.RoleEnum;
 import com.marcos.estik.ticket.application.command.ForwardCommand;
 import com.marcos.estik.ticket.application.ports.in.ForwardTicketPort;
@@ -48,16 +47,12 @@ public class ForwardTicketUseCase implements ForwardTicketPort {
         ticket.forward(principal.id(), forwardUser.id(), command.priority());
         ticketRepositoryPort.save(ticket);
         ticketEventPublisherPort.execute(
-            new TicketNotifyEvent(
+            new TicketForwardedNotifyEvent(
                 ticketId, 
                 ticket.getTitle(), 
                 ticket.getRequesterId(),
                 ticket.getForwardedId(),
-                ticket.getAssigneeId(),
-                principal.id(),
-                ticket.getTicketType().name(), 
-                ticket.getStatus().name(), 
-                Instant.now()
+                principal.id()
             )
         );
 

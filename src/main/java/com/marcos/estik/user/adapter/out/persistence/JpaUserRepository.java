@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import com.marcos.estik.shared.domain.user.FunctionEnum;
 import com.marcos.estik.shared.domain.user.RoleEnum;
 
 public interface JpaUserRepository extends JpaRepository<UserEntity, UUID>, JpaSpecificationExecutor<UserEntity> {
@@ -19,5 +18,5 @@ public interface JpaUserRepository extends JpaRepository<UserEntity, UUID>, JpaS
 
     Page<UserEntity> findByUsernameContainingIgnoreCase(String username, Pageable pageable);
 
-    List<UserEntity> findByRoleAndFunction(RoleEnum role, FunctionEnum function);
+    List<UserEntity> findByRole(RoleEnum role);
 }

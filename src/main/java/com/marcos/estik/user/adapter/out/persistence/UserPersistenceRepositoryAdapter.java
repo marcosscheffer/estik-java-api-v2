@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
-import com.marcos.estik.shared.domain.user.FunctionEnum;
 import com.marcos.estik.shared.domain.user.RoleEnum;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
 import com.marcos.estik.user.domain.User;
@@ -53,11 +52,10 @@ public class UserPersistenceRepositoryAdapter implements UserRepositoryPort {
 
 
     @Override 
-    public PageResult<User> SearchUsers(UUID facilityId, String username, FunctionEnum function, RoleEnum role, PageQuery page) {
+    public PageResult<User> SearchUsers(UUID facilityId, String username, RoleEnum role, PageQuery page) {
         Specification<UserEntity> spec = Specification.allOf(
             UserSpecification.facilityIs(facilityId),
             UserSpecification.usernameContains(username),
-            UserSpecification.functionIs(function),
             UserSpecification.roleIs(role)
         );
         Page<UserEntity> users = jpaUserRepository.findAll(spec, PageRequest.of(page.page(), page.size()));
@@ -77,7 +75,7 @@ public class UserPersistenceRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public List<User> findByRoleAndFunction(RoleEnum role, FunctionEnum function) {
-        return jpaUserRepository.findByRoleAndFunction(role, function).stream().map(userPersistenceMapper::toDomain).toList();
+    public List<User> findByRole(RoleEnum role) {
+        return jpaUserRepository.findByRole(role).stream().map(userPersistenceMapper::toDomain).toList();
     }
 }

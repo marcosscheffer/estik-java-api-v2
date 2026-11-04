@@ -1,13 +1,12 @@
 package com.marcos.estik.ticket.application.usecases;
 
-import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.security.AuthenticatedUser;
-import com.marcos.estik.shared.domain.event.TicketNotifyEvent;
+import com.marcos.estik.shared.domain.event.TicketResolveNotifyEvent;
 import com.marcos.estik.ticket.application.ports.in.ResolveTicketPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
@@ -47,16 +46,11 @@ public class ResolveTicketUseCase implements ResolveTicketPort {
         ticketHistoryRepositoryPort.save(ticketHistory);
 
         ticketEventPublisherPort.execute(
-            new TicketNotifyEvent(
+            new TicketResolveNotifyEvent(
                 ticket.getId(),
                 ticket.getTitle(),
                 ticket.getRequesterId(),
-                null,
-                ticket.getAssigneeId(),
-                principal.id(),
-                ticket.getTicketType().name(),
-                ticket.getStatus().name(),
-                Instant.now()
+                principal.id()
             )
         );
 

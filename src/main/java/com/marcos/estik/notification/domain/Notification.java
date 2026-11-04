@@ -16,9 +16,11 @@ public class Notification {
     private String type;
     private String title;
     private String message;
-    private UUID referencesId;
+    private UUID referenceId;
+    private String referenceLabel;
     private Boolean read;
     private Instant readAt;
+    private UUID actorId;
     private Instant createdAt;
 
     public static Notification create(
@@ -26,17 +28,21 @@ public class Notification {
         String type,
         String title,
         String message,
-        UUID referencesId
+        UUID referenceId,
+        String referenceLabel,
+        UUID actorId
     ) {
         return new Notification(
             UUID.randomUUID(),
             recipientId, 
             type, 
             title, 
-            message, 
-            referencesId, 
+            message,
+            referenceId,
+            referenceLabel,
             false, 
-            null, 
+            null,
+            actorId, 
             Instant.now()
         );
     }

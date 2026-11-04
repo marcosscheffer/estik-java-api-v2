@@ -4,7 +4,7 @@ CREATE TABLE notifications(
     type VARCHAR(30) NOT NULL,
     title VARCHAR(100) NOT NULL,
     message VARCHAR(500) NOT NULL,
-    references_id UUID,
+    reference_id UUID,
     read BOOLEAN NOT NULL DEFAULT false,
     read_at TIMESTAMP,
     created_at TIMESTAMP NOT NULL DEFAULT now()

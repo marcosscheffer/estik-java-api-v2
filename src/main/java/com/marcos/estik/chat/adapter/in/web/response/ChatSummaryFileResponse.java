@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public record ChatSummaryFileResponse(
     UUID id,
+    String fileName,
     String fileUrl,
     String fileType
 ) {

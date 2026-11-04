@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.marcos.estik.shared.domain.user.FunctionEnum;
 import com.marcos.estik.shared.domain.user.RoleEnum;
 
 public final class UserSpecification {
@@ -27,11 +26,4 @@ public final class UserSpecification {
             ? Specification.unrestricted()
             : (root, q, cb) -> cb.equal(root.get("role"), role);
     }
-
-    public static Specification<UserEntity> functionIs(FunctionEnum function) {
-        return function == null
-            ? Specification.unrestricted()
-            : (root, q, cb) -> cb.equal(root.get("function"), function);
-    }
-
 }

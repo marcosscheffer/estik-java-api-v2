@@ -20,7 +20,6 @@ public class SearchUsersUseCase implements SearchUsersPort {
         return userRepositoryPort.SearchUsers(
             command.facilityId(), 
             command.username(),
-            command.function(),
             command.role(), 
             command.page()
         );
