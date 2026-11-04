@@ -34,12 +34,7 @@ CREATE INDEX idx_messages_reply_to_id ON messages(reply_to_id);
 CREATE TABLE attachments(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     message_id UUID NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
-    file_name VARCHAR(255) NOT NULL,
-    file_type VARCHAR(100) NOT NULL,
-    file_size BIGINT NOT NULL,
-    file_url VARCHAR(500) NOT NULL,
     created_at TIMESTAMP DEFAULT now()
-
 );
 
 CREATE INDEX idx_attachments_message_id ON attachments(message_id);

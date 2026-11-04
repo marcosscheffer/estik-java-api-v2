@@ -1,4 +1,4 @@
-package com.marcos.estik.chat.adapter.out.fileStorage;
+package com.marcos.estik.files.adapter.out.filestorage;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -9,8 +9,10 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.marcos.estik.chat.application.command.FileUpload;
-import com.marcos.estik.chat.application.ports.out.FileStoragePort;
+import com.marcos.estik.files.application.ports.out.FileStoragePort;
+import com.marcos.estik.shared.domain.file.FileUpload;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Component 
 public class FileStorageAdapter implements FileStoragePort {
@@ -22,9 +24,9 @@ public class FileStorageAdapter implements FileStoragePort {
     }
 
     @Override
-    public String store(UUID chatId, FileUpload file, String fileType) {
+    public String store(String dir, FileUpload file, String fileType) {
         String storedName = UUID.randomUUID() + extensionOf(fileType);
-        Path chatDir = path.resolve(chatId.toString());
+        Path chatDir = path.resolve(dir.toString());
 
         try {
             Files.createDirectories(chatDir);
@@ -33,10 +35,30 @@ public class FileStorageAdapter implements FileStoragePort {
             throw new UncheckedIOException("Failed to store file", exception);
         }
 
-        return chatId + "/" + storedName;
+        return dir + "/" + storedName;
 
     }
 
+    @Override
+    public byte[] load(String fileUrl) {
+        Path file = path.resolve(fileUrl).normalize();
+
+        if (!file.startsWith(path)) {
+            throw new SecurityException("Invalid file path");
+        }
+
+        if (!Files.exists(file)) {
+            throw new EntityNotFoundException("File not found");
+        }
+
+        try {
+            return Files.readAllBytes(file);
+        } catch (IOException exception) {
+            throw new UncheckedIOException("Failed read file", exception);
+        }
+
+    }
+    
     private String extensionOf(String fileType) {
         return switch (fileType) {
             case "image/png" -> ".png";
@@ -46,5 +68,5 @@ public class FileStorageAdapter implements FileStoragePort {
             default -> "";
         };
     }
-    
+
 }

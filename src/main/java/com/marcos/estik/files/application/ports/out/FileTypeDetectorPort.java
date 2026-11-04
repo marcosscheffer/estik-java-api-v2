@@ -1,4 +1,4 @@
-package com.marcos.estik.chat.application.ports.out;
+package com.marcos.estik.files.application.ports.out;
 
 public interface FileTypeDetectorPort {
     

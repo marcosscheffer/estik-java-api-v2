@@ -15,28 +15,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor 
 public class AttachmentRepositoryAdapter implements AttachmentRepositoryPort {
 
-    private final JpaAttachmentRepository jpaAttachmentRepository;
     private final AttachmentPersistenceMapper attachmentPersistenceMapper;
-
+    private final JpaAttachmentRepository jpaAttachmentRepository;
+    
     @Override
     public Attachment save(Attachment attachment) {
         AttachmentEntity attachmentEntity = attachmentPersistenceMapper.toEntity(attachment);
-        AttachmentEntity savedAttachmentEntity = jpaAttachmentRepository.save(attachmentEntity);
-        return attachmentPersistenceMapper.toDomain(savedAttachmentEntity);
+        AttachmentEntity attachmentEntitySaved = jpaAttachmentRepository.save(attachmentEntity);
+        return attachmentPersistenceMapper.toDomain(attachmentEntitySaved);
     }
+
     @Override
     public List<Attachment> findByMessageIds(Collection<UUID> messageIds) {
-        List<AttachmentEntity> attachments = jpaAttachmentRepository.findByMessageIdIn(messageIds);
-        return attachments
+        return jpaAttachmentRepository.findByMessageIdIn(messageIds)
             .stream()
             .map(attachmentPersistenceMapper::toDomain)
             .toList();
     }
-    @Override
-    public List<Attachment> saveAll(Collection<Attachment> attachments) {
-        List<AttachmentEntity> attachmentEntities = 
-            attachments.stream().map(attachmentPersistenceMapper::toEntity).toList();
-        List<AttachmentEntity> attachmentEntitiesSaved = jpaAttachmentRepository.saveAll(attachmentEntities);
-        return attachmentEntitiesSaved.stream().map(attachmentPersistenceMapper::toDomain).toList();
-    }    
+    
 }

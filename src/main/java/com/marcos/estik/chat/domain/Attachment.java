@@ -11,26 +11,17 @@ import lombok.Getter;
 public class Attachment {
     private UUID id;
     private UUID messageId;
-    private String fileName;
-    private String fileType;
-    private Long fileSize;
-    private String fileUrl;
+    private UUID fileId;
     private Instant createdAt;
 
     public static Attachment create(
         UUID messageId,
-        String fileName,
-        String fileType,
-        Long fileSize,
-        String fileLocation
+        UUID fileId
     ) {
         return new Attachment(
             UUID.randomUUID(),
             messageId,
-            fileName,
-            fileType,
-            fileSize,
-            fileLocation,
+            fileId,
             Instant.now()
         );
     }

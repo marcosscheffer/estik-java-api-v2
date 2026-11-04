@@ -4,9 +4,7 @@ import java.util.UUID;
 
 public record AttachmentSummaryPayload(
     UUID id,
-    String fileName,
-    Long fileSize,
-    String fileUrl
+    FileSummaryPayload file
 ) {
     
 }

@@ -1,4 +1,4 @@
-package com.marcos.estik.chat.application.command;
+package com.marcos.estik.shared.domain.file;
 
 public record FileUpload(
     String fileName,

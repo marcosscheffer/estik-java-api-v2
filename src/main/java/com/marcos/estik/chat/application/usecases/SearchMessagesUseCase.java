@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.marcos.estik.chat.application.ports.in.SearchMessagesPort;
 import com.marcos.estik.chat.application.ports.out.AttachmentRepositoryPort;
 import com.marcos.estik.chat.application.ports.out.ChatRepositoryPort;
+import com.marcos.estik.chat.application.ports.out.LoadChatFindFileByIdPort;
 import com.marcos.estik.chat.application.ports.out.LoadChatFindUserByIdPort;
 import com.marcos.estik.chat.application.ports.out.MessageRepositoryPort;
 import com.marcos.estik.chat.application.ports.out.ParticipantRepositoryPort;
@@ -36,6 +37,7 @@ public class SearchMessagesUseCase implements SearchMessagesPort {
     private final ParticipantRepositoryPort participantRepositoryPort;
     private final AttachmentRepositoryPort attachmentRepositoryPort;
     private final MessageRepositoryPort messageRepositoryPort;
+    private final LoadChatFindFileByIdPort loadChatFindFileByIdPort;
     private final LoadChatFindUserByIdPort loadChatFindUserByIdPort;
 
     @Override
@@ -54,10 +56,7 @@ public class SearchMessagesUseCase implements SearchMessagesPort {
                 attachment -> new ChatAttachmentInfo(
                     attachment.getId(),
                     attachment.getMessageId(),
-                    attachment.getFileName(),
-                    attachment.getFileType(),
-                    attachment.getFileSize(),
-                    attachment.getFileUrl(),
+                    loadChatFindFileByIdPort.execute(attachment.getFileId()),
                     attachment.getCreatedAt()
                 )
             )

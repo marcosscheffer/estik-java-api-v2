@@ -1,9 +1,9 @@
-package com.marcos.estik.chat.adapter.out.tika;
+package com.marcos.estik.files.adapter.out.tika;
 
 import org.apache.tika.Tika;
 import org.springframework.stereotype.Component;
 
-import com.marcos.estik.chat.application.ports.out.FileTypeDetectorPort;
+import com.marcos.estik.files.application.ports.out.FileTypeDetectorPort;
 
 import lombok.RequiredArgsConstructor;
 

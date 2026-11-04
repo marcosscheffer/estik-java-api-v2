@@ -18,23 +18,14 @@ import lombok.Setter;
 @Setter 
 public class AttachmentEntity {
     @Id 
-    private UUID id;
+    UUID id;
 
     @Column(name = "message_id")
     private UUID messageId;
 
-    @Column(name = "file_name")
-    private String fileName;
+    @Column(name = "file_id")
+    private UUID fileId;
 
-    @Column(name = "file_type")
-    private String fileType;
-
-    @Column(name = "file_size")
-    private Long fileSize;
-
-    @Column(name = "file_url")
-    private String fileUrl;
-    
     @CreationTimestamp 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

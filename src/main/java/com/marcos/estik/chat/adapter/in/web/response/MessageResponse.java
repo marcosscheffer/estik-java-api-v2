@@ -8,7 +8,7 @@ public record MessageResponse(
     UUID id,
     ParticipantResponse sender,
     List<AttachmentResponse> attachments,
-    UUID replyToId,
+    MessageSummaryResponse replyTo,
     String content,
     Instant createdAt,
     Instant updatedAt

@@ -7,8 +7,8 @@ import com.marcos.estik.chat.domain.Attachment;
 @Mapper(componentModel = "spring")
 public interface AttachmentPersistenceMapper {
 
+    Attachment toDomain(AttachmentEntity attachment);
+
     AttachmentEntity toEntity(Attachment attachment);
 
-    Attachment toDomain(AttachmentEntity attachment);
-    
 }

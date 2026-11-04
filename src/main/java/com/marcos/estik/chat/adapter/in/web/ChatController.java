@@ -11,7 +11,6 @@ import com.marcos.estik.chat.adapter.in.web.mapper.MessageWebMapper;
 import com.marcos.estik.chat.adapter.in.web.request.SendMessageRequest;
 import com.marcos.estik.chat.adapter.in.web.response.ChatResponse;
 import com.marcos.estik.chat.adapter.in.web.response.MessageResponse;
-import com.marcos.estik.chat.application.command.FileUpload;
 import com.marcos.estik.chat.application.command.SendMessageCommand;
 import com.marcos.estik.chat.application.ports.in.FindChatByIdPort;
 import com.marcos.estik.chat.application.ports.in.SearchMessagesPort;
@@ -21,6 +20,7 @@ import com.marcos.estik.chat.application.view.MessageView;
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
+import com.marcos.estik.shared.domain.file.FileUpload;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,8 +37,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.PostMapping;
-
-
 
 @RestController 
 @RequestMapping("/chats/{id}")
@@ -102,8 +100,6 @@ public class ChatController {
         );
 
         MessageView message = sendMessagePort.execute(id, command, principal);
-
-        System.out.println(message);
         return ResponseEntity.ok(messageWebMapper.toResponse(message));
     }
 
