@@ -16,7 +16,7 @@ RUN ./mvnw -B -q clean package -DskipTests
 
 FROM eclipse-temurin:25-jre-alpine AS runtime
 
-RUN groupadd --system estik && useradd --system --gid  estik --no-create-home estik
+RUN addgroup -S estik && adduser -S -G estik -H estik
 
 COPY --from=build /workspace/target/estik-0.0.1-SNAPSHOT.jar app.jar
 
