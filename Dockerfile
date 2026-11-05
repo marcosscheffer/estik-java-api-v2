@@ -12,7 +12,7 @@ RUN chmod +x mvnw && ./mvnw -B -q  dependency:go-offline
 
 COPY src src
 
-RUN ./mvwn -B -q clean package -DskipTests
+RUN ./mvnw -B -q clean package -DskipTests
 
 FROM eclipse-temurin:25-jre AS runtinem
 
