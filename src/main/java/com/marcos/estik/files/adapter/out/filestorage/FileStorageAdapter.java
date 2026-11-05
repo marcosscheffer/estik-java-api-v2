@@ -19,7 +19,7 @@ public class FileStorageAdapter implements FileStoragePort {
 
     private final Path path;
 
-    public FileStorageAdapter(@Value("${storage.chat.dir:uploads}") String path) {
+    public FileStorageAdapter(@Value("${storage.dir:uploads}") String path) {
         this.path = Path.of(path).toAbsolutePath().normalize();
     }
 
