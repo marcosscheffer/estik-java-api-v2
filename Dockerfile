@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM eclipse-temurin:25-jdk AS build
+FROM eclipse-temurin:25-jdk-alpine AS build
 
 WORKDIR /workspace
 
@@ -14,7 +14,7 @@ COPY src src
 
 RUN ./mvnw -B -q clean package -DskipTests
 
-FROM eclipse-temurin:25-jre AS runtinem
+FROM eclipse-temurin:25-jre-alpine AS runtime
 
 RUN groupadd --system estik && useradd --system --gid  estik --no-create-home estik
 
