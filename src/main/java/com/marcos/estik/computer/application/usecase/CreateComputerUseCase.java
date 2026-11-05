@@ -4,16 +4,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.computer.application.command.CreateComputerCommand;
-import com.marcos.estik.computer.application.command.LoadCreateComputerHistoryCommand;
 import com.marcos.estik.computer.application.ports.in.CreateComputerPort;
+import com.marcos.estik.computer.application.ports.out.ComputerHistoryRepositoryPort;
 import com.marcos.estik.computer.application.ports.out.ComputerRepositoryPort;
-import com.marcos.estik.computer.application.ports.out.LoadComputerCreateComputerHistoryPort;
 import com.marcos.estik.computer.application.ports.out.LoadComputerFindDepartamentByIdPort;
 import com.marcos.estik.computer.application.ports.out.LoadComputerFindFacilityByIdPort;
 import com.marcos.estik.computer.application.view.ComputerDepartamentInfo;
 import com.marcos.estik.computer.application.view.ComputerFacilityInfo;
 import com.marcos.estik.computer.application.view.ComputerView;
 import com.marcos.estik.computer.domain.Computer;
+import com.marcos.estik.computer.domain.ComputerHistory;
+import com.marcos.estik.computer.domain.DirectionEnum;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,8 +24,8 @@ public class CreateComputerUseCase implements CreateComputerPort {
 
     private final ComputerRepositoryPort computerRepositoryPort;
     private final LoadComputerFindDepartamentByIdPort loadComputerFindDepartamentByIdPort;
+    private final ComputerHistoryRepositoryPort computerHistoryRepositoryPort;
     private final LoadComputerFindFacilityByIdPort loadComputerFindFacilityByIdPort;
-    private final LoadComputerCreateComputerHistoryPort loadComputerCreateComputerHistoryPort;
 
     @Override
     @Transactional
@@ -45,14 +46,14 @@ public class CreateComputerUseCase implements CreateComputerPort {
         
         computerRepositoryPort.save(computer);
 
-        loadComputerCreateComputerHistoryPort.CreateComputerHistory(
-            new LoadCreateComputerHistoryCommand(
-                "Created",
-                "SENT",
-                computer.getId(),
-                computer.getDepartamentId()
-            )
+        ComputerHistory history = ComputerHistory.create(
+            "Created",
+            DirectionEnum.SENT,
+            computer.getId(),
+            computer.getDepartamentId()
         );
+
+        computerHistoryRepositoryPort.save(history);
 
         return new ComputerView(
             computer,

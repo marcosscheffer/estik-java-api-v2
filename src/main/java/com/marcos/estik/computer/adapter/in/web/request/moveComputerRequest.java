@@ -2,6 +2,8 @@ package com.marcos.estik.computer.adapter.in.web.request;
 
 import java.util.UUID;
 
+import com.marcos.estik.computer.domain.DirectionEnum;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -12,8 +14,8 @@ public record moveComputerRequest(
     UUID departamentId,
     @NotBlank 
     String serviceDescription,
-    @NotBlank 
-    String direction
+    @NotNull 
+    DirectionEnum direction
 ) {
     
 }

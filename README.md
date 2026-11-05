@@ -204,7 +204,7 @@ To call protected endpoints in Swagger, log in with `POST /auth/login`, copy the
 | notification | `/notifications` | `GET /`, `GET /unread`, `PATCH /{id}/read`, `PATCH /read` (all), `GET /stream` (SSE) |
 | files | `/files` | `GET /{id}?expires=&signature=` (signed URL, no token needed) |
 | computer | `/computers` | `GET /`, `GET /{id}`, `POST /`, `PUT /{id}`, `POST /{id}/move`, `DELETE /{id}` |
-| computerhistory | `/histories` | `GET /`, `GET /{id}` |
+| computer | `/histories` | `GET /` (filters: `computerId`, `departamentId`, `direction`), `GET /{id}` |
 | item | `/items` | `GET /`, `GET /{id}`, `POST /`, `PUT /{id}` |
 | category | `/categories` | `GET /`, `GET /{id}`, `POST /`, `PUT /{id}` |
 | stock | `/stock/balances` | `GET /`, `GET /{id}` (read-only) |
@@ -307,8 +307,7 @@ src/main/java/com/marcos/estik/
 ├── chat/              ticket chat, messages, attachments, SSE stream and heartbeat
 ├── notification/      notifications from events, SSE stream
 ├── files/             file storage, type detection (Tika), signed URLs
-├── computer/          computer inventory
-├── computerhistory/   computer movement history
+├── computer/          computer inventory and movement history (/computers, /histories)
 ├── item/              catalog items
 ├── category/          catalog categories
 ├── stock/             stock balances and movements

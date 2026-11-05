@@ -5,17 +5,17 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.marcos.estik.computer.application.command.LoadCreateComputerHistoryCommand;
 import com.marcos.estik.computer.application.command.MoveComputerCommand;
 import com.marcos.estik.computer.application.ports.in.MoveComputerPort;
+import com.marcos.estik.computer.application.ports.out.ComputerHistoryRepositoryPort;
 import com.marcos.estik.computer.application.ports.out.ComputerRepositoryPort;
-import com.marcos.estik.computer.application.ports.out.LoadComputerCreateComputerHistoryPort;
 import com.marcos.estik.computer.application.ports.out.LoadComputerFindDepartamentByIdPort;
 import com.marcos.estik.computer.application.ports.out.LoadComputerFindFacilityByIdPort;
 import com.marcos.estik.computer.application.view.ComputerDepartamentInfo;
 import com.marcos.estik.computer.application.view.ComputerFacilityInfo;
 import com.marcos.estik.computer.application.view.ComputerView;
 import com.marcos.estik.computer.domain.Computer;
+import com.marcos.estik.computer.domain.ComputerHistory;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,9 +25,9 @@ import lombok.RequiredArgsConstructor;
 public class MoveComputerUseCase implements MoveComputerPort {
 
     private final ComputerRepositoryPort computerRepositoryPort;
+    private final ComputerHistoryRepositoryPort computerHistoryRepositoryPort;
     private final LoadComputerFindFacilityByIdPort loadComputerFindFacilityByIdPort;
     private final LoadComputerFindDepartamentByIdPort loadComputerFindDepartamentByIdPort;
-    private final LoadComputerCreateComputerHistoryPort loadComputerCreateComputerHistoryPort;
 
     @Override
     public ComputerView execute(UUID computerId, MoveComputerCommand command) {
@@ -37,16 +37,16 @@ public class MoveComputerUseCase implements MoveComputerPort {
         Computer computer = computerRepositoryPort.findComputerById(computerId);
         computer.moveTo(command.facilityId(), command.departamentId());
 
-        loadComputerCreateComputerHistoryPort.CreateComputerHistory(
-            new LoadCreateComputerHistoryCommand(
-                command.serviceDescription(),
-                command.direction(),
-                computerId,
-                computer.getDepartamentId()
-            )
+        computerRepositoryPort.save(computer);
+
+        ComputerHistory history = ComputerHistory.create(
+            command.serviceDescription(),
+            command.direction(),
+            computer.getId(),
+            computer.getDepartamentId()
         );
 
-        computerRepositoryPort.save(computer);
+        computerHistoryRepositoryPort.save(history);
         
         return new ComputerView(
             computer,

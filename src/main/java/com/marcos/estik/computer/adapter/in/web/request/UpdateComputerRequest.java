@@ -1,5 +1,6 @@
 package com.marcos.estik.computer.adapter.in.web.request;
 
+import com.marcos.estik.computer.domain.DirectionEnum;
 import com.marcos.estik.computer.domain.OsEnum;
 import com.marcos.estik.computer.domain.StorageTypeEnum;
 
@@ -19,7 +20,7 @@ public record UpdateComputerRequest(
     String storage,
     @NotBlank
     String serviceDescription,
-    @NotBlank
-    String direction
+    @NotNull 
+    DirectionEnum direction
 ) {
 }
