@@ -32,6 +32,9 @@ public class NotificationEntity {
     private String referenceLabel;
     private Boolean read;
 
+    @Column(name = "actor_id")
+    private UUID actorId;
+
     @Column(name = "read_at", nullable = true, updatable = true)
     private Instant readAt;
 
