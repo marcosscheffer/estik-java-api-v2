@@ -1,0 +1,17 @@
+package com.marcos.estik.access.application.ports.out;
+
+import java.util.List;
+import java.util.UUID;
+
+import com.marcos.estik.access.domain.Permission;
+
+public interface PermissionRepositoryPort {
+    
+    
+   List<Permission> findByRoleId(UUID id);
+
+   Permission save(Permission permission);
+
+   Permission findById(UUID id);
+
+}

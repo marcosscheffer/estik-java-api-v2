@@ -9,12 +9,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor 
 public class Role {
-    UUID id;
-    String name;
-    Instant createdAt;
-    Instant updatedAt;
+    private UUID id;
+    private String name;
+    private Instant createdAt;
+    private Instant updatedAt;
 
-    public Role create(
+    public static Role create(
         String name
     ) {
         return new Role(

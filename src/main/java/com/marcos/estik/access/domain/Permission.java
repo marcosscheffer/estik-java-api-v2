@@ -11,13 +11,13 @@ import lombok.Getter;
 @Getter 
 @AllArgsConstructor 
 public class Permission {
-    UUID id;
-    UUID roleId;
-    PermissionEnum permission;
-    Instant createdAt;
-    Instant updatedAt;
+    private UUID id;
+    private UUID roleId;
+    private PermissionEnum permission;
+    private Instant createdAt;
+    private Instant updatedAt;
 
-    public Permission create(
+    public static Permission create(
         UUID roleId,
         PermissionEnum permission
     ) {
