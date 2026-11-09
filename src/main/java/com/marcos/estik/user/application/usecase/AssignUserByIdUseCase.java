@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.marcos.estik.shared.domain.user.RoleEnum;
 import com.marcos.estik.user.application.port.in.AssignUserByIdPort;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
 import com.marcos.estik.user.domain.User;
@@ -18,7 +17,7 @@ public class AssignUserByIdUseCase implements AssignUserByIdPort {
     private final UserRepositoryPort userRepositoryPort;
 
     @Override
-    public User execute(UUID userId, UUID principalId, RoleEnum role) {
+    public User execute(UUID userId, UUID principalId, UUID role) {
         User user = userRepositoryPort.findById(userId);
         user.changeRole(principalId, role);
         return userRepositoryPort.save(user);

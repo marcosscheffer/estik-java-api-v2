@@ -3,7 +3,6 @@ package com.marcos.estik.user.domain;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.marcos.estik.shared.domain.user.RoleEnum;
 import com.marcos.estik.user.domain.exception.CannotAssignSelfException;
 import com.marcos.estik.user.domain.exception.CannotDeactiveSelfException;
 import com.marcos.estik.user.domain.exception.UserOwnershipException;
@@ -18,9 +17,9 @@ public class User {
     private String username;
     private String email;
     private String password;
-    private RoleEnum role;
     private Instant createdAt;
     private Instant updatedAt;
+    private UUID roleId;
     private Boolean active;
     private UUID facilityId;
 
@@ -30,9 +29,9 @@ public class User {
             username,
             email,
             password,
-            RoleEnum.USER,
             Instant.now(),
             Instant.now(),
+            null,
             Boolean.FALSE,
             facility
         );
@@ -71,12 +70,12 @@ public class User {
         this.updatedAt = Instant.now();
     }
 
-    public void changeRole(UUID actorId, RoleEnum role) {
+    public void changeRole(UUID actorId, UUID role) {
         if (this.id.equals(actorId)) {
             throw new CannotAssignSelfException("cannot assign to self");
         }
 
-        this.role = role;
+        this.roleId = role;
         this.updatedAt = Instant.now();
     }
 }

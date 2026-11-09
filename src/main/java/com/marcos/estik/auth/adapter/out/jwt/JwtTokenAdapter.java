@@ -4,6 +4,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.crypto.SecretKey;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.marcos.estik.auth.application.port.out.TokenProviderPort;
 import com.marcos.estik.auth.domain.UserAuth;
+import com.marcos.estik.shared.domain.user.PermissionEnum;
 import com.marcos.estik.shared.domain.user.RoleEnum;
 
 import io.jsonwebtoken.Claims;
@@ -28,6 +32,7 @@ public class JwtTokenAdapter implements TokenProviderPort {
     private final Duration expirationTime;
     private final Duration refreshTokenExpirationTime;
 
+
     public JwtTokenAdapter(
         @Value("${jwt.secret}") String secret,
         @Value("${jwt.issuer}") String issuer,
@@ -41,7 +46,7 @@ public class JwtTokenAdapter implements TokenProviderPort {
     }
 
     @Override
-    public String generateToken(UserAuth user) {
+    public String generateToken(UserAuth user, Set<PermissionEnum> permissions) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .subject(user.getId().toString())
@@ -51,7 +56,8 @@ public class JwtTokenAdapter implements TokenProviderPort {
 
                 .claim("type", "access")
                 .claim("username", user.getUsername())
-                .claim("role", user.getRole().name())
+                .claim("role", user.getRoleId())
+                .claim("permissions", permissions.stream().toList())
 
                 .signWith(secret)
                 .compact();
@@ -84,6 +90,7 @@ public class JwtTokenAdapter implements TokenProviderPort {
         Claims claim = getClaims(token);
         return UUID.fromString(claim.getId());
     }
+
 
     private Claims getClaims(String token) {
         return Jwts.parser()
@@ -127,5 +134,26 @@ public class JwtTokenAdapter implements TokenProviderPort {
     public String getUsername(String token) {
         Claims claims = getClaims(token);
         return claims.get("username", String.class);
+    }
+
+    @Override
+    public Set<PermissionEnum> getPermission(String token) {
+        Claims claims = getClaims(token);
+        List<?> raw = claims.get("permissions", List.class);
+        if (raw == null) {
+            return Set.of();
+        }
+
+        Set<PermissionEnum> permissions = EnumSet.noneOf(PermissionEnum.class);
+        for (PermissionEnum permission : permissions) {
+            try {
+                permissions.add(PermissionEnum.valueOf(String.valueOf(permission)));
+            
+            } catch(IllegalArgumentException exception) {
+                // ignore
+            }
+        }
+
+        return permissions;
     }
 }

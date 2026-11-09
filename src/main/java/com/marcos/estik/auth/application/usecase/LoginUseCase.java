@@ -1,5 +1,6 @@
 package com.marcos.estik.auth.application.usecase;
 
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -10,11 +11,13 @@ import com.marcos.estik.auth.application.port.out.PasswordEncodePort;
 import com.marcos.estik.auth.application.port.out.RefreshTokenRepositoryPort;
 import com.marcos.estik.auth.application.port.out.TokenProviderPort;
 import com.marcos.estik.auth.application.port.out.LoadUserByUsernamePort;
+import com.marcos.estik.auth.application.port.out.LoadUserFindPermissionByRoleIdPort;
 import com.marcos.estik.auth.application.result.AuthTokens;
 import com.marcos.estik.auth.domain.RefreshToken;
 import com.marcos.estik.auth.domain.UserAuth;
 import com.marcos.estik.auth.domain.exception.InvalidCredentialsException;
 import com.marcos.estik.auth.domain.exception.UserInactiveException;
+import com.marcos.estik.shared.domain.user.PermissionEnum;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +28,7 @@ public class LoginUseCase implements LoginPort {
     private final PasswordEncodePort passwordEncoder;
     private final LoadUserByUsernamePort loadUserByUsernamePort;
     private final TokenProviderPort tokenProvider;
+    private final LoadUserFindPermissionByRoleIdPort loadUserFindPermissionByRoleIdPort;
     private final RefreshTokenRepositoryPort refreshTokenRepository;
 
     @Override
@@ -39,7 +43,9 @@ public class LoginUseCase implements LoginPort {
             throw new InvalidCredentialsException("Invalid username or password");
         }
 
-        String accessToken = tokenProvider.generateToken(user);
+        Set<PermissionEnum> permissions = loadUserFindPermissionByRoleIdPort.execute(user.getRoleId()); 
+
+        String accessToken = tokenProvider.generateToken(user, permissions);
         
         UUID tokenId = UUID.randomUUID();
         RefreshToken token = RefreshToken.create(tokenId, user.getId());

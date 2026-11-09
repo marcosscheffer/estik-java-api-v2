@@ -75,7 +75,7 @@ public class UserPersistenceRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public List<User> findByRole(RoleEnum role) {
-        return jpaUserRepository.findByRole(role).stream().map(userPersistenceMapper::toDomain).toList();
+    public List<User> findByRole(UUID role) {
+        return jpaUserRepository.findByRoleId(role).stream().map(userPersistenceMapper::toDomain).toList();
     }
 }

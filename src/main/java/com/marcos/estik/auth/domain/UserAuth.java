@@ -3,7 +3,6 @@ package com.marcos.estik.auth.domain;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.marcos.estik.shared.domain.user.RoleEnum;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +15,7 @@ public class UserAuth {
     String email;
     String password;
     UUID facilityId;
-    RoleEnum role;
+    UUID roleId;
     Instant createdAt;
     Instant updatedAt;
     Boolean active;

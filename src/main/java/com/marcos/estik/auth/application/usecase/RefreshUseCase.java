@@ -1,6 +1,7 @@
 package com.marcos.estik.auth.application.usecase;
 
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -8,12 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.auth.application.port.in.RefreshPort;
 import com.marcos.estik.auth.application.port.out.LoadUserByIdPort;
+import com.marcos.estik.auth.application.port.out.LoadUserFindPermissionByRoleIdPort;
 import com.marcos.estik.auth.application.port.out.RefreshTokenRepositoryPort;
 import com.marcos.estik.auth.application.port.out.TokenProviderPort;
 import com.marcos.estik.auth.application.result.AuthTokens;
 import com.marcos.estik.auth.domain.RefreshToken;
 import com.marcos.estik.auth.domain.UserAuth;
 import com.marcos.estik.auth.domain.exception.InvalidRefreshTokenException;
+import com.marcos.estik.shared.domain.user.PermissionEnum;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +27,7 @@ public class RefreshUseCase implements RefreshPort {
     private final RefreshTokenRepositoryPort refreshTokenRepositoryPort;
     private final TokenProviderPort tokenProviderPort;
     private final LoadUserByIdPort loadUserByIdPort;
+    private final LoadUserFindPermissionByRoleIdPort loadUserFindPermissionByRoleIdPort;
 
     @Override
     @Transactional
@@ -53,8 +57,10 @@ public class RefreshUseCase implements RefreshPort {
         RefreshToken newRefreshToken = RefreshToken.create(UUID.randomUUID(), user.getId());
         refreshTokenRepositoryPort.save(newRefreshToken);
 
+        Set<PermissionEnum> permissions = loadUserFindPermissionByRoleIdPort.execute(user.getRoleId());
+
         return new AuthTokens(
-            tokenProviderPort.generateToken(user),
+            tokenProviderPort.generateToken(user, permissions),
             tokenProviderPort.generateRefreshToken(user, newRefreshToken.getId())
         );
     }

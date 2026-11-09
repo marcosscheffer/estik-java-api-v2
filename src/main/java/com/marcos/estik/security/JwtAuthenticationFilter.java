@@ -2,6 +2,7 @@ package com.marcos.estik.security;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.http.HttpHeaders;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.marcos.estik.auth.application.port.out.TokenProviderPort;
-import com.marcos.estik.shared.domain.user.RoleEnum;
+import com.marcos.estik.shared.domain.user.PermissionEnum;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -43,16 +44,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             ) {
                 UUID userId = tokenProvider.getUserId(token);
                 String username = tokenProvider.getUsername(token);
-                RoleEnum role = tokenProvider.getRole(token);
-                
+                Set<PermissionEnum> permissions = tokenProvider.getPermission(token);                
                 AuthenticatedUser principal = new AuthenticatedUser(
                     userId,
                     username,
-                    role
+                    permissions
                 );
 
-                List<GrantedAuthority> authorities = 
-                    List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+                List<GrantedAuthority> authorities = permissions.stream()
+                    .map(permission -> (GrantedAuthority) new SimpleGrantedAuthority(permission.name()))
+                    .toList();
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     principal,

@@ -39,4 +39,9 @@ public class PermissionRepositoryAdapter implements PermissionRepositoryPort {
             );
         return permissionPersistenceMapper.toDomain(permissionEntity);
     }
+
+    @Override
+    public void delete(UUID id) {
+        jpaPermissionRepository.deleteById(id);
+    }
 }

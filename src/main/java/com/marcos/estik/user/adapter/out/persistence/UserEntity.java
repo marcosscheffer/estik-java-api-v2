@@ -6,12 +6,9 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.marcos.estik.shared.domain.user.RoleEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -28,8 +25,9 @@ public class UserEntity {
     private String username;
     private String email;
     private String password;
-    @Enumerated(EnumType.STRING)
-    private RoleEnum role;
+
+    @Column(name = "role_id")
+    private UUID roleId;
     private Boolean active;
 
     @Column(name = "facility_id")

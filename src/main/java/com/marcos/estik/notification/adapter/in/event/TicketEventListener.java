@@ -29,7 +29,7 @@ public class TicketEventListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     void onTicketCreateNotifyEventListener(TicketCreateNotifyEvent event) {
-        List<UUID> recipientsId = loadNotificationFindUserByRolePort.execute(RoleEnum.ADMINISTRATOR);
+        // List<UUID> recipientsId = loadNotificationFindUserByRolePort.execute(RoleEnum.ADMINISTRATOR);
 
         createNotificationPort.execute(
             new CreateNotificationCommand(

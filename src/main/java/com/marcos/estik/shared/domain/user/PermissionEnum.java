@@ -9,8 +9,10 @@ public enum PermissionEnum {
 
     FACILITY_READ, FACILITY_MANAGE,
 
-    USER_READ, USER_MANAGE,
+    USER_MANAGE,
 
-    ALL_ACCESS
+    CHAT_MANAGE,
+
+    ACCESS_MANAGE
  
 }

@@ -42,103 +42,10 @@ public class SecurityConfig {
                     "/files/**"
                 ).permitAll()
 
-                .requestMatchers(
-                    "/notifications/**"
-
-                ).hasRole("USER")
-
-                .requestMatchers(
-                    "/chat/{id}",
-                    "/chats/{id}/messages",
-                    "/chats/{id}/stream"
-                ).hasRole("USER")
-
-                .requestMatchers(
-                    HttpMethod.GET,
-                    "/computers/**",
-                    
-                    "/histories/**"
-                ).hasRole("USER")
-
-                // stock for role USER
-                .requestMatchers(
-                    HttpMethod.GET,
-                    "/stock/balances/**"
-                ).hasRole("USER")
                 
-                .requestMatchers(
-                    HttpMethod.GET,
-                    "/stock/movements/**"
-                ).hasRole("USER")
-
-                // users for role USER
-                .requestMatchers(
-                    "/users/{id}"
-                ).hasRole("USER")
-
-                // tickets for role USER
-                .requestMatchers(
-                    "/tickets",
-                    "/tickets/{id}",
-                    "/tickets/{id}/cancel",
-                    "/tickets/{id}/histories",
-                    "/tickets/{id}/reopen",
-                    "/tickets/{id}/messages",
-                    "/tickets/{id}/messages/stream"
-                ).hasRole("USER")
-
-                // facilities for role USER
-                .requestMatchers(
-                    HttpMethod.GET,
-                    "/facilities",
-                    "/facilities/{id}"
-                ).hasRole("USER")
-
-                // departaments for role USER
-                .requestMatchers(
-                    HttpMethod.GET,
-                    "/departaments",
-                    "/departaments/{id}"
-                ).hasRole("USER")
-                
-                .requestMatchers(
-                    "/tickets/{id}/forward"
-                ).hasRole("ADMINISTRATOR")
-
-                .requestMatchers(
-                    "/tickets/**"
-                ).hasRole("TECHNICIAN")
-
-                .requestMatchers(
-                    "/stock/"
-                ).hasRole("TECHNICIAN")
-
-                .requestMatchers(
-                    "/items/**"
-                ).hasRole("TECHNICIAN")
-
-                .requestMatchers(
-                    "/computers/**"
-                ).hasRole("TECHNICIAN")
-
-                .requestMatchers(
-                    "/categories/**"
-                ).hasRole("TECHNICIAN")
-
-                
-
-                .anyRequest().hasRole("ADMINISTRATOR")
 
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .build();
-    }
-
-    @Bean 
-    public RoleHierarchy roleHierarchy() {
-        return RoleHierarchyImpl.withDefaultRolePrefix()
-            .role("ADMINISTRATOR").implies("TECHNICIAN")
-            .role("TECHNICIAN").implies("USER")
             .build();
     }
 }

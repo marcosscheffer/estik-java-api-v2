@@ -12,6 +12,8 @@ public interface PermissionRepositoryPort {
 
    Permission save(Permission permission);
 
+   void delete(UUID id);
+
    Permission findById(UUID id);
 
 }

@@ -18,7 +18,7 @@ public class LoadNotificationFindUserByRoleAdapter implements LoadNotificationFi
     private final FindUserByRolePort findUserByRolePort;
     
     @Override
-    public List<UUID> execute(RoleEnum role) {
+    public List<UUID> execute(UUID role) {
         return findUserByRolePort.execute(role).stream().map(user -> user.getId()).toList();
     }
 }
