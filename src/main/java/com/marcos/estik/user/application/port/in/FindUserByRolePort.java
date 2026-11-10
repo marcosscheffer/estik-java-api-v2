@@ -7,6 +7,6 @@ import com.marcos.estik.user.domain.User;
 
 public interface FindUserByRolePort {
 
-    List<User> execute(UUID role);
+    List<User> execute(List<UUID> role);
     
 }

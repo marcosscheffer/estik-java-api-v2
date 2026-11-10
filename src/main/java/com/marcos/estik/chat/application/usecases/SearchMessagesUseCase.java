@@ -27,6 +27,7 @@ import com.marcos.estik.chat.domain.exception.ChatForbiddenException;
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
+import com.marcos.estik.shared.domain.user.PermissionEnum;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,7 +47,9 @@ public class SearchMessagesUseCase implements SearchMessagesPort {
     public PageResult<MessageView> execute(UUID chatId, AuthenticatedUser principal, PageQuery page) {
         Chat chat = chatRepositoryPort.findById(chatId);
 
-        if (!participantRepositoryPort.existsByUserIdAndChatId(principal.id(), chat.getId())) {
+        if (!participantRepositoryPort.existsByUserIdAndChatId(principal.id(), chat.getId())
+            && !principal.permissions().contains(PermissionEnum.TICKET_MANAGE)
+        ) {
             throw new ChatForbiddenException("you cannot access this chat");
         }
         

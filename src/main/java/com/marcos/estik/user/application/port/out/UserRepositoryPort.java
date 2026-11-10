@@ -10,7 +10,7 @@ import com.marcos.estik.user.domain.User;
 
 public interface UserRepositoryPort {
 
-    List<User> findByRole(UUID role);
+    List<User> findByRoles(List<UUID> ids);
 
     User findByUsername(String username);
 

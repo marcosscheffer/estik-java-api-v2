@@ -43,9 +43,8 @@ public class LoginUseCase implements LoginPort {
             throw new InvalidCredentialsException("Invalid username or password");
         }
 
-        Set<PermissionEnum> permissions = loadUserFindPermissionByRoleIdPort.execute(user.getRoleId()); 
-
-        String accessToken = tokenProvider.generateToken(user, permissions);
+        Set<PermissionEnum> permissions = loadUserFindPermissionByRoleIdPort.execute(user.getRoleId());
+        String accessToken = tokenProvider.generateToken(user, PermissionEnum.expand(permissions));
         
         UUID tokenId = UUID.randomUUID();
         RefreshToken token = RefreshToken.create(tokenId, user.getId());

@@ -5,20 +5,19 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import com.marcos.estik.notification.application.ports.out.LoadNotificationFindUserByRolePort;
-import com.marcos.estik.shared.domain.user.RoleEnum;
+import com.marcos.estik.notification.application.ports.out.LoadNotificationFindUserByRolesPort;
 import com.marcos.estik.user.application.port.in.FindUserByRolePort;
 
 import lombok.RequiredArgsConstructor;
 
 @Component 
 @RequiredArgsConstructor 
-public class LoadNotificationFindUserByRoleAdapter implements LoadNotificationFindUserByRolePort {
+public class LoadNotificationFindUserByRoleAdapter implements LoadNotificationFindUserByRolesPort {
 
     private final FindUserByRolePort findUserByRolePort;
     
     @Override
-    public List<UUID> execute(UUID role) {
+    public List<UUID> execute(List<UUID> role) {
         return findUserByRolePort.execute(role).stream().map(user -> user.getId()).toList();
     }
 }

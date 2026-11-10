@@ -136,4 +136,13 @@ public class UserController {
 
         return ResponseEntity.ok(userWebMapper.toResponse(user));
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> me(
+        @AuthenticationPrincipal AuthenticatedUser principal
+    ) {
+        User user = findUserByIdPort.execute(principal.id());
+
+        return ResponseEntity.ok(userWebMapper.toResponse(user));
+    }
 }

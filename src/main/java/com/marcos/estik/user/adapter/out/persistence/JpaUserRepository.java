@@ -1,5 +1,6 @@
 package com.marcos.estik.user.adapter.out.persistence;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,5 +18,6 @@ public interface JpaUserRepository extends JpaRepository<UserEntity, UUID>, JpaS
 
     Page<UserEntity> findByUsernameContainingIgnoreCase(String username, Pageable pageable);
 
-    List<UserEntity> findByRoleId(UUID role);
+    List<UserEntity> findByRoleIdIn(Collection<UUID> ids);
+
 }

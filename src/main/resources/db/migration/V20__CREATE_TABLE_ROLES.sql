@@ -20,17 +20,16 @@ CREATE TABLE permissions (
 CREATE INDEX idx_permissions_roles_id ON permissions(role_id);
 
 INSERT INTO permissions ("role_id", "permission") 
+    
 SELECT r.id, unnest(ARRAY[
     'TICKET_OPEN', 
     'TICKET_WORK', 
-    'TICKET_MANAGE', 
+    'TICKET_MANAGE',
     'STOCK_READ', 
-    'STOCK_WRITE',
+    'STOCK_MANAGE',
     'COMPUTER_READ', 
     'COMPUTER_MANAGE',
-    'FACILITY_READ', 
     'FACILITY_MANAGE',
     'USER_MANAGE',
-    'CHAT_MANAGE',
     'ACCESS_MANAGE'
     ]) FROM roles r where r.name = 'SUPER';

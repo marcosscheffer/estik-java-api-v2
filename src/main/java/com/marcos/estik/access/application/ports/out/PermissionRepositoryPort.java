@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.marcos.estik.access.domain.Permission;
+import com.marcos.estik.shared.domain.user.PermissionEnum;
 
 public interface PermissionRepositoryPort {
     
@@ -15,5 +16,7 @@ public interface PermissionRepositoryPort {
    void delete(UUID id);
 
    Permission findById(UUID id);
+
+   List<Permission> findByPermission(PermissionEnum permission);
 
 }

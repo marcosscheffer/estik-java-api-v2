@@ -9,14 +9,15 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.marcos.estik.notification.application.command.CreateNotificationCommand;
 import com.marcos.estik.notification.application.ports.in.CreateNotificationPort;
-import com.marcos.estik.notification.application.ports.out.LoadNotificationFindUserByRolePort;
+import com.marcos.estik.notification.application.ports.out.LoadNotificationFindPermissionByPermissionPort;
+import com.marcos.estik.notification.application.ports.out.LoadNotificationFindUserByRolesPort;
 import com.marcos.estik.shared.domain.event.TicketAssumedNotifyEvent;
 import com.marcos.estik.shared.domain.event.TicketCancelledNotifyEvent;
 import com.marcos.estik.shared.domain.event.TicketCreateNotifyEvent;
 import com.marcos.estik.shared.domain.event.TicketForwardedNotifyEvent;
 import com.marcos.estik.shared.domain.event.TicketReopenNotifyEvent;
 import com.marcos.estik.shared.domain.event.TicketResolveNotifyEvent;
-import com.marcos.estik.shared.domain.user.RoleEnum;
+import com.marcos.estik.shared.domain.user.PermissionEnum;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,11 +26,17 @@ import lombok.RequiredArgsConstructor;
 public class TicketEventListener {
 
     private final CreateNotificationPort createNotificationPort;
-    private final LoadNotificationFindUserByRolePort loadNotificationFindUserByRolePort;
+    private final LoadNotificationFindPermissionByPermissionPort loadNotificationFindPermissionByPermissionPort;
+    private final LoadNotificationFindUserByRolesPort loadNotificationFindUserByRolesPort;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     void onTicketCreateNotifyEventListener(TicketCreateNotifyEvent event) {
-        // List<UUID> recipientsId = loadNotificationFindUserByRolePort.execute(RoleEnum.ADMINISTRATOR);
+        List<UUID> rolesId = loadNotificationFindPermissionByPermissionPort.execute(PermissionEnum.TICKET_MANAGE)
+            .stream()
+            .map(permission -> permission.roleId())
+            .toList();
+        
+        List<UUID> recipientsId = loadNotificationFindUserByRolesPort.execute(rolesId);
 
         createNotificationPort.execute(
             new CreateNotificationCommand(

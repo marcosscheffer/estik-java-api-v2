@@ -19,6 +19,7 @@ import com.marcos.estik.chat.domain.Chat;
 import com.marcos.estik.chat.domain.Participant;
 import com.marcos.estik.chat.domain.exception.ChatForbiddenException;
 import com.marcos.estik.security.AuthenticatedUser;
+import com.marcos.estik.shared.domain.user.PermissionEnum;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +39,7 @@ public class FindChatByIdUseCase implements FindChatByIdPort {
             participant -> participant.getUserId().equals(principal.id())
         );
 
-        if (!isParticipant) {
+        if (!isParticipant && !principal.permissions().contains(PermissionEnum.TICKET_MANAGE)) {
             throw new ChatForbiddenException("You are not a participant of this chat");
         }
 

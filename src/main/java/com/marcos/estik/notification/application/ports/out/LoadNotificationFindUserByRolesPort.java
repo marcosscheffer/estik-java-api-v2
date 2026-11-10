@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 
-public interface LoadNotificationFindUserByRolePort {
+public interface LoadNotificationFindUserByRolesPort {
     
-    List<UUID> execute(UUID role);
+    List<UUID> execute(List<UUID> role);
 
 }

@@ -145,9 +145,9 @@ public class JwtTokenAdapter implements TokenProviderPort {
         }
 
         Set<PermissionEnum> permissions = EnumSet.noneOf(PermissionEnum.class);
-        for (PermissionEnum permission : permissions) {
+        for (Object value : raw) {
             try {
-                permissions.add(PermissionEnum.valueOf(String.valueOf(permission)));
+                permissions.add(PermissionEnum.valueOf(String.valueOf(value)));
             
             } catch(IllegalArgumentException exception) {
                 // ignore

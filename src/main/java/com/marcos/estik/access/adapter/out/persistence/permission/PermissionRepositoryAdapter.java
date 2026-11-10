@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.marcos.estik.access.application.ports.out.PermissionRepositoryPort;
 import com.marcos.estik.access.domain.Permission;
+import com.marcos.estik.shared.domain.user.PermissionEnum;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +44,13 @@ public class PermissionRepositoryAdapter implements PermissionRepositoryPort {
     @Override
     public void delete(UUID id) {
         jpaPermissionRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Permission> findByPermission(PermissionEnum permission) {
+        return jpaPermissionRepository.findByPermission(permission)
+            .stream()
+            .map(permissionPersistenceMapper::toDomain)
+            .toList();
     }
 }

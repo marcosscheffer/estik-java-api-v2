@@ -60,7 +60,7 @@ public class RefreshUseCase implements RefreshPort {
         Set<PermissionEnum> permissions = loadUserFindPermissionByRoleIdPort.execute(user.getRoleId());
 
         return new AuthTokens(
-            tokenProviderPort.generateToken(user, permissions),
+            tokenProviderPort.generateToken(user, PermissionEnum.expand(permissions)),
             tokenProviderPort.generateRefreshToken(user, newRefreshToken.getId())
         );
     }
