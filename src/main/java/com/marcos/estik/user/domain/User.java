@@ -16,6 +16,7 @@ public class User {
     private UUID id;
     private String username;
     private String email;
+    private UUID specializationId;
     private String password;
     private Instant createdAt;
     private Instant updatedAt;
@@ -23,11 +24,12 @@ public class User {
     private Boolean active;
     private UUID facilityId;
 
-    public static User create(String username, String email, String password, UUID facility) {
+    public static User create(String username, String email, String password, UUID facility, UUID specializationId) {
         return new User(
             UUID.randomUUID(),
             username,
             email,
+            specializationId,
             password,
             Instant.now(),
             Instant.now(),
@@ -76,6 +78,11 @@ public class User {
         }
 
         this.roleId = role;
+        this.updatedAt = Instant.now();
+    }
+
+    public void changeSpecialization(UUID specializationId) {
+        this.specializationId = specializationId;
         this.updatedAt = Instant.now();
     }
 }

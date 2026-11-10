@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import com.marcos.estik.chat.application.ports.out.LoadChatFindUserByIdPort;
 import com.marcos.estik.chat.application.view.ChatUserInfo;
 import com.marcos.estik.user.application.port.in.FindUserByIdPort;
-import com.marcos.estik.user.domain.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +19,6 @@ public class LoadChatFindUserByIdAdapter implements LoadChatFindUserByIdPort {
     
     @Override
     public ChatUserInfo execute(UUID id) {
-        User user = findUserByIdPort.execute(id);
-        return chatUserMapper.toUserInfo(user);
+        return chatUserMapper.toUserInfo(findUserByIdPort.execute(id));
     }
 }

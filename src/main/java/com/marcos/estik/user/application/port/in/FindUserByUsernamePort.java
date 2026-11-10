@@ -1,7 +1,7 @@
 package com.marcos.estik.user.application.port.in;
 
-import com.marcos.estik.user.domain.User;
+import com.marcos.estik.user.application.view.UserView;
 
 public interface FindUserByUsernamePort {
-    User execute(String command);
+    UserView execute(String command);
 }

@@ -32,7 +32,7 @@ import com.marcos.estik.user.application.port.in.DeactiveUserByIdPort;
 import com.marcos.estik.user.application.port.in.FindUserByIdPort;
 import com.marcos.estik.user.application.port.in.SearchUsersPort;
 import com.marcos.estik.user.application.port.in.UpdateUserPort;
-import com.marcos.estik.user.domain.User;
+import com.marcos.estik.user.application.view.UserView;
 
 import lombok.RequiredArgsConstructor;
 
@@ -58,7 +58,7 @@ public class UserController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
-        PageResult<User> users = searchUsersPort.execute(
+        PageResult<UserView> users = searchUsersPort.execute(
             new SearchUsersCommand (
                 username,
                 facilityId,
@@ -85,7 +85,7 @@ public class UserController {
         @RequestBody UpdateUserRequest request,
         @AuthenticationPrincipal AuthenticatedUser principal
     ) {
-        User user = updateUserPort.execute(id, userWebMapper.toUpdateUserCommand(request), principal);
+        UserView user = updateUserPort.execute(id, userWebMapper.toUpdateUserCommand(request), principal);
         return ResponseEntity.ok(userWebMapper.toResponse(user));
     }
 
@@ -93,7 +93,7 @@ public class UserController {
     public ResponseEntity<UserResponse> getUser(
         @PathVariable UUID id
     ) {
-        User user = findUserByIdPort.execute(id);
+        UserView user = findUserByIdPort.execute(id);
         return ResponseEntity.ok(userWebMapper.toResponse(user));
     }
 
@@ -102,7 +102,7 @@ public class UserController {
         @PathVariable UUID id,
         @AuthenticationPrincipal AuthenticatedUser principal
     ) {
-        User user = deactiveUserByIdPort.execute(id, principal.id());
+        UserView user = deactiveUserByIdPort.execute(id, principal.id());
 
         return ResponseEntity.ok(userWebMapper.toResponse(user));
     }
@@ -111,7 +111,7 @@ public class UserController {
     public ResponseEntity<UserResponse> activeUser(
         @PathVariable UUID id
     ) {
-        User user = activeUserByIdPort.execute(id);
+        UserView user = activeUserByIdPort.execute(id);
 
         return ResponseEntity.ok(userWebMapper.toResponse(user));
     }
@@ -122,7 +122,7 @@ public class UserController {
         @AuthenticationPrincipal AuthenticatedUser principal,
         @RequestBody AssignUserRequest request
     ) {
-        User user = assignUserByIdPort.execute(id, principal.id(), request.role());
+        UserView user = assignUserByIdPort.execute(id, principal.id(), request.role());
 
         return ResponseEntity.ok(userWebMapper.toResponse(user));
     }
@@ -132,7 +132,7 @@ public class UserController {
         @PathVariable UUID id,
         @RequestBody ChangeFacilityRequest request
     ) {
-        User user = changeFacilityUserByIdPort.execute(id, request.facilityId());
+        UserView user = changeFacilityUserByIdPort.execute(id, request.facilityId());
 
         return ResponseEntity.ok(userWebMapper.toResponse(user));
     }
@@ -141,7 +141,7 @@ public class UserController {
     public ResponseEntity<UserResponse> me(
         @AuthenticationPrincipal AuthenticatedUser principal
     ) {
-        User user = findUserByIdPort.execute(principal.id());
+        UserView user = findUserByIdPort.execute(principal.id());
 
         return ResponseEntity.ok(userWebMapper.toResponse(user));
     }

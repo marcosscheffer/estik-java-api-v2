@@ -3,10 +3,10 @@ package com.marcos.estik.user.application.port.in;
 import java.util.List;
 import java.util.UUID;
 
-import com.marcos.estik.user.domain.User;
+import com.marcos.estik.user.application.view.UserView;
 
 public interface FindUserByRolePort {
 
-    List<User> execute(List<UUID> role);
+    List<UserView> execute(List<UUID> role);
     
 }

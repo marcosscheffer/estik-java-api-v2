@@ -5,7 +5,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.marcos.estik.user.application.port.in.DeactiveUserByIdPort;
+import com.marcos.estik.user.application.port.out.LoadUserFindRoleByIdPort;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
+import com.marcos.estik.user.application.view.UserView;
 import com.marcos.estik.user.domain.User;
 
 import lombok.RequiredArgsConstructor;
@@ -15,11 +17,18 @@ import lombok.RequiredArgsConstructor;
 public class DeactiveUserByIdUseCase implements DeactiveUserByIdPort {
 
     private final UserRepositoryPort userRepositoryPort;
+    private final LoadUserFindRoleByIdPort loadUserFindRoleByIdPort;
+
 
     @Override
-    public User execute(UUID userId, UUID principalId) {
+    public UserView execute(UUID userId, UUID principalId) {
         User user = userRepositoryPort.findById(userId);
         user.deactivate(principalId);
-        return userRepositoryPort.save(user);
+        userRepositoryPort.save(user);
+
+        return new UserView(
+            user, 
+            loadUserFindRoleByIdPort.execute(user.getRoleId())
+        );
     }
 }

@@ -5,7 +5,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.marcos.estik.user.application.port.in.FindUserByIdPort;
+import com.marcos.estik.user.application.port.out.LoadUserFindRoleByIdPort;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
+import com.marcos.estik.user.application.view.UserView;
 import com.marcos.estik.user.domain.User;
 
 import lombok.RequiredArgsConstructor;
@@ -15,10 +17,16 @@ import lombok.RequiredArgsConstructor;
 public class FindUserByIdUseCase implements FindUserByIdPort {
 
     private final UserRepositoryPort userRepositoryPort;
+    private final LoadUserFindRoleByIdPort loadUserFindRoleByIdPort;
+
 
     @Override
-    public User execute(UUID id) {
-        return userRepositoryPort.findById(id);
+    public UserView execute(UUID id) {
+        User user = userRepositoryPort.findById(id);
+        return new UserView(
+            user, 
+            loadUserFindRoleByIdPort.execute(user.getRoleId())
+        );
     }
     
 }

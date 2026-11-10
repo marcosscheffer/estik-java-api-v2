@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.user.application.command.UpdateUserCommand;
-import com.marcos.estik.user.domain.User;
+import com.marcos.estik.user.application.view.UserView;
 
 public interface UpdateUserPort {
-    User execute(UUID userId, UpdateUserCommand command, AuthenticatedUser principal);
+    UserView execute(UUID userId, UpdateUserCommand command, AuthenticatedUser principal);
 }

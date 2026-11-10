@@ -8,7 +8,7 @@ public record UserResponse(
     String username,
     String email,
     UUID facilityId,
-    UUID role,
+    UserSummaryRole role,
     Instant createdAt,
     Instant updatedAt,
     Boolean active

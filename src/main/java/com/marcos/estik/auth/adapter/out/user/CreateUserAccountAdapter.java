@@ -21,7 +21,7 @@ public class CreateUserAccountAdapter implements CreateUserAccountPort {
     public UUID createUser(NewUserAccount user) {
         return createUserPort.execute(
             userAccountMapper.toCommand(user)
-        ).getId();
+        ).user().getId();
     }
     
 }

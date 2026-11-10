@@ -6,7 +6,7 @@ public record UserResponseSummary(
     UUID id,
     String username,
     String email,
-    UUID role,
+    UserSummaryRole role,
     Boolean active
 ) {
     
