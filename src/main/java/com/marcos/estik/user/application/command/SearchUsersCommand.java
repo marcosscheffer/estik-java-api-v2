@@ -9,6 +9,7 @@ public record SearchUsersCommand(
     String username,
     UUID facilityId,
     RoleEnum role,
+    UUID specializationId,
     PageQuery page
 ) {
 }

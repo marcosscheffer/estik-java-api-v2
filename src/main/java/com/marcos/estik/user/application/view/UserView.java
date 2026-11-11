@@ -4,7 +4,8 @@ import com.marcos.estik.user.domain.User;
 
 public record UserView(
     User user,
-    UserRoleInfo role
+    UserRoleInfo role,
+    UserSpecializationInfo specialization
 ) {
     
 }

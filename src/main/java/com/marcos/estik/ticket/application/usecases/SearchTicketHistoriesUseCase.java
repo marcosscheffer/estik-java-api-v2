@@ -23,7 +23,4 @@ public class SearchTicketHistoriesUseCase implements SearchTicketHistoryPort {
         return ticketHistoryRepositoryPort.searchTicketHistory(
             id, command.status(), command.type(), command.page());
     }
-
-
-    
 }

@@ -25,6 +25,9 @@ public class UserEntity {
     private String username;
     private String email;
     private String password;
+    
+    @Column(name = "specialization_id")
+    private UUID specializationId;
 
     @Column(name = "role_id")
     private UUID roleId;

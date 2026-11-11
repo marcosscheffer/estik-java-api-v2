@@ -55,6 +55,7 @@ public class UserController {
         @RequestParam(defaultValue = "") String username,
         @RequestParam(required = false) UUID facilityId,
         @RequestParam(required = false) RoleEnum role,
+        @RequestParam(required = false) UUID specializationId,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
@@ -63,6 +64,7 @@ public class UserController {
                 username,
                 facilityId,
                 role,
+                specializationId,
                 new PageQuery(page, size)
             )
         );

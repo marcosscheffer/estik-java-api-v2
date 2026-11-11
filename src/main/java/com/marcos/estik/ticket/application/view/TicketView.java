@@ -8,7 +8,8 @@ public record TicketView(
     TicketUserInfo regulator,
     TicketUserInfo forwarded,
     TicketUserInfo assignee,
-    TicketFacilityInfo facility
+    TicketFacilityInfo facility,
+    TicketSpecializationInfo specialization
 ) {
     
 }

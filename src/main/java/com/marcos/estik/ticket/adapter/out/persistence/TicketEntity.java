@@ -8,7 +8,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.marcos.estik.ticket.domain.enums.PriorityEnum;
 import com.marcos.estik.ticket.domain.enums.StatusEnum;
-import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,8 +49,8 @@ public class TicketEntity {
     @Enumerated(EnumType.STRING)
     private PriorityEnum priority;
     
-    @Enumerated(EnumType.STRING)
-    private TicketTypeEnum ticketType;
+    @Column(name = "specialization_id")
+    private UUID specializationId;
 
     @Version 
     private Long version;

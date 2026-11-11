@@ -14,7 +14,7 @@ public interface UserRepositoryPort {
 
     User findByUsername(String username);
 
-    PageResult<User> SearchUsers(UUID facilityId, String username, RoleEnum role, PageQuery page);
+    PageResult<User> SearchUsers(UUID facilityId, String username, RoleEnum role, UUID specializationId, PageQuery page);
 
     User findById(UUID id);
 

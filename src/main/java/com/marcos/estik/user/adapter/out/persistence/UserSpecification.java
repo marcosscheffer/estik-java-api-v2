@@ -26,4 +26,10 @@ public final class UserSpecification {
             ? Specification.unrestricted()
             : (root, q, cb) -> cb.equal(root.get("role"), role);
     }
+
+    public static Specification<UserEntity> specializationIs(UUID specializationId) {
+        return specializationId == null 
+            ? Specification.unrestricted()
+            : (root, q, cb) -> cb.equal(root.get("specializationId"), specializationId);
+    }
 }

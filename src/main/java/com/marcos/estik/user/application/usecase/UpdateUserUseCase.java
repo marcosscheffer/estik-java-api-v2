@@ -8,6 +8,7 @@ import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.user.application.command.UpdateUserCommand;
 import com.marcos.estik.user.application.port.in.UpdateUserPort;
 import com.marcos.estik.user.application.port.out.LoadUserFindRoleByIdPort;
+import com.marcos.estik.user.application.port.out.LoadUserFindSpecializationByIdPort;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
 import com.marcos.estik.user.application.view.UserView;
 import com.marcos.estik.user.domain.User;
@@ -20,7 +21,7 @@ public class UpdateUserUseCase implements UpdateUserPort {
 
     private final UserRepositoryPort userRepositoryPort;
     private final LoadUserFindRoleByIdPort loadUserFindRoleByIdPort;
-
+    private final LoadUserFindSpecializationByIdPort loadUserFindSpecializationByIdPort;
 
     @Override
     public UserView execute(UUID userId, UpdateUserCommand command, AuthenticatedUser principal) {
@@ -29,7 +30,8 @@ public class UpdateUserUseCase implements UpdateUserPort {
         userRepositoryPort.save(user);
         return new UserView(
             user, 
-            loadUserFindRoleByIdPort.execute(user.getRoleId())
+            loadUserFindRoleByIdPort.execute(user.getRoleId()),
+            loadUserFindSpecializationByIdPort.execute(user.getSpecializationId())
         );
     }
 }

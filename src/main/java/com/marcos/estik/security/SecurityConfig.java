@@ -133,7 +133,11 @@ public class SecurityConfig {
 
                 .requestMatchers(
                     "/access/**"
-                ).hasAuthority("ACCESS_MANAGE")
+                ).hasAuthority("SYSTEM_MANAGE")
+
+                .requestMatchers(
+                    "/specializations"
+                ).hasAuthority("SYSTEM_MANAGE")
 
                 .anyRequest().denyAll()
                 

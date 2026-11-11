@@ -4,12 +4,11 @@ import java.time.Instant;
 import java.util.UUID;
 
 import com.marcos.estik.ticket.domain.enums.StatusEnum;
-import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 public record TicketHistoryResponse(
     UUID id,
     StatusEnum status,
-    TicketTypeEnum type,
+    UUID type,
     Instant createdAt
 ) {
     

@@ -10,4 +10,5 @@ public interface UserPersistenceMapper {
     User toDomain(UserEntity userEntity);
 
     UserEntity toEntity(User user);
+    
 }

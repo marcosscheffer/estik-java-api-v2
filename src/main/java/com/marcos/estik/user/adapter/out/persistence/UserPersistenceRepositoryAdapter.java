@@ -52,11 +52,12 @@ public class UserPersistenceRepositoryAdapter implements UserRepositoryPort {
 
 
     @Override 
-    public PageResult<User> SearchUsers(UUID facilityId, String username, RoleEnum role, PageQuery page) {
+    public PageResult<User> SearchUsers(UUID facilityId, String username, RoleEnum role, UUID specializationId, PageQuery page) {
         Specification<UserEntity> spec = Specification.allOf(
             UserSpecification.facilityIs(facilityId),
             UserSpecification.usernameContains(username),
-            UserSpecification.roleIs(role)
+            UserSpecification.roleIs(role),
+            UserSpecification.specializationIs(specializationId)
         );
         Page<UserEntity> users = jpaUserRepository.findAll(spec, PageRequest.of(page.page(), page.size()));
 

@@ -13,6 +13,7 @@ import com.marcos.estik.ticket.application.command.ForwardCommand;
 import com.marcos.estik.ticket.application.ports.in.ForwardTicketPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindPermissionByPermissionPort;
+import com.marcos.estik.ticket.application.ports.out.LoadTicketFindSpecializationByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
 import com.marcos.estik.ticket.application.ports.out.TicketEventPublisherPort;
 import com.marcos.estik.ticket.application.ports.out.TicketHistoryRepositoryPort;
@@ -36,6 +37,7 @@ public class ForwardTicketUseCase implements ForwardTicketPort {
     private final TicketHistoryRepositoryPort ticketHistoryRepositoryPort;
     private final LoadTicketFindFacilityByIdPort loadTicketFindFacilityByIdPort;
     private final LoadTicketFindPermissionByPermissionPort loadTicketFindPermissionByPermissionPort;
+    private final LoadTicketFindSpecializationByIdPort loadTicketFindSpecializationByIdPort;
     
     @Override
     @Transactional 
@@ -60,7 +62,7 @@ public class ForwardTicketUseCase implements ForwardTicketPort {
             )
         );
 
-        TicketHistory ticketHistory = TicketHistory.create(ticketId, StatusEnum.FORWARDED, ticket.getTicketType());
+        TicketHistory ticketHistory = TicketHistory.create(ticketId, StatusEnum.FORWARDED, ticket.getSpecializationId());
         ticketHistoryRepositoryPort.save(ticketHistory);
 
         return new TicketView(
@@ -69,7 +71,8 @@ public class ForwardTicketUseCase implements ForwardTicketPort {
             ticket.getRegulatorId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
             forwardUser,
             ticket.getAssigneeId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
-            loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId())
+            loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId()),
+            loadTicketFindSpecializationByIdPort.execute(ticket.getSpecializationId())
         );
     }
     

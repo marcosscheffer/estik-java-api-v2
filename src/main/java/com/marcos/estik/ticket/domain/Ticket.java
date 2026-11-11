@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import com.marcos.estik.ticket.domain.enums.PriorityEnum;
 import com.marcos.estik.ticket.domain.enums.StatusEnum;
-import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 import com.marcos.estik.ticket.domain.exception.InvalidTicketStatusException;
 import com.marcos.estik.ticket.domain.exception.TicketAlreadyAssignedException;
 import com.marcos.estik.ticket.domain.exception.TicketNotAssignableException;
@@ -20,7 +19,7 @@ public class Ticket {
     private UUID id;
     private String title;
     private String description;
-    private TicketTypeEnum ticketType;
+    private UUID specializationId;
     private UUID chatId;
     private UUID requesterId;
     private UUID facilityId;
@@ -36,7 +35,7 @@ public class Ticket {
     public static Ticket create(
         String title, 
         String description,
-        TicketTypeEnum ticketType,
+        UUID specializationId,
         UUID requesterId,
         UUID facilityId,
         PriorityEnum priority
@@ -45,8 +44,8 @@ public class Ticket {
         return new Ticket(
             UUID.randomUUID(),
             title, 
-            description, 
-            ticketType,
+            description,
+            specializationId,
             null,
             requesterId, 
             facilityId, 
@@ -148,7 +147,7 @@ public class Ticket {
         UUID actorId,
         String title,
         String description,
-        TicketTypeEnum ticketType
+        UUID specializationId
     ) {
          if(!actorId.equals(this.requesterId)) {
             throw new TicketOwnerShipException("you not owner of ticket");
@@ -156,7 +155,7 @@ public class Ticket {
 
         this.title = title;
         this.description = description;
-        this.ticketType = ticketType;
+        this.specializationId = specializationId;
         this.updatedAt = Instant.now();
     }
 

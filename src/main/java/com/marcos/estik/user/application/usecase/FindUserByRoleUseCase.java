@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.marcos.estik.user.application.port.in.FindUserByRolePort;
 import com.marcos.estik.user.application.port.out.LoadUserFindRoleByIdPort;
+import com.marcos.estik.user.application.port.out.LoadUserFindSpecializationByIdPort;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
 import com.marcos.estik.user.application.view.UserView;
 
@@ -18,7 +19,7 @@ public class FindUserByRoleUseCase implements FindUserByRolePort {
 
     private final UserRepositoryPort userRepositoryPort;
     private final LoadUserFindRoleByIdPort loadUserFindRoleByIdPort;
-
+    private final LoadUserFindSpecializationByIdPort loadUserFindSpecializationByIdPort;
 
     @Override
     public List<UserView> execute(List<UUID> ids) {
@@ -26,7 +27,8 @@ public class FindUserByRoleUseCase implements FindUserByRolePort {
             user -> {
                 return new UserView(
                     user, 
-                    loadUserFindRoleByIdPort.execute(user.getRoleId())
+                    loadUserFindRoleByIdPort.execute(user.getRoleId()),
+                    loadUserFindSpecializationByIdPort.execute(user.getSpecializationId())
                 );
             }
         ).toList();

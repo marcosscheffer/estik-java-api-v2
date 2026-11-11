@@ -9,6 +9,7 @@ import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.shared.domain.event.TicketReopenNotifyEvent;
 import com.marcos.estik.ticket.application.ports.in.ReopenTicketPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
+import com.marcos.estik.ticket.application.ports.out.LoadTicketFindSpecializationByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
 import com.marcos.estik.ticket.application.ports.out.TicketEventPublisherPort;
 import com.marcos.estik.ticket.application.ports.out.TicketHistoryRepositoryPort;
@@ -29,6 +30,7 @@ public class ReopenTicketUseCase implements ReopenTicketPort {
     private final LoadTicketFindFacilityByIdPort loadTicketFindFacilityByIdPort;
     private final LoadTicketFindUserByIdPort loadTicketFindUserByIdPort;
     private final TicketEventPublisherPort ticketEventPublisherPort;
+    private final LoadTicketFindSpecializationByIdPort loadTicketFindSpecializationByIdPort;
     
     @Override
     @Transactional 
@@ -37,7 +39,7 @@ public class ReopenTicketUseCase implements ReopenTicketPort {
         TicketHistory ticketHistory = TicketHistory.create(
             ticket.getId(), 
             StatusEnum.PROGRESS, 
-            ticket.getTicketType()
+            ticket.getSpecializationId()
         );
 
         ticket.reopen(principal.id());
@@ -59,7 +61,8 @@ public class ReopenTicketUseCase implements ReopenTicketPort {
             loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
             loadTicketFindUserByIdPort.execute(ticket.getForwardedId()),
             loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
-            loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId())
+            loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId()),
+            loadTicketFindSpecializationByIdPort.execute(ticket.getSpecializationId())
         );
     }
     

@@ -8,6 +8,7 @@ import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.ticket.application.command.UpdateTicketCommand;
 import com.marcos.estik.ticket.application.ports.in.UpdateTicketPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
+import com.marcos.estik.ticket.application.ports.out.LoadTicketFindSpecializationByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
 import com.marcos.estik.ticket.application.view.TicketView;
@@ -22,6 +23,7 @@ public class UpdateTicketUseCase implements UpdateTicketPort {
     private final TicketRepositoryPort ticketRepositoryPort;
     private final LoadTicketFindFacilityByIdPort loadTicketFindFacilityByIdPort;
     private final LoadTicketFindUserByIdPort loadTicketFindUserByIdPort;
+    private final LoadTicketFindSpecializationByIdPort loadTicketFindSpecializationByIdPort;
     
     @Override
     public TicketView execute(UpdateTicketCommand command, UUID ticketId, AuthenticatedUser principal) {
@@ -30,7 +32,7 @@ public class UpdateTicketUseCase implements UpdateTicketPort {
             principal.id(),
             command.title(),
             command.description(), 
-            command.ticketType()
+            command.type()
         );
         ticketRepositoryPort.save(ticket);
         return new TicketView(
@@ -39,7 +41,8 @@ public class UpdateTicketUseCase implements UpdateTicketPort {
             ticket.getRegulatorId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
             ticket.getForwardedId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getForwardedId()),
             ticket.getAssigneeId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
-            loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId())
+            loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId()),
+            loadTicketFindSpecializationByIdPort.execute(ticket.getSpecializationId())
         );
     }
 }

@@ -15,8 +15,7 @@ public enum PermissionEnum {
 
     USER_MANAGE,
 
-
-    ACCESS_MANAGE;
+    SYSTEM_MANAGE;
 
     public Set<PermissionEnum> implied() {
         return switch(this) {

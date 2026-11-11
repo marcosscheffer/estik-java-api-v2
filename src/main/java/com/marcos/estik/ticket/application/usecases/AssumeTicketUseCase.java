@@ -11,6 +11,7 @@ import com.marcos.estik.ticket.application.ports.in.AssumeTicketPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketCreateChatPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketCreateParticipantPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
+import com.marcos.estik.ticket.application.ports.out.LoadTicketFindSpecializationByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
 import com.marcos.estik.ticket.application.ports.out.TicketEventPublisherPort;
 import com.marcos.estik.ticket.application.ports.out.TicketHistoryRepositoryPort;
@@ -33,6 +34,7 @@ public class AssumeTicketUseCase implements AssumeTicketPort {
     private final LoadTicketCreateParticipantPort loadTicketCreateParticipantPort;
     private final LoadTicketCreateChatPort loadTicketCreateChatPort;
     private final TicketEventPublisherPort ticketEventPublisherPort;
+    private final LoadTicketFindSpecializationByIdPort loadTicketFindSpecializationByIdPort;
 
     @Override
     @Transactional 
@@ -41,7 +43,7 @@ public class AssumeTicketUseCase implements AssumeTicketPort {
         TicketHistory ticketHistory = TicketHistory.create(
             ticket.getId(), 
             StatusEnum.PROGRESS, 
-            ticket.getTicketType()
+            ticket.getSpecializationId()
         );
 
         UUID chatId = loadTicketCreateChatPort.execute();
@@ -66,7 +68,8 @@ public class AssumeTicketUseCase implements AssumeTicketPort {
             loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
             loadTicketFindUserByIdPort.execute(ticket.getForwardedId()),
             loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
-            loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId())
+            loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId()),
+            loadTicketFindSpecializationByIdPort.execute(ticket.getSpecializationId())
         );
     }
 }

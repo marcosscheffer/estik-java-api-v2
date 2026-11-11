@@ -11,6 +11,7 @@ import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
 import com.marcos.estik.ticket.application.view.TicketFacilityInfo;
 import com.marcos.estik.ticket.application.view.TicketView;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
+import com.marcos.estik.ticket.application.ports.out.LoadTicketFindSpecializationByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
 import com.marcos.estik.ticket.application.ports.out.TicketEventPublisherPort;
 import com.marcos.estik.ticket.application.ports.out.TicketHistoryRepositoryPort;
@@ -29,6 +30,7 @@ public class CreateTicketUseCase implements CreateTicketPort {
     private final LoadTicketFindFacilityByIdPort loadTicketFindFacilityByIdPort;
     private final LoadTicketFindUserByIdPort loadTicketFindUserByIdPort;
     private final TicketEventPublisherPort ticketEventPublisherPort;
+    private final LoadTicketFindSpecializationByIdPort loadTicketFindSpecializationByIdPort;
 
     @Override
     @Transactional 
@@ -37,7 +39,7 @@ public class CreateTicketUseCase implements CreateTicketPort {
         Ticket ticket = Ticket.create(
             command.title(),
             command.description(),
-            command.ticketType(),
+            command.type(),
             principal.id(), 
             command.facilityId(),
             command.priority()
@@ -46,7 +48,7 @@ public class CreateTicketUseCase implements CreateTicketPort {
         TicketHistory ticketHistory = TicketHistory.create(
             ticket.getId(), 
             StatusEnum.OPEN, 
-            ticket.getTicketType()
+            ticket.getSpecializationId()
         );
 
         ticketRepositoryPort.save(ticket);
@@ -66,7 +68,8 @@ public class CreateTicketUseCase implements CreateTicketPort {
             null,
             null,
             null,
-            facilityInfo
+            facilityInfo,
+            loadTicketFindSpecializationByIdPort.execute(ticket.getSpecializationId())
         );
     }
 }
