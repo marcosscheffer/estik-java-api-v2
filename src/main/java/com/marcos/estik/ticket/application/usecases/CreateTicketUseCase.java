@@ -39,7 +39,7 @@ public class CreateTicketUseCase implements CreateTicketPort {
         Ticket ticket = Ticket.create(
             command.title(),
             command.description(),
-            command.type(),
+            command.specializationId(),
             principal.id(), 
             command.facilityId(),
             command.priority()
@@ -58,6 +58,7 @@ public class CreateTicketUseCase implements CreateTicketPort {
             new TicketCreateNotifyEvent(
                 ticket.getId(),
                 ticket.getTitle(),
+                ticket.getSpecializationId(),
                 principal.id()
             )
         );

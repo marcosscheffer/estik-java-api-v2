@@ -7,7 +7,7 @@ import com.marcos.estik.ticket.domain.enums.PriorityEnum;
 public record CreateTicketCommand(
     String title,
     String description,
-    UUID type,
+    UUID specializationId,
     UUID facilityId,
     PriorityEnum priority
 ) {

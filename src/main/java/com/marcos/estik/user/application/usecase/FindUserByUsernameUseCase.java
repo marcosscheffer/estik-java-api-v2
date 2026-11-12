@@ -22,10 +22,15 @@ public class FindUserByUsernameUseCase implements FindUserByUsernamePort {
     @Override
     public UserView execute(String username) {
         User user = userRepositoryPort.findByUsername(username);
+
+        if (user == null) {
+            return null;
+        }
+
         return new UserView(
             user, 
-            loadUserFindRoleByIdPort.execute(user.getRoleId()),
-            loadUserFindSpecializationByIdPort.execute(user.getSpecializationId())
+            user.getRoleId() == null ? null : loadUserFindRoleByIdPort.execute(user.getRoleId()),
+            user.getSpecializationId() == null ? null : loadUserFindSpecializationByIdPort.execute(user.getSpecializationId())
         );
     }
 }

@@ -8,13 +8,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
+import com.marcos.estik.ticket.application.command.SearchTicketsFilter;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
 import com.marcos.estik.ticket.domain.Ticket;
-import com.marcos.estik.ticket.domain.enums.PriorityEnum;
-import com.marcos.estik.ticket.domain.enums.StatusEnum;
-import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -34,36 +31,25 @@ public class TicketRepositoryAdapter implements TicketRepositoryPort {
     }
 
     @Override
-    public PageResult<Ticket> searchTickets(
-        String title,
-        UUID facilityId,
-        UUID requesterId,
-        UUID regulatorId,
-        UUID forwardedId,
-        Boolean forwarded,
-        UUID assigneeId,
-        PriorityEnum priority,
-        TicketTypeEnum type,
-        StatusEnum status,
-        PageQuery page
-    ) {
+    public PageResult<Ticket> searchTickets(SearchTicketsFilter filter) {
 
         Specification<TicketEntity> spec = Specification.allOf(
-            TicketSpecification.titleContains(title),
-            TicketSpecification.facilityIdIs(facilityId),
-            TicketSpecification.requesterIdIs(requesterId),
-            TicketSpecification.forwardedIdIs(forwardedId),
-            TicketSpecification.forwardedIs(forwarded),
-            TicketSpecification.regulatorIs(regulatorId),
-            TicketSpecification.assigneeIs(assigneeId),
-            TicketSpecification.priorityIs(priority),
-            TicketSpecification.typeIs(type),
-            TicketSpecification.statusIs(status)
+            TicketSpecification.titleContains(filter.title()),
+            TicketSpecification.facilityIdIs(filter.facilityId()),
+            TicketSpecification.requesterIdIs(filter.requesterId()),
+            TicketSpecification.forwardedIdIs(filter.forwardedId()),
+            TicketSpecification.regulatorIs(filter.regulatorId()),
+            TicketSpecification.assigneeIs(filter.assigneeId()),
+            TicketSpecification.priorityIs(filter.priority()),
+            TicketSpecification.specializationIs(filter.specializationId()),
+            TicketSpecification.statusIs(filter.status()),
+
+            TicketSpecification.FilterIs(filter.visibleUserId(), filter.visibleSpecializationId())
         );
 
         Page<TicketEntity> tickets = jpaTicketRepository.findAll(
             spec, 
-            PageRequest.of(page.page(), page.size(), Sort.by(Sort.Direction.DESC, "createdAt"))
+            PageRequest.of(filter.page().page(), filter.page().size(), Sort.by(Sort.Direction.DESC, "createdAt"))
         );
 
         return new PageResult<Ticket>(

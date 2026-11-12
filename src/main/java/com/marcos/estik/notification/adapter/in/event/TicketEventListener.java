@@ -31,13 +31,19 @@ public class TicketEventListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     void onTicketCreateNotifyEventListener(TicketCreateNotifyEvent event) {
-        List<UUID> rolesId = loadNotificationFindPermissionByPermissionPort.execute(PermissionEnum.TICKET_MANAGE)
+        List<UUID> rolesId = loadNotificationFindPermissionByPermissionPort.execute(
+            PermissionEnum.grantedBy(PermissionEnum.TICKET_SUPERVISOR)
+        )
             .stream()
             .map(permission -> permission.roleId())
             .toList();
         
-        List<UUID> recipientsId = loadNotificationFindUserByRolesPort.execute(rolesId);
-
+        List<UUID> recipientsId = loadNotificationFindUserByRolesPort.execute(rolesId)
+            .stream()
+            .filter(user -> user.specializationId().equals(event.specializationId()) )
+            .map(user -> user.id())
+            .toList();
+        
         createNotificationPort.execute(
             new CreateNotificationCommand(
                 recipientsId,
@@ -53,7 +59,7 @@ public class TicketEventListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     void onTicketCancelledNotifyEvent(TicketCancelledNotifyEvent event) {
-        List<UUID> recipientsId = event == null ? List.of() : List.of(event.assigneeId());
+        List<UUID> recipientsId = event.assigneeId() == null ? List.of() : List.of(event.assigneeId());
 
         createNotificationPort.execute(
             new CreateNotificationCommand(

@@ -14,6 +14,7 @@ public class UserAuth {
     String username;
     String email;
     String password;
+    UUID specializationId;
     UUID facilityId;
     UUID roleId;
     Instant createdAt;

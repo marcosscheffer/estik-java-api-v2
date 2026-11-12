@@ -41,7 +41,6 @@ import com.marcos.estik.ticket.application.view.TicketView;
 import com.marcos.estik.ticket.domain.TicketHistory;
 import com.marcos.estik.ticket.domain.enums.PriorityEnum;
 import com.marcos.estik.ticket.domain.enums.StatusEnum;
-import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -76,30 +75,30 @@ public class TicketController {
         @RequestParam(defaultValue = "") String title,
         @RequestParam(required = false) StatusEnum status,
         @RequestParam(required = false) PriorityEnum priority,
-        @RequestParam(required = false) TicketTypeEnum type,
+        @RequestParam(required = false) UUID specializationId,
         @RequestParam(required = false) UUID facilityId,
         @RequestParam(required = false) UUID requesterId,
         @RequestParam(required = false) UUID regulatorId,
         @RequestParam(required = false) UUID forwardedId,
-        @RequestParam(required = false) Boolean forwarded,
         @RequestParam(required = false) UUID assigneeId,
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "20") int size
+        @RequestParam(defaultValue = "20") int size,
+        @AuthenticationPrincipal AuthenticatedUser principal
     ) {
         PageResult<TicketView> tickets = searchTicketsPort.execute(
             new SearchTicketsCommand(
                 title,
                 status,
                 priority,
-                type,
+                specializationId,
                 facilityId,
                 requesterId,
                 regulatorId,
                 forwardedId,
-                forwarded,
                 assigneeId,
                 new PageQuery(page, size)
-            )
+            ), 
+            principal
         );
 
         return ResponseEntity.ok(tickets.map(ticketWebMapper::toSummaryResponse));
@@ -107,9 +106,10 @@ public class TicketController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TicketResponse> getTicket(
-        @PathVariable UUID id
+        @PathVariable UUID id,
+        @AuthenticationPrincipal AuthenticatedUser principal
     ) {
-        TicketView ticket = findTicketByIdPort.execute(id);
+        TicketView ticket = findTicketByIdPort.execute(id, principal);
         return ResponseEntity.ok(
             ticketWebMapper.toResponse(ticket)
         );
@@ -188,7 +188,7 @@ public class TicketController {
     @PutMapping("/{id}")
     public ResponseEntity<TicketResponse> updateTicket(
         @PathVariable UUID id,
-        @RequestBody UpdateTicketRequest request,
+        @RequestBody @Valid UpdateTicketRequest request,
         @AuthenticationPrincipal AuthenticatedUser principal
     ) {
         TicketView ticket = updateTicketPort.execute(
@@ -212,7 +212,7 @@ public class TicketController {
     public ResponseEntity<PageResult<TicketHistoryResponse>> getTicketHistories(
         @PathVariable UUID id,
         @RequestParam(required = false) StatusEnum status,
-        @RequestParam(required = false) TicketTypeEnum type,
+        @AuthenticationPrincipal AuthenticatedUser principal,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
@@ -220,9 +220,9 @@ public class TicketController {
             id, 
             new SearchTicketHistoriesCommand(
                 status,
-                type,
                 new PageQuery(page, size)
-            )
+            ),
+            principal
         );
 
         return ResponseEntity.ok(ticketHistories.map(ticketHistoryWebMapper::toResponse));

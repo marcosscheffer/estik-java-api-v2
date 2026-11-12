@@ -35,12 +35,14 @@ public class LoginUseCase implements LoginPort {
     public AuthTokens execute(LoginCommand command) {
         UserAuth user = loadUserByUsernamePort.findByUsername(command.username());
 
-        if (!user.getActive()) {
-            throw new UserInactiveException();
+        if (user == null
+            || !passwordEncoder.matches(command.password(), user.getPassword())
+        ) {
+            throw new InvalidCredentialsException("Invalid username or password");
         }
 
-        if (!passwordEncoder.matches(command.password(), user.getPassword())) {
-            throw new InvalidCredentialsException("Invalid username or password");
+        if (!user.getActive()) {
+            throw new UserInactiveException();
         }
 
         Set<PermissionEnum> permissions = loadUserFindPermissionByRoleIdPort.execute(user.getRoleId());

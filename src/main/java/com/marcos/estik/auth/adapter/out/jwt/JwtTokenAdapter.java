@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import com.marcos.estik.auth.application.port.out.TokenProviderPort;
 import com.marcos.estik.auth.domain.UserAuth;
 import com.marcos.estik.shared.domain.user.PermissionEnum;
-import com.marcos.estik.shared.domain.user.RoleEnum;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -56,7 +55,7 @@ public class JwtTokenAdapter implements TokenProviderPort {
 
                 .claim("type", "access")
                 .claim("username", user.getUsername())
-                .claim("role", user.getRoleId())
+                .claim("specializationId", user.getSpecializationId())
                 .claim("permissions", permissions.stream().toList())
 
                 .signWith(secret)
@@ -77,6 +76,13 @@ public class JwtTokenAdapter implements TokenProviderPort {
 
                 .signWith(secret)
                 .compact();
+    }
+
+    @Override 
+    public UUID getSpecializationId(String token) {
+        Claims claim = getClaims(token);
+        String specializationId = claim.get("specializationId", String.class);
+        return specializationId == null ? null : UUID.fromString(specializationId);
     }
 
     @Override
@@ -121,13 +127,6 @@ public class JwtTokenAdapter implements TokenProviderPort {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    @Override
-    public RoleEnum getRole(String token) {
-        Claims claims = getClaims(token);
-        String role = claims.get("role", String.class);
-        return RoleEnum.valueOf(role);
     }
 
     @Override

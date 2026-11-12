@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.marcos.estik.ticket.domain.enums.StatusEnum;
-import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,8 +30,8 @@ public class TicketHistoryEntity {
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
 
-    @Enumerated(EnumType.STRING)
-    private TicketTypeEnum type;
+    @Column(name = "specialization_id")
+    private UUID specializationId;
     
     @CreationTimestamp 
     @Column(name = "created_at")

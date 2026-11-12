@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
-import com.marcos.estik.shared.domain.user.RoleEnum;
 import com.marcos.estik.user.application.port.out.UserRepositoryPort;
 import com.marcos.estik.user.domain.User;
 
@@ -28,7 +27,7 @@ public class UserPersistenceRepositoryAdapter implements UserRepositoryPort {
     public User findByUsername(String username) {
         return jpaUserRepository.findByUsername(username)
             .map(userPersistenceMapper::toDomain)
-            .orElseThrow(() -> new EntityNotFoundException("Username not found"));
+            .orElse(null);
     }
 
     @Override
@@ -52,11 +51,11 @@ public class UserPersistenceRepositoryAdapter implements UserRepositoryPort {
 
 
     @Override 
-    public PageResult<User> SearchUsers(UUID facilityId, String username, RoleEnum role, UUID specializationId, PageQuery page) {
+    public PageResult<User> SearchUsers(UUID facilityId, String username, UUID roleId, UUID specializationId, PageQuery page) {
         Specification<UserEntity> spec = Specification.allOf(
             UserSpecification.facilityIs(facilityId),
             UserSpecification.usernameContains(username),
-            UserSpecification.roleIs(role),
+            UserSpecification.roleIs(roleId),
             UserSpecification.specializationIs(specializationId)
         );
         Page<UserEntity> users = jpaUserRepository.findAll(spec, PageRequest.of(page.page(), page.size()));

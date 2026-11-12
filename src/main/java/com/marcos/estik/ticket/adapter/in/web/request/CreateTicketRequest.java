@@ -3,7 +3,6 @@ package com.marcos.estik.ticket.adapter.in.web.request;
 import java.util.UUID;
 
 import com.marcos.estik.ticket.domain.enums.PriorityEnum;
-import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +14,7 @@ public record CreateTicketRequest(
     @NotNull 
     UUID facilityId,
     @NotNull 
-    TicketTypeEnum ticketType,
+    UUID specializationId,
     @NotNull 
     PriorityEnum priority
 ) {

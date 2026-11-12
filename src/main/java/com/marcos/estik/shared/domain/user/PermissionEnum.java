@@ -21,11 +21,24 @@ public enum PermissionEnum {
         return switch(this) {
             case TICKET_WORK -> EnumSet.of(TICKET_OPEN);
             case TICKET_SUPERVISOR -> EnumSet.of(TICKET_WORK, TICKET_OPEN);
-            case TICKET_MANAGE -> EnumSet.of(TICKET_OPEN, TICKET_WORK);
+            case TICKET_MANAGE -> EnumSet.of(TICKET_OPEN, TICKET_WORK, TICKET_SUPERVISOR);
             
             case STOCK_MANAGE -> EnumSet.of(STOCK_READ);
 
             case COMPUTER_MANAGE -> EnumSet.of(COMPUTER_READ);
+
+            case SYSTEM_MANAGE -> EnumSet.of(
+                TICKET_OPEN, 
+                TICKET_WORK, 
+                TICKET_SUPERVISOR, 
+                TICKET_MANAGE,
+                STOCK_READ, 
+                STOCK_MANAGE,
+                COMPUTER_READ, 
+                COMPUTER_MANAGE,
+                FACILITY_MANAGE,
+                USER_MANAGE
+            );
 
             default -> EnumSet.noneOf(PermissionEnum.class);
 
@@ -41,4 +54,16 @@ public enum PermissionEnum {
         }
         return result;
     } 
+
+    public static Set<PermissionEnum> grantedBy(PermissionEnum target) {
+        Set<PermissionEnum> result = EnumSet.noneOf(PermissionEnum.class);
+
+        for(PermissionEnum permission : values()) {
+            if (permission == target || permission.implied().contains(target)) {
+                result.add(permission);
+            }
+        }
+
+        return result;
+    }
 }

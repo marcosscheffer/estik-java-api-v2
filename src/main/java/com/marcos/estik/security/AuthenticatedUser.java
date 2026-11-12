@@ -7,7 +7,8 @@ import com.marcos.estik.shared.domain.user.PermissionEnum;
 
 public record AuthenticatedUser(
     UUID id,
-    String username, 
+    String username,
+    UUID specializationId,
     Set<PermissionEnum> permissions
 ) {
 

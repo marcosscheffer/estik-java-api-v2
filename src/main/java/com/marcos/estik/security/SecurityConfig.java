@@ -57,6 +57,10 @@ public class SecurityConfig {
                 ).authenticated()
 
                 .requestMatchers(
+                    "/users/{id}/assign"
+                ).hasAuthority("SYSTEM_MANAGE")
+
+                .requestMatchers(
                     HttpMethod.GET,
                     "/users"
                 ).hasAnyAuthority("USER_MANAGE", "TICKET_MANAGE", "TICKET_SUPERVISOR")
@@ -64,6 +68,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/users/**"
                 ).hasAnyAuthority("USER_MANAGE")
+
 
                 // endpoint tickets permissions
 
@@ -128,8 +133,18 @@ public class SecurityConfig {
                     "/histories/**"
                 ).hasAuthority("COMPUTER_MANAGE")
 
+                // endpoint specializations permissions
 
-                // endpoint access permissins
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/specializations/**"
+                ).authenticated()
+
+                .requestMatchers(
+                    "/specializations/**"
+                ).hasAuthority("SYSTEM_MANAGE")
+
+                // endpoint access permissions
 
                 .requestMatchers(
                     "/access/**"

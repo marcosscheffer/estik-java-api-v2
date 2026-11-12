@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
-import com.marcos.estik.shared.domain.user.RoleEnum;
 import com.marcos.estik.user.adapter.in.web.mapper.UserWebMapper;
 import com.marcos.estik.user.adapter.in.web.request.AssignUserRequest;
 import com.marcos.estik.user.adapter.in.web.request.ChangeFacilityRequest;
+import com.marcos.estik.user.adapter.in.web.request.ChangeSpecializationRequest;
 import com.marcos.estik.user.adapter.in.web.request.UpdateUserRequest;
 import com.marcos.estik.user.adapter.in.web.response.PageResponse;
 import com.marcos.estik.user.adapter.in.web.response.UserResponse;
@@ -28,6 +28,7 @@ import com.marcos.estik.user.application.command.SearchUsersCommand;
 import com.marcos.estik.user.application.port.in.ActiveUserByIdPort;
 import com.marcos.estik.user.application.port.in.AssignUserByIdPort;
 import com.marcos.estik.user.application.port.in.ChangeFacilityUserByIdPort;
+import com.marcos.estik.user.application.port.in.ChangeSpecializationPort;
 import com.marcos.estik.user.application.port.in.DeactiveUserByIdPort;
 import com.marcos.estik.user.application.port.in.FindUserByIdPort;
 import com.marcos.estik.user.application.port.in.SearchUsersPort;
@@ -48,13 +49,14 @@ public class UserController {
     private final DeactiveUserByIdPort deactiveUserByIdPort;
     private final ActiveUserByIdPort activeUserByIdPort;
     private final AssignUserByIdPort assignUserByIdPort;
+    private final ChangeSpecializationPort changeSpecializationPort;
     private final ChangeFacilityUserByIdPort changeFacilityUserByIdPort;
 
     @GetMapping
     public ResponseEntity<PageResponse<UserResponseSummary>> getUsers(
         @RequestParam(defaultValue = "") String username,
         @RequestParam(required = false) UUID facilityId,
-        @RequestParam(required = false) RoleEnum role,
+        @RequestParam(required = false) UUID roleId,
         @RequestParam(required = false) UUID specializationId,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
@@ -63,7 +65,7 @@ public class UserController {
             new SearchUsersCommand (
                 username,
                 facilityId,
-                role,
+                roleId,
                 specializationId,
                 new PageQuery(page, size)
             )
@@ -135,6 +137,16 @@ public class UserController {
         @RequestBody ChangeFacilityRequest request
     ) {
         UserView user = changeFacilityUserByIdPort.execute(id, request.facilityId());
+
+        return ResponseEntity.ok(userWebMapper.toResponse(user));
+    }
+
+    @PostMapping("/{id}/specialization")
+    public ResponseEntity<UserResponse> changeSpecialization(
+        @PathVariable UUID id,
+        @RequestBody ChangeSpecializationRequest request
+    ) {
+        UserView user = changeSpecializationPort.execute(id, request.specializationId());
 
         return ResponseEntity.ok(userWebMapper.toResponse(user));
     }

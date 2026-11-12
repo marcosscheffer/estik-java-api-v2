@@ -44,10 +44,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             ) {
                 UUID userId = tokenProvider.getUserId(token);
                 String username = tokenProvider.getUsername(token);
+                UUID specializationId = tokenProvider.getSpecializationId(token);
                 Set<PermissionEnum> permissions = tokenProvider.getPermission(token);                
                 AuthenticatedUser principal = new AuthenticatedUser(
                     userId,
                     username,
+                    specializationId,
                     permissions
                 );
 

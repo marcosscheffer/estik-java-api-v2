@@ -9,6 +9,7 @@ public record UserResponse(
     String email,
     UUID facilityId,
     UserSummaryRole role,
+    UserSpecializationResponse specialization,
     Instant createdAt,
     Instant updatedAt,
     Boolean active

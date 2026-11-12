@@ -5,7 +5,7 @@ import java.util.UUID;
 public record UpdateTicketCommand(
     String title,
     String description,
-    UUID type
+    UUID specializationId
 ) {
     
 }

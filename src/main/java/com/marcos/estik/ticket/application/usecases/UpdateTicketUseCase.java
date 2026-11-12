@@ -32,7 +32,7 @@ public class UpdateTicketUseCase implements UpdateTicketPort {
             principal.id(),
             command.title(),
             command.description(), 
-            command.type()
+            command.specializationId()
         );
         ticketRepositoryPort.save(ticket);
         return new TicketView(

@@ -7,6 +7,7 @@ public record UserResponseSummary(
     String username,
     String email,
     UserSummaryRole role,
+    UserSpecializationResponse specialization,
     Boolean active
 ) {
     

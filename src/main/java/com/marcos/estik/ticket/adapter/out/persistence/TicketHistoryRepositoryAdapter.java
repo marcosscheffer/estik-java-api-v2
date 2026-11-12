@@ -13,7 +13,6 @@ import com.marcos.estik.shared.application.pagination.PageResult;
 import com.marcos.estik.ticket.application.ports.out.TicketHistoryRepositoryPort;
 import com.marcos.estik.ticket.domain.TicketHistory;
 import com.marcos.estik.ticket.domain.enums.StatusEnum;
-import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,10 +31,8 @@ public class TicketHistoryRepositoryAdapter implements TicketHistoryRepositoryPo
     }
 
     @Override
-    public PageResult<TicketHistory> searchTicketHistory(UUID ticketId, StatusEnum status, TicketTypeEnum type,
-            PageQuery page) {
+    public PageResult<TicketHistory> searchTicketHistory(UUID ticketId, StatusEnum status, PageQuery page) {
         Specification<TicketHistoryEntity> spec = Specification.allOf(
-            TicketHistorySpecification.typeIs(type),
             TicketHistorySpecification.statusIs(status),
             TicketHistorySpecification.ticketIs(ticketId)
         );

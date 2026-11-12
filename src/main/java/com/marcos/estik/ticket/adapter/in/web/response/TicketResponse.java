@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import com.marcos.estik.ticket.domain.enums.PriorityEnum;
 import com.marcos.estik.ticket.domain.enums.StatusEnum;
-import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
 
 public record TicketResponse(
     UUID id,
@@ -15,7 +14,7 @@ public record TicketResponse(
     TicketUserResponse forwarded,
     TicketUserResponse regulator,
     TicketUserResponse assignee,
-    TicketTypeEnum ticketType,
+    TicketSpecializationResponse specialization,
     String title,
     String description,
     StatusEnum status,

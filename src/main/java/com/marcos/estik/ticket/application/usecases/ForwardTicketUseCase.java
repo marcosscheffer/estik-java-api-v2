@@ -1,5 +1,6 @@
 package com.marcos.estik.ticket.application.usecases;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -44,7 +45,11 @@ public class ForwardTicketUseCase implements ForwardTicketPort {
     public TicketView execute(UUID ticketId, ForwardCommand command, AuthenticatedUser principal) {
         TicketUserInfo forwardUser = loadTicketFindUserByIdPort.execute(command.userId());
         Ticket ticket = ticketRepositoryPort.findTicketById(ticketId);
-        Set<UUID> recipientsRole = loadTicketFindPermissionByPermissionPort.execute(PermissionEnum.TICKET_SUPERVISOR);
+        Set<UUID> recipientsRole = loadTicketFindPermissionByPermissionPort.execute(
+            List.copyOf(
+                PermissionEnum.grantedBy(PermissionEnum.TICKET_WORK)
+            )
+        );
 
         if (!recipientsRole.contains(forwardUser.roleId())) {
             throw new ForwardedRoleInvalidException("Role forwarded invalid");

@@ -6,7 +6,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.marcos.estik.ticket.domain.enums.PriorityEnum;
 import com.marcos.estik.ticket.domain.enums.StatusEnum;
-import com.marcos.estik.ticket.domain.enums.TicketTypeEnum;
+
+import jakarta.persistence.criteria.Predicate;
 
 public final class TicketSpecification {
 
@@ -24,10 +25,10 @@ public final class TicketSpecification {
             : (root, q, cb) -> cb.equal(root.get("status"), status);
     }
 
-    public static Specification<TicketEntity> typeIs(TicketTypeEnum type) {
+    public static Specification<TicketEntity> specializationIs(UUID type) {
         return type == null
             ? Specification.unrestricted()
-            : (root, q, cb) -> cb.equal(root.get("ticketType"), type);
+            : (root, q, cb) -> cb.equal(root.get("specializationId"), type);
     }
 
     public static Specification<TicketEntity> priorityIs(PriorityEnum priority) {
@@ -66,9 +67,26 @@ public final class TicketSpecification {
             : (root, q, cb) -> cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%");
     }
 
-    public static Specification<TicketEntity> forwardedIs(Boolean forwarded) {
-        return forwarded == null 
-            ? Specification.unrestricted()
-            : (root, q, cb) -> cb.isNull(root.get("forwardedId"));
+    public static Specification<TicketEntity> FilterIs(UUID userId, UUID specializationId) {
+        if (userId == null) {
+            return Specification.unrestricted();
+        }
+
+        return (root, q, cb) -> {
+            Predicate involved = cb.or(
+                cb.equal(root.get("requesterId"), userId),
+                cb.equal(root.get("forwardedId"), userId),
+                cb.equal(root.get("assigneeId"), userId)
+            );
+
+            if (specializationId == null) {
+                return involved;
+            }
+
+            return cb.or(
+                involved,
+                cb.equal(root.get("specializationId"), specializationId)
+            );
+        };
     }
 }

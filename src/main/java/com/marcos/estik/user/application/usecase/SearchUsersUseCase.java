@@ -24,15 +24,15 @@ public class SearchUsersUseCase implements SearchUsersPort {
         return userRepositoryPort.SearchUsers(
             command.facilityId(), 
             command.username(),
-            command.role(),
+            command.roleId(),
             command.specializationId(),
             command.page()
         ).map(
             user -> {
                 return new UserView(
                     user, 
-                    loadUserFindRoleByIdPort.execute(user.getRoleId()),
-                    loadUserFindSpecializationByIdPort.execute(user.getSpecializationId())
+                    user.getRoleId() == null ? null : loadUserFindRoleByIdPort.execute(user.getRoleId()),
+                    user.getSpecializationId() == null ? null : loadUserFindSpecializationByIdPort.execute(user.getSpecializationId())
                 );
             }
         );

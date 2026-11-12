@@ -1,5 +1,7 @@
 package com.marcos.estik.ticket.adapter.out.access;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,11 +20,16 @@ public class LoadTicketFindPermissionByPermissionAdapter implements LoadTicketFi
     private final FindPermissionByPermissionPort findPermissionByPermissionPort;
 
     @Override
-    public Set<UUID> execute(PermissionEnum permission) {
-        Set<UUID> permissionsId = Set.of();
-        findPermissionByPermissionPort.execute(permission)
-            .stream()
-            .forEach(p -> permissionsId.add(p.getId()));
+    public Set<UUID> execute(List<PermissionEnum> permissions) {
+        Set<UUID> permissionsId = new HashSet<>();
+
+        permissions.stream().forEach(
+            permission -> findPermissionByPermissionPort.execute(permission)
+                .stream()
+                .forEach(
+                    p -> permissionsId.add(p.getRoleId())
+                )
+        );
         
         return permissionsId;        
     }

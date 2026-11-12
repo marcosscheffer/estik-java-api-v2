@@ -8,7 +8,6 @@ import com.marcos.estik.ticket.domain.enums.StatusEnum;
 public record TicketHistoryResponse(
     UUID id,
     StatusEnum status,
-    UUID type,
     Instant createdAt
 ) {
     

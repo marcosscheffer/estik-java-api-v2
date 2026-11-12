@@ -39,8 +39,8 @@ public class CreateUserUseCase implements CreateUserPort {
         
         return new UserView(
             user, 
-            loadUserFindRoleByIdPort.execute(user.getRoleId()),
-            loadUserFindSpecializationByIdPort.execute(user.getSpecializationId())
+            user.getRoleId() == null ? null : loadUserFindRoleByIdPort.execute(user.getRoleId()),
+            user.getSpecializationId() == null ? null : loadUserFindSpecializationByIdPort.execute(user.getSpecializationId())
         );
     }
     
