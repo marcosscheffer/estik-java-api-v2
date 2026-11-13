@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,13 +19,16 @@ import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 import com.marcos.estik.specialization.adapter.in.web.mapper.SpecializationWebMapper;
 import com.marcos.estik.specialization.adapter.in.web.request.CreateSpecializationRequest;
+import com.marcos.estik.specialization.adapter.in.web.request.UpdateSpecializationRequest;
 import com.marcos.estik.specialization.adapter.in.web.response.SpecializationResponse;
 import com.marcos.estik.specialization.application.ports.in.CreateSpecializationPort;
 import com.marcos.estik.specialization.application.ports.in.DeleteSpecializationPort;
 import com.marcos.estik.specialization.application.ports.in.FindSpecializationByIdPort;
 import com.marcos.estik.specialization.application.ports.in.SearchSpecializationPort;
+import com.marcos.estik.specialization.application.ports.in.UpdateSpecializationPort;
 import com.marcos.estik.specialization.domain.Specialization;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController 
@@ -36,6 +40,7 @@ public class SpecializationController {
     private final FindSpecializationByIdPort findSpecializationByIdPort;
     private final CreateSpecializationPort createSpecializationPort;
     private final DeleteSpecializationPort deleteSpecializationPort;
+    private final UpdateSpecializationPort updateSpecializationPort;
     private final SpecializationWebMapper specializationWebMapper;
 
     @GetMapping
@@ -61,7 +66,7 @@ public class SpecializationController {
 
     @PostMapping
     public ResponseEntity<SpecializationResponse> createSpecialization(
-        @RequestBody CreateSpecializationRequest request,
+        @RequestBody @Valid CreateSpecializationRequest request,
         UriComponentsBuilder uriBuilder
     ) {
         Specialization specialization = createSpecializationPort.execute(request.name());
@@ -78,5 +83,16 @@ public class SpecializationController {
     ) {
         deleteSpecializationPort.execute(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SpecializationResponse> updateSpecialization(
+        @PathVariable UUID id,
+        @RequestBody @Valid UpdateSpecializationRequest request
+    ) {
+        Specialization specialization = updateSpecializationPort.execute(id, request.name());
+        return ResponseEntity.ok(
+            specializationWebMapper.toResponse(specialization)
+        );
     }
 }

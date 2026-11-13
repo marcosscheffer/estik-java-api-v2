@@ -22,4 +22,8 @@ public class Specialization {
             Instant.now()
         );
     } 
+
+    public void updateName(String name) {
+        this.name = name;
+    }
 }

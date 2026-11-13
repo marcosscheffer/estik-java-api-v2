@@ -8,12 +8,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.shared.domain.event.TicketReopenNotifyEvent;
 import com.marcos.estik.ticket.application.ports.in.ReopenTicketPort;
+import com.marcos.estik.ticket.application.ports.out.AssigneedRepositoryPort;
+import com.marcos.estik.ticket.application.ports.out.ForwardedRepositoryPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindSpecializationByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
 import com.marcos.estik.ticket.application.ports.out.TicketEventPublisherPort;
 import com.marcos.estik.ticket.application.ports.out.TicketHistoryRepositoryPort;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
+import com.marcos.estik.ticket.application.view.TicketAssigneedInfo;
+import com.marcos.estik.ticket.application.view.TicketForwardedInfo;
 import com.marcos.estik.ticket.application.view.TicketView;
 import com.marcos.estik.ticket.domain.Ticket;
 import com.marcos.estik.ticket.domain.TicketHistory;
@@ -27,6 +31,8 @@ public class ReopenTicketUseCase implements ReopenTicketPort {
 
     private final TicketRepositoryPort ticketRepositoryPort;
     private final TicketHistoryRepositoryPort ticketHistoryRepositoryPort;
+    private final ForwardedRepositoryPort forwardedRepositoryPort;
+    private final AssigneedRepositoryPort assigneedRepositoryPort;
     private final LoadTicketFindFacilityByIdPort loadTicketFindFacilityByIdPort;
     private final LoadTicketFindUserByIdPort loadTicketFindUserByIdPort;
     private final TicketEventPublisherPort ticketEventPublisherPort;
@@ -50,7 +56,10 @@ public class ReopenTicketUseCase implements ReopenTicketPort {
             new TicketReopenNotifyEvent(
                 ticket.getId(),
                 ticket.getTitle(),
-                ticket.getAssigneeId(),
+                assigneedRepositoryPort.searchAssigneed(ticket.getId())
+                .stream()
+                .map(assigneeUser -> assigneeUser.getUserId())
+                .toList(),
                 principal.id()
             )
         );
@@ -59,11 +68,23 @@ public class ReopenTicketUseCase implements ReopenTicketPort {
             ticket,
             loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
             loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
-            loadTicketFindUserByIdPort.execute(ticket.getForwardedId()),
-            loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
             loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId()),
-            loadTicketFindSpecializationByIdPort.execute(ticket.getSpecializationId())
+            ticket.getSpecializationId() == null ? null : loadTicketFindSpecializationByIdPort.execute(ticket.getSpecializationId()),
+            forwardedRepositoryPort.searchForwarded(ticket.getId()).stream()
+            .map(
+                userForwarded -> new TicketForwardedInfo(
+                    userForwarded.getId(),
+                    loadTicketFindUserByIdPort.execute(userForwarded.getUserId())
+                )
+            ).toList(),
+            assigneedRepositoryPort.searchAssigneed(ticket.getId())
+            .stream()
+            .map(
+                assigneeUser -> new TicketAssigneedInfo(
+                    assigneeUser.getId(),
+                    loadTicketFindUserByIdPort.execute(assigneeUser.getUserId())
+                )
+            ).toList()
         );
     }
-    
 }

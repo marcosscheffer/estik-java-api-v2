@@ -1,4 +1,4 @@
-package com.marcos.estik.ticket.adapter.out.persistence;
+package com.marcos.estik.ticket.adapter.out.persistence.ticket;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -34,14 +34,10 @@ public class TicketEntity {
     private UUID requesterId;
     @Column(name = "facility_id")
     private UUID facilityId;
-    @Column(name = "assignee_id")
-    private UUID assigneeId;
     @Column(name = "chat_id")
     private UUID chatId;
     @Column(name = "regulator_id")
     private UUID regulatorId;
-    @Column(name = "forwarded_id")
-    private UUID forwardedId;
 
     @Enumerated(EnumType.STRING)
     private StatusEnum status;

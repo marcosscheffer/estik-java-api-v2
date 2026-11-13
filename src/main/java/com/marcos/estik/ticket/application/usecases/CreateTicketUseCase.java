@@ -1,5 +1,7 @@
 package com.marcos.estik.ticket.application.usecases;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,10 +69,10 @@ public class CreateTicketUseCase implements CreateTicketPort {
             ticket,
             loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
             null,
-            null,
-            null,
             facilityInfo,
-            loadTicketFindSpecializationByIdPort.execute(ticket.getSpecializationId())
+            ticket.getSpecializationId() == null ? null : loadTicketFindSpecializationByIdPort.execute(ticket.getSpecializationId()),
+            List.of(),
+            List.of()
         );
     }
 }

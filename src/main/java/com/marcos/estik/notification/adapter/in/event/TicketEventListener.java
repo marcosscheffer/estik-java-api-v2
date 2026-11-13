@@ -1,5 +1,6 @@
 package com.marcos.estik.notification.adapter.in.event;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,7 +60,7 @@ public class TicketEventListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     void onTicketCancelledNotifyEvent(TicketCancelledNotifyEvent event) {
-        List<UUID> recipientsId = event.assigneeId() == null ? List.of() : List.of(event.assigneeId());
+        List<UUID> recipientsId = event.assigneesId() == null ? List.of() : event.assigneesId();
 
         createNotificationPort.execute(
             new CreateNotificationCommand(
@@ -93,7 +94,9 @@ public class TicketEventListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     void onTicketForwardedNotifyEvent(TicketForwardedNotifyEvent event) {
-        List<UUID> recipientsId = List.of(event.requesterId(), event.forwardedId());
+        List<UUID> recipientsId = new ArrayList<>();
+        recipientsId.add(event.requesterId());
+        recipientsId.addAll(event.forwardedId()); 
 
         createNotificationPort.execute(
             new CreateNotificationCommand(
@@ -110,7 +113,7 @@ public class TicketEventListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     void onTicketReopenNotifyEvent(TicketReopenNotifyEvent event) {
-        List<UUID> recipientsId = List.of(event.assigneeId());
+        List<UUID> recipientsId = event.assigneeId();
 
         createNotificationPort.execute(
             new CreateNotificationCommand(

@@ -51,8 +51,6 @@ public class SearchTicketsUseCase implements SearchTicketsPort {
                 ticket,
                 loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
                 ticket.getRegulatorId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
-                ticket.getForwardedId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getForwardedId()),
-                ticket.getAssigneeId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getAssigneeId()),
                 loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId()),
                 ticket.getSpecializationId() == null ? null : loadTicketFindSpecializationByIdPort.execute(ticket.getSpecializationId())
             )

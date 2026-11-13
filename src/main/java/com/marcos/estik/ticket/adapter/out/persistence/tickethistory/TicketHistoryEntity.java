@@ -1,4 +1,4 @@
-package com.marcos.estik.ticket.adapter.out.persistence;
+package com.marcos.estik.ticket.adapter.out.persistence.tickethistory;
 
 import java.time.Instant;
 import java.util.UUID;

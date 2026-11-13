@@ -23,9 +23,7 @@ public class Ticket {
     private UUID chatId;
     private UUID requesterId;
     private UUID facilityId;
-    private UUID assigneeId;
     private UUID regulatorId;
-    private UUID forwardedId;
     private StatusEnum status;
     private PriorityEnum priority;
     private Long version;
@@ -50,8 +48,6 @@ public class Ticket {
             requesterId, 
             facilityId, 
             null,
-            null,
-            null,
             StatusEnum.OPEN, 
             priority,
             null,
@@ -60,46 +56,13 @@ public class Ticket {
         );
     }
 
-    public void forward(UUID actorId, UUID userId, PriorityEnum priority) {
-        if (!this.status.equals(StatusEnum.OPEN) && !this.status.equals(StatusEnum.FORWARDED)) {
-            throw new InvalidTicketStatusException("Ticket status invalid for this operation");
-        }
 
-        if (this.requesterId.equals(userId)) {
-            throw new TicketOwnerShipException("Ticket not forwaded for you");
-        }
-
-        this.priority = priority;
-        this.regulatorId = actorId;
-        this.forwardedId = userId;
-        this.assigneeId = null;
+    public void forward() {
         this.status = StatusEnum.FORWARDED;
         this.updatedAt = Instant.now();
     }
 
-    public void assignTo(UUID userId, UUID chatId) {
-        if (this.status.equals(StatusEnum.CANCELLED) || this.status.equals(StatusEnum.RESOLVED)) {
-            throw new TicketNotAssignableException(id);
-        }
-
-        if(this.requesterId.equals(userId)) {
-            throw new TicketOwnerShipException("Ticket not be assumed");
-        }
-
-        if (this.assigneeId != null) {
-            throw new TicketAlreadyAssignedException(id);
-        }
-
-        if (this.forwardedId == null) {
-            throw new InvalidTicketStatusException("Ticket not forwaded");
-        }
-
-        if (!this.forwardedId.equals(userId)) {
-            throw new TicketOwnerShipException("Ticket not forwaded for you");
-        }
-
-        this.assigneeId = userId;
-        this.chatId = chatId;
+    public void assign() {
         this.status = StatusEnum.PROGRESS;
         this.updatedAt = Instant.now();
     }
@@ -107,10 +70,6 @@ public class Ticket {
     public void resolve(UUID actorId) {
         if (!this.status.equals(StatusEnum.PROGRESS)) {
             throw new InvalidTicketStatusException("You cannot resolve this ticket");
-        }
-
-        if (!this.assigneeId.equals(actorId)) {
-            throw new TicketOwnerShipException("Ticket not assigned for you");
         }
 
         this.status = StatusEnum.RESOLVED;
@@ -158,9 +117,4 @@ public class Ticket {
         this.specializationId = specializationId;
         this.updatedAt = Instant.now();
     }
-
-    public Boolean canAccessChat(UUID actorId) {
-        return actorId.equals(this.requesterId) || actorId.equals(this.assigneeId);
-    }
-
 }
