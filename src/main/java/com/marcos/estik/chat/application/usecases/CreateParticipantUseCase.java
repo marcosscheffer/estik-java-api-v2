@@ -27,11 +27,18 @@ public class CreateParticipantUseCase implements CreateParticipantPort{
     public ChatParticipantInfo execute(CreateParticipantCommand command) {
         Chat chat = chatRepositoryPort.findById(command.chatId());
         ChatUserInfo user = loadChatFindUserByIdPort.execute(command.userId());
-        if (participantRepositoryPort.existsByUserIdAndChatId(user.id(), chat.getId())) {
-            throw new ParticipantAlreadyExistsException("user already in chat");
+        Participant participant = participantRepositoryPort.findByUserIdAndChatId(user.id(), chat.getId());
+
+        if (participant != null) {
+            if (participant.getActive()) {
+                throw new ParticipantAlreadyExistsException("user already in chat");
+            } else {
+                participant.active();
+            }
+        } else {
+            participant = Participant.create(chat.getId(), user.id());
         }
-        
-        Participant participant = Participant.create(chat.getId(), user.id());
+
         participantRepositoryPort.save(participant);
 
         return new ChatParticipantInfo(

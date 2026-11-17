@@ -29,4 +29,6 @@ public class ParticipantEntity {
     @CreationTimestamp 
     @Column(name = "joined_at", nullable = false, updatable = false)
     private Instant joinedAt;
+
+    private Boolean active;
 }

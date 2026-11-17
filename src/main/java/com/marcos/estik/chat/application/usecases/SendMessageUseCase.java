@@ -25,6 +25,7 @@ import com.marcos.estik.chat.domain.Attachment;
 import com.marcos.estik.chat.domain.Chat;
 import com.marcos.estik.chat.domain.Message;
 import com.marcos.estik.chat.domain.Participant;
+import com.marcos.estik.chat.domain.exception.ChatForbiddenException;
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.shared.domain.file.FileUpload;
 
@@ -48,6 +49,10 @@ public class SendMessageUseCase implements SendMessagePort {
     public MessageView execute(UUID chatId, SendMessageCommand command, AuthenticatedUser principal) {
         Chat chat = chatRepositoryPort.findById(chatId);
         Participant participant = participantRepositoryPort.findByUserIdAndChatId(principal.id(), chat.getId());
+        
+        if (participant == null || !participant.getActive()) {
+            throw new ChatForbiddenException("You are not a participant of this chat");
+        }
         Message message = Message.create(
             chat.getId(), 
             participant.getId(),

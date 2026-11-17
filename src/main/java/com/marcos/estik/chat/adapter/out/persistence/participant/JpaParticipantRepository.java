@@ -12,10 +12,10 @@ public interface JpaParticipantRepository extends JpaRepository<ParticipantEntit
 
     Optional<ParticipantEntity> findByUserIdAndChatId(UUID userId, UUID chatId);
 
-    Boolean existsByUserIdAndChatId(UUID userId, UUID chatId);
+    Boolean existsByUserIdAndChatIdAndActive(UUID userId, UUID chatId, Boolean active);
 
     Optional<Participant> findByUserId(UUID userId);
 
     List<ParticipantEntity> findByChatId(UUID chatId);
-    
+
 }

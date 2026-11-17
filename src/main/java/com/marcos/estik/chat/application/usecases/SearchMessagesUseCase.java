@@ -12,11 +12,13 @@ import com.marcos.estik.chat.application.ports.in.SearchMessagesPort;
 import com.marcos.estik.chat.application.ports.out.AttachmentRepositoryPort;
 import com.marcos.estik.chat.application.ports.out.ChatRepositoryPort;
 import com.marcos.estik.chat.application.ports.out.LoadChatFindFileByIdPort;
+import com.marcos.estik.chat.application.ports.out.LoadChatFindTicketByChatIdPort;
 import com.marcos.estik.chat.application.ports.out.LoadChatFindUserByIdPort;
 import com.marcos.estik.chat.application.ports.out.MessageRepositoryPort;
 import com.marcos.estik.chat.application.ports.out.ParticipantRepositoryPort;
 import com.marcos.estik.chat.application.view.ChatAttachmentInfo;
 import com.marcos.estik.chat.application.view.ChatParticipantInfo;
+import com.marcos.estik.chat.application.view.ChatTicketInfo;
 import com.marcos.estik.chat.application.view.MessageInfo;
 import com.marcos.estik.chat.application.view.MessageView;
 import com.marcos.estik.chat.domain.Attachment;
@@ -27,6 +29,7 @@ import com.marcos.estik.chat.domain.exception.ChatForbiddenException;
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
+import com.marcos.estik.shared.domain.chat.ChatTypeEnum;
 import com.marcos.estik.shared.domain.user.PermissionEnum;
 
 import lombok.RequiredArgsConstructor;
@@ -41,34 +44,35 @@ public class SearchMessagesUseCase implements SearchMessagesPort {
     private final MessageRepositoryPort messageRepositoryPort;
     private final LoadChatFindFileByIdPort loadChatFindFileByIdPort;
     private final LoadChatFindUserByIdPort loadChatFindUserByIdPort;
+    private final LoadChatFindTicketByChatIdPort loadChatFindTicketByChatIdPort;
 
     @Override
     @Transactional(readOnly = true)
     public PageResult<MessageView> execute(UUID chatId, AuthenticatedUser principal, PageQuery page) {
         Chat chat = chatRepositoryPort.findById(chatId);
-
-        if (!participantRepositoryPort.existsByUserIdAndChatId(principal.id(), chat.getId())
-            && !principal.permissions().contains(PermissionEnum.TICKET_MANAGE)
-        ) {
-            throw new ChatForbiddenException("you cannot access this chat");
+        Boolean canSupervise = chat.getType() == ChatTypeEnum.TICKET 
+            && (principal.has(PermissionEnum.TICKET_SUPERVISOR) || principal.has(PermissionEnum.TICKET_MANAGE));
+        if (!canSupervise) {
+           Participant participant = participantRepositoryPort.findByUserIdAndChatId(principal.id(), chat.getId());
+            if (participant == null || !participant.getActive()) {
+                throw new ChatForbiddenException("You are not a participant of this chat");
+            }
         }
-        
+
+        if (canSupervise && principal.has(PermissionEnum.TICKET_SUPERVISOR) ) {
+            if(principal.specializationId() != ticket.specializationId() && ticket.specializationId() != null) {
+                throw new ChatForbiddenException("you not be access this chat");
+            }
+        }
+
+        return this.getMessages(chat, page);
+    }
+
+    private PageResult<MessageView> getMessages(Chat chat, PageQuery page) {
         PageResult<Message> messages = messageRepositoryPort.searchByChatId(chat.getId(), page);
-        List<Attachment> attachments = attachmentRepositoryPort.findByMessageIds(
+        Map<UUID, List<ChatAttachmentInfo>> attachmentsMap = getAttachments(
             messages.items().stream().map(message -> message.getId()).toList()
         );
-
-        Map<UUID, List<ChatAttachmentInfo>> attachmentsMap = attachments
-            .stream()
-            .map(
-                attachment -> new ChatAttachmentInfo(
-                    attachment.getId(),
-                    attachment.getMessageId(),
-                    loadChatFindFileByIdPort.execute(attachment.getFileId()),
-                    attachment.getCreatedAt()
-                )
-            )
-            .collect(Collectors.groupingBy(ChatAttachmentInfo::messageId));
 
         return messages.map(
             message -> {
@@ -86,6 +90,22 @@ public class SearchMessagesUseCase implements SearchMessagesPort {
                 );
             }
         );
+    }
+
+    private Map<UUID, List<ChatAttachmentInfo>> getAttachments(List<UUID> messagesId) {
+        List<Attachment> attachments = attachmentRepositoryPort.findByMessageIds(messagesId);
+
+        return attachments
+            .stream()
+            .map(
+                attachment -> new ChatAttachmentInfo(
+                    attachment.getId(),
+                    attachment.getMessageId(),
+                    loadChatFindFileByIdPort.execute(attachment.getFileId()),
+                    attachment.getCreatedAt()
+                )
+            )
+            .collect(Collectors.groupingBy(ChatAttachmentInfo::messageId));
     }
     
     private MessageInfo getReplyInfo(UUID id) {

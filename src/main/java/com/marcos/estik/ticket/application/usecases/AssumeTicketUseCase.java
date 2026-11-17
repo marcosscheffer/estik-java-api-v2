@@ -26,6 +26,7 @@ import com.marcos.estik.ticket.domain.Assigneed;
 import com.marcos.estik.ticket.domain.Ticket;
 import com.marcos.estik.ticket.domain.TicketHistory;
 import com.marcos.estik.ticket.domain.enums.StatusEnum;
+import com.marcos.estik.ticket.domain.exception.TicketAlreadyAssignedException;
 import com.marcos.estik.ticket.domain.exception.TicketOwnerShipException;
 
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,9 @@ public class AssumeTicketUseCase implements AssumeTicketPort {
             StatusEnum.PROGRESS, 
             ticket.getSpecializationId()
         );
+        if (assigneedRepositoryPort.existsByTicketIdAndUserId(ticket.getId(), principal.id())) {
+            throw new TicketAlreadyAssignedException(ticket.getId());
+        }
 
         List<TicketForwardedInfo> forwardedUsers = forwardedRepositoryPort.searchForwarded(ticket.getId())
             .stream()
@@ -70,10 +74,12 @@ public class AssumeTicketUseCase implements AssumeTicketPort {
 
         Assigneed assigneed = Assigneed.create(principal.id(), ticketId);
         UUID chatId = ticket.getChatId() == null ? loadTicketCreateChatPort.execute() : ticket.getChatId();
-        ticket.assign();
+        if (ticket.getChatId() == null) {
+            loadTicketCreateParticipantPort.execute(ticket.getRequesterId(), chatId);
+        }
         loadTicketCreateParticipantPort.execute(assigneed.getUserId(), chatId);
-        loadTicketCreateParticipantPort.execute(ticket.getRequesterId(), chatId);
 
+        ticket.assign(chatId);
         ticketRepositoryPort.save(ticket);
         ticketHistoryRepositoryPort.save(ticketHistory);
         assigneedRepositoryPort.save(assigneed);
@@ -89,7 +95,7 @@ public class AssumeTicketUseCase implements AssumeTicketPort {
         return new TicketView(
             ticket,
             loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
-            loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
+            ticket.getRegulatorId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
             loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId()),
             ticket.getSpecializationId() == null ? null : loadTicketFindSpecializationByIdPort.execute(ticket.getSpecializationId()),
             forwardedUsers,

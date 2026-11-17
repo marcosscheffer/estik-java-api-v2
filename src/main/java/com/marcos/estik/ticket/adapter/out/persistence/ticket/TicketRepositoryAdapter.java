@@ -72,4 +72,9 @@ public class TicketRepositoryAdapter implements TicketRepositoryPort {
     public void deleteTicketById(UUID id) {
         jpaTicketRepository.deleteById(id);
     }
+
+    @Override
+    public Ticket findByChatId(UUID chatId) {
+        return ticketPersistenceMapper.toDomain(jpaTicketRepository.findByChatId(chatId).orElse(null));
+    }
 }

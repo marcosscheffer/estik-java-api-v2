@@ -1,6 +1,7 @@
 package com.marcos.estik.ticket.adapter.in.web.response;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 import com.marcos.estik.ticket.domain.enums.PriorityEnum;
@@ -11,9 +12,9 @@ public record TicketResponse(
     UUID chatId,
     TicketFacilityResponse facility,
     TicketUserResponse requester,
-    TicketUserResponse forwarded,
+    List<TicketForwardedResponse> forwarded,
     TicketUserResponse regulator,
-    TicketUserResponse assignee,
+    List<TicketAssigneedsResponse> assigneeds,
     TicketSpecializationResponse specialization,
     String title,
     String description,

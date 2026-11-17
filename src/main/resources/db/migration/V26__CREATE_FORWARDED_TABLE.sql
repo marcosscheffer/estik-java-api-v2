@@ -1,6 +1,6 @@
 CREATE TABLE forwarded (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    ticket_id NOT NUll REFERENCES tickets(id) ON DELETE CASCADE,
+    ticket_id UUID NOT NUll REFERENCES tickets(id) ON DELETE CASCADE,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
 

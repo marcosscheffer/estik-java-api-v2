@@ -11,7 +11,7 @@ public record TicketView(
     TicketFacilityInfo facility,
     TicketSpecializationInfo specialization,
     List<TicketForwardedInfo> forwarded,
-    List<TicketAssigneedInfo> asigneeds
+    List<TicketAssigneedInfo> assigneeds
 ) {
     
 }

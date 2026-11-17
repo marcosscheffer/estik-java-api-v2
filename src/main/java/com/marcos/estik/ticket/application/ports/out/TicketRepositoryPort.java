@@ -17,4 +17,6 @@ public interface TicketRepositoryPort {
 
     void deleteTicketById(UUID id);
 
+    Ticket findByChatId(UUID chatId);
+
 }

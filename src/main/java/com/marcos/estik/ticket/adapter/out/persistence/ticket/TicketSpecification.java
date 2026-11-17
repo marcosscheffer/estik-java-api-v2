@@ -4,10 +4,16 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import com.marcos.estik.ticket.adapter.out.persistence.assigneed.AssigneedEntity;
+import com.marcos.estik.ticket.adapter.out.persistence.forwarded.ForwardedEntity;
 import com.marcos.estik.ticket.domain.enums.PriorityEnum;
 import com.marcos.estik.ticket.domain.enums.StatusEnum;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 
 public final class TicketSpecification {
 
@@ -46,13 +52,25 @@ public final class TicketSpecification {
     public static Specification<TicketEntity> forwardedIdIs(UUID forwardedId) {
         return forwardedId == null
             ? Specification.unrestricted()
-            : (root, q, cb) -> cb.equal(root.get("forwardedId"), forwardedId);
+            : (root, q, cb) -> existsLink(
+                ForwardedEntity.class, 
+                forwardedId, 
+                root, 
+                q, 
+                cb
+            );
     }
 
     public static Specification<TicketEntity> assigneeIs(UUID assigneeId) {
         return assigneeId == null 
             ? Specification.unrestricted() 
-            : (root, q, cb) -> cb.equal(root.get("assigneeId"), assigneeId);
+            : (root, q, cb) -> existsLink(
+                AssigneedEntity.class, 
+                assigneeId, 
+                root, 
+                q, 
+                cb
+            );
     }
 
     public static Specification<TicketEntity> regulatorIs(UUID regulatorId) {
@@ -75,8 +93,8 @@ public final class TicketSpecification {
         return (root, q, cb) -> {
             Predicate involved = cb.or(
                 cb.equal(root.get("requesterId"), userId),
-                cb.equal(root.get("forwardedId"), userId),
-                cb.equal(root.get("assigneeId"), userId)
+                existsLink(ForwardedEntity.class, userId, root, q, cb),
+                existsLink(AssigneedEntity.class, userId, root, q, cb)
             );
 
             if (specializationId == null) {
@@ -88,5 +106,24 @@ public final class TicketSpecification {
                 cb.equal(root.get("specializationId"), specializationId)
             );
         };
+    }
+
+    private static Predicate existsLink(
+        Class<?> linkEntity,
+        UUID userId,
+        Root<TicketEntity> root,
+        CriteriaQuery<?> q,
+        CriteriaBuilder cb
+    ) {
+        Subquery<Integer> sub = q.subquery(Integer.class);
+        Root<?> link = sub.from(linkEntity);
+
+        sub.select(cb.literal(1))
+            .where(
+                cb.equal(link.get("ticketId"), root.get("id")),
+                cb.equal(link.get("userId"), userId)
+            );
+
+        return cb.exists(sub);
     }
 }

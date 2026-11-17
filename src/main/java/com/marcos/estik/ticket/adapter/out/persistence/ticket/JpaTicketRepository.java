@@ -1,5 +1,6 @@
 package com.marcos.estik.ticket.adapter.out.persistence.ticket;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ public interface JpaTicketRepository extends JpaRepository<TicketEntity, UUID>, 
 
     Page<TicketEntity> findByRequesterId(UUID requesterId, Pageable pageable);
 
-    Page<TicketEntity> findByAssigneeId(UUID assigneeId, Pageable pageable);
+    Optional<TicketEntity> findByChatId(UUID chatId);
+
     
 }

@@ -10,10 +10,14 @@ import com.marcos.estik.shared.domain.user.PermissionEnum;
 import com.marcos.estik.ticket.application.command.SearchTicketsCommand;
 import com.marcos.estik.ticket.application.command.SearchTicketsFilter;
 import com.marcos.estik.ticket.application.ports.in.SearchTicketsPort;
+import com.marcos.estik.ticket.application.ports.out.AssigneedRepositoryPort;
+import com.marcos.estik.ticket.application.ports.out.ForwardedRepositoryPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindFacilityByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindSpecializationByIdPort;
 import com.marcos.estik.ticket.application.ports.out.LoadTicketFindUserByIdPort;
 import com.marcos.estik.ticket.application.ports.out.TicketRepositoryPort;
+import com.marcos.estik.ticket.application.view.TicketAssigneedInfo;
+import com.marcos.estik.ticket.application.view.TicketForwardedInfo;
 import com.marcos.estik.ticket.application.view.TicketView;
 import com.marcos.estik.ticket.domain.Ticket;
 
@@ -25,6 +29,8 @@ public class SearchTicketsUseCase implements SearchTicketsPort {
 
     private final TicketRepositoryPort ticketRepositoryPort;
     private final LoadTicketFindFacilityByIdPort loadTicketFindFacilityByIdPort;
+    private final AssigneedRepositoryPort assigneedRepositoryPort;
+    private final ForwardedRepositoryPort forwardedRepositoryPort;
     private final LoadTicketFindUserByIdPort loadTicketFindUserByIdPort;
     private final LoadTicketFindSpecializationByIdPort loadTicketFindSpecializationByIdPort;
 
@@ -52,7 +58,23 @@ public class SearchTicketsUseCase implements SearchTicketsPort {
                 loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
                 ticket.getRegulatorId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
                 loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId()),
-                ticket.getSpecializationId() == null ? null : loadTicketFindSpecializationByIdPort.execute(ticket.getSpecializationId())
+                ticket.getSpecializationId() == null ? null : loadTicketFindSpecializationByIdPort.execute(ticket.getSpecializationId()),
+                forwardedRepositoryPort.searchForwarded(ticket.getId())
+                .stream()
+                .map(
+                    userForwarded -> new TicketForwardedInfo(
+                        userForwarded.getId(),
+                        loadTicketFindUserByIdPort.execute(userForwarded.getUserId())
+                    )
+                ).toList(),
+                assigneedRepositoryPort.searchAssigneed(ticket.getId())
+                .stream()
+                .map(
+                    assigneeUser -> new TicketAssigneedInfo(
+                        assigneeUser.getId(),
+                        loadTicketFindUserByIdPort.execute(assigneeUser.getUserId())
+                    )
+                ).toList()
             )
         );
     }

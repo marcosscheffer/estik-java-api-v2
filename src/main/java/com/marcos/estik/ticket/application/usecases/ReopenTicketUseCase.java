@@ -67,7 +67,7 @@ public class ReopenTicketUseCase implements ReopenTicketPort {
         return new TicketView(
             ticket,
             loadTicketFindUserByIdPort.execute(ticket.getRequesterId()),
-            loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
+            ticket.getRegulatorId() == null ? null : loadTicketFindUserByIdPort.execute(ticket.getRegulatorId()),
             loadTicketFindFacilityByIdPort.execute(ticket.getFacilityId()),
             ticket.getSpecializationId() == null ? null : loadTicketFindSpecializationByIdPort.execute(ticket.getSpecializationId()),
             forwardedRepositoryPort.searchForwarded(ticket.getId()).stream()

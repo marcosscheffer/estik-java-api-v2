@@ -19,6 +19,7 @@ import com.marcos.estik.chat.domain.Chat;
 import com.marcos.estik.chat.domain.Participant;
 import com.marcos.estik.chat.domain.exception.ChatForbiddenException;
 import com.marcos.estik.security.AuthenticatedUser;
+import com.marcos.estik.shared.domain.chat.ChatTypeEnum;
 import com.marcos.estik.shared.domain.user.PermissionEnum;
 
 import lombok.RequiredArgsConstructor;
@@ -35,15 +36,17 @@ public class FindChatByIdUseCase implements FindChatByIdPort {
     
     @Override
     public ChatView execute(UUID id, AuthenticatedUser principal) {
-        Boolean isParticipant = participantRepositoryPort.findByChatId(id).stream().anyMatch(
-            participant -> participant.getUserId().equals(principal.id())
-        );
-
-        if (!isParticipant && !principal.permissions().contains(PermissionEnum.TICKET_MANAGE)) {
-            throw new ChatForbiddenException("You are not a participant of this chat");
-        }
-
         Chat chat = chatRepositoryPort.findById(id);
+        Boolean canSupervise = chat.getType() == ChatTypeEnum.TICKET && 
+            (principal.has(PermissionEnum.TICKET_SUPERVISOR) || principal.has(PermissionEnum.TICKET_MANAGE));
+        if (!canSupervise) {
+            Participant participant = participantRepositoryPort.findByUserIdAndChatId(principal.id(), chat.getId());
+            if (participant == null || !participant.getActive()) {
+                throw new ChatForbiddenException("You are not a participant of this chat");
+
+            }
+        } 
+
         Map<UUID, ChatParticipantInfo> participantsMap = toMapParticipantInfo(
             participantRepositoryPort.findByChatId(id)
         );
@@ -66,6 +69,11 @@ public class FindChatByIdUseCase implements FindChatByIdPort {
                 )
             )
             .collect(Collectors.toMap(ChatParticipantInfo::id, Function.identity()));
+    }
+
+    private Boolean canRead(Chat chat, AuthenticatedUser principal) {
+        ChatTicketInfo ticket = loadChatFindTicketByChatIdPort.execute(chat.getId());
+
     }
 
 }

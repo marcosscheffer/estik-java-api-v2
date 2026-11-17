@@ -6,8 +6,6 @@ import java.util.UUID;
 import com.marcos.estik.ticket.domain.enums.PriorityEnum;
 import com.marcos.estik.ticket.domain.enums.StatusEnum;
 import com.marcos.estik.ticket.domain.exception.InvalidTicketStatusException;
-import com.marcos.estik.ticket.domain.exception.TicketAlreadyAssignedException;
-import com.marcos.estik.ticket.domain.exception.TicketNotAssignableException;
 import com.marcos.estik.ticket.domain.exception.TicketOwnerShipException;
 
 import lombok.AllArgsConstructor;
@@ -57,12 +55,25 @@ public class Ticket {
     }
 
 
-    public void forward() {
+    public void forward(PriorityEnum priority, UUID actorId) {
+        if (this.status == StatusEnum.CANCELLED || this.status == StatusEnum.RESOLVED) {
+            throw new InvalidTicketStatusException("Ticket status invalid");
+        }
+        this.priority = priority;
+        this.regulatorId = actorId;
         this.status = StatusEnum.FORWARDED;
         this.updatedAt = Instant.now();
     }
 
-    public void assign() {
+    public void assign(UUID chatId) {
+        if (this.status != StatusEnum.FORWARDED
+            && this.status != StatusEnum.REFORWARDED
+            && this.status != StatusEnum.PROGRESS
+        ) {
+            throw new InvalidTicketStatusException("Ticket not be assigneed");
+        }
+
+        this.chatId = chatId;
         this.status = StatusEnum.PROGRESS;
         this.updatedAt = Instant.now();
     }
@@ -115,6 +126,17 @@ public class Ticket {
         this.title = title;
         this.description = description;
         this.specializationId = specializationId;
+        this.updatedAt = Instant.now();
+    }
+
+    public void reforward(PriorityEnum priority, UUID actorId) {
+        if (this.status != StatusEnum.PROGRESS && this.status != StatusEnum.FORWARDED) {
+            throw new InvalidTicketStatusException("Ticket status invalid");
+        }
+
+        this.priority = priority;
+        this.regulatorId = actorId;
+        this.status = StatusEnum.REFORWARDED;
         this.updatedAt = Instant.now();
     }
 }

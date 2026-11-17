@@ -12,6 +12,7 @@ public class Participant {
     private UUID id;
     private UUID chatId;
     private UUID userId;
+    private Boolean active;
     private Instant joinedAt;
 
     public static Participant create(UUID chatId, UUID userId) {
@@ -19,7 +20,18 @@ public class Participant {
             UUID.randomUUID(), 
             chatId, 
             userId, 
+            Boolean.TRUE,
             Instant.now()
         );
+    }
+
+    public void deactive() {
+        this.active = Boolean.FALSE;
+        this.joinedAt = Instant.now();
+    }
+
+    public void active() {
+        this.active = Boolean.TRUE;
+        this.joinedAt = Instant.now();
     }
 }
