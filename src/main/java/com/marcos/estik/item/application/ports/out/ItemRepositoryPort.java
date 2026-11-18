@@ -21,4 +21,6 @@ public interface ItemRepositoryPort {
         PageQuery page
     );
 
+    void deleteById(UUID id);
+
 }

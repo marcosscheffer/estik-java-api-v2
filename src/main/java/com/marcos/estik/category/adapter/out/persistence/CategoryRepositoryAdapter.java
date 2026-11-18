@@ -60,4 +60,9 @@ public class CategoryRepositoryAdapter implements CategoryRepositoryPort {
     public Boolean existsById(UUID categoryId) {
         return jpaCategoryRepository.existsById(categoryId);
     }
+
+    @Override
+    public void deleteById(UUID id) {
+        jpaCategoryRepository.deleteById(id);
+    }
 }

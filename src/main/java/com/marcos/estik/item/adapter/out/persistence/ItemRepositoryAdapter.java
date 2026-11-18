@@ -62,4 +62,9 @@ public class ItemRepositoryAdapter implements ItemRepositoryPort {
     public Boolean existsById(UUID id) {
         return jpaItemRepository.existsById(id);
     }
+
+    @Override
+    public void deleteById(UUID id) {
+        jpaItemRepository.deleteById(id);
+    }
 }

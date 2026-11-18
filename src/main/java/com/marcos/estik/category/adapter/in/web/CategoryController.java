@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import com.marcos.estik.category.adapter.in.web.response.CategoryResponse;
 import com.marcos.estik.category.adapter.in.web.response.CategorySummaryResponse;
 import com.marcos.estik.category.application.command.SearchCategoryCommand;
 import com.marcos.estik.category.application.ports.in.CreateCategoryPort;
+import com.marcos.estik.category.application.ports.in.DeleteCategoryPort;
 import com.marcos.estik.category.application.ports.in.FindCategoryByIdPort;
 import com.marcos.estik.category.application.ports.in.SearchCategoryPort;
 import com.marcos.estik.category.application.ports.in.UpdateCategoryPort;
@@ -39,6 +41,7 @@ public class CategoryController {
     private final CreateCategoryPort createCategoryPort;
     private final FindCategoryByIdPort findCategoryByIdPort;
     private final SearchCategoryPort searchCategoryPort;
+    private final DeleteCategoryPort deleteCategoryPort;
     private final UpdateCategoryPort updateCategoryPort;
     private final CategoryWebMapper categoryWebMapper;
 
@@ -86,5 +89,13 @@ public class CategoryController {
     ) {
         Category category = updateCategoryPort.execute(id, categoryWebMapper.toUpdateCategoryCommand(request));
         return ResponseEntity.ok(categoryWebMapper.toResponse(category));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(
+        @PathVariable UUID id
+    ) {
+        deleteCategoryPort.execute(id);
+        return ResponseEntity.noContent().build();
     }
 }

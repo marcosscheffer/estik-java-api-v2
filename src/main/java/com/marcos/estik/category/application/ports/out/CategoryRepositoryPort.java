@@ -17,4 +17,6 @@ public interface CategoryRepositoryPort {
         String name,
         PageQuery page
     );
+
+    void deleteById(UUID id);
 }
