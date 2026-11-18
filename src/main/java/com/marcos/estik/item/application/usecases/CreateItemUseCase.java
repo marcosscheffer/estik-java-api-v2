@@ -27,7 +27,6 @@ public class CreateItemUseCase implements CreateItemPort {
             command.name(), 
             command.description(), 
             command.sku(),
-            command.minimum(),
             command.categoryId()
         );
 

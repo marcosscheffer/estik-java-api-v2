@@ -23,7 +23,8 @@ public class UpdateCategoryUseCase implements UpdateCategoryPort {
         Category category = categoryRepositoryPort.findById(id);
         category.updateInfo(
             command.name(), 
-            command.description()    
+            command.description(),
+            command.minimum()
         );
         return categoryRepositoryPort.save(category);
     }

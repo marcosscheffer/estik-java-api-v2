@@ -14,6 +14,8 @@ public interface StockBalanceRepositoryPort {
 
     Boolean existsByFacilityIdAndDepartamentIdAndItemId(UUID facilityId, UUID departamentId, UUID itemId);
 
+    Long sumQuantityByCategory(UUID categoryId);
+
     StockBalance FindByFacilityIdAndDepartamentIdAndItemId(UUID facilityId, UUID departamentId, UUID itemId);
 
     PageResult<StockBalance> SearchStockBalance(

@@ -30,7 +30,6 @@ public class UpdateItemUseCase implements UpdateItemPort {
             command.name(),
             command.description(),
             command.sku(),
-            command.minimum(),
             command.categoryId()
         );
         itemRepositoryPort.save(item);

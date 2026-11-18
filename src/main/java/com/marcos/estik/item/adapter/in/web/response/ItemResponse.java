@@ -8,7 +8,6 @@ public record ItemResponse(
     String name,
     String description,
     String sku,
-    Long minimum,
     UUID categoryId,
     Instant createdAt,
     Instant updatedAt

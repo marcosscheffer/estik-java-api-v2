@@ -13,8 +13,6 @@ public record CreateItemRequest(
     @NotBlank 
     String sku,
     @NotNull 
-    Long minimum,
-    @NotNull 
     UUID categoryId
 ) {
     

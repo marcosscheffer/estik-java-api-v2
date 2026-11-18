@@ -20,9 +20,9 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import com.marcos.estik.auth.domain.exception.InvalidCredentialsException;
 import com.marcos.estik.auth.domain.exception.InvalidRefreshTokenException;
 import com.marcos.estik.auth.domain.exception.UserInactiveException;
+import com.marcos.estik.category.domain.exception.MinimumInvalidException;
 import com.marcos.estik.chat.domain.exception.ChatForbiddenException;
 import com.marcos.estik.files.domain.exception.FileMimeTypeInvalidException;
-import com.marcos.estik.item.domain.exception.ItemMinimumInvalidException;
 import com.marcos.estik.notification.domain.exception.NotificationNotBelongException;
 import com.marcos.estik.notification.domain.exception.NotificationNotFoundException;
 import com.marcos.estik.shared.domain.exception.DomainCannotMovedException;
@@ -213,9 +213,9 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.UNAUTHORIZED, exception.getMessage(), request);
     }
 
-    @ExceptionHandler(ItemMinimumInvalidException.class)
+    @ExceptionHandler(MinimumInvalidException.class)
     public ResponseEntity<ErrorResponse> handleItemMinimumInvalid(
-        ItemMinimumInvalidException exception,
+        MinimumInvalidException exception,
         HttpServletRequest request
     ) {
         return build(HttpStatus.BAD_REQUEST, exception.getMessage(), request);

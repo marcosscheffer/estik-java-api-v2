@@ -20,7 +20,8 @@ public class CreateCategoryUseCase implements CreateCategoryPort {
     public Category execute(CreateCategoryCommand command) {
         Category category = Category.create(
             command.name(), 
-            command.description()
+            command.description(),
+            command.minimum()
         );
 
         return categoryRepositoryPort.save(category);

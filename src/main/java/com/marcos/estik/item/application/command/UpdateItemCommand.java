@@ -6,7 +6,6 @@ public record UpdateItemCommand(
     String name,
     String description,
     String sku,
-    Long minimum,
     UUID categoryId
 ) {
     

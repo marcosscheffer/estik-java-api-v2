@@ -24,7 +24,6 @@ public class ItemEntity {
     private String name;
     private String description;
     private String sku;
-    private Long minimum;
     private UUID categoryId;
 
     @CreationTimestamp

@@ -74,4 +74,10 @@ public class StockBalanceRepositoryAdapter implements StockBalanceRepositoryPort
         return jpaStockBalanceRepository.findByFacilityIdAndDepartamentIdAndItemId(facilityId, departamentId, itemId)
             .orElseThrow(EntityNotFoundException::new );
     }
+
+    @Override
+    public Long sumQuantityByCategory(UUID categoryId) {
+        return jpaStockBalanceRepository.sumByCategory(categoryId);
+    }
+
 }

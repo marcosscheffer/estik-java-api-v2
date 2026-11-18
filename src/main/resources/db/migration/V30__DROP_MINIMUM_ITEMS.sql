@@ -1,0 +1,3 @@
+ALTER TABLE items DROP COLUMN minimum;
+
+ALTER TABLE categories ADD COLUMN minimum BIGINT NOT NULL DEFAULT 0;

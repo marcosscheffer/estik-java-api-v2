@@ -6,7 +6,6 @@ public record CreateItemCommand(
     String name,
     String description,
     String sku,
-    Long minimum,
     UUID categoryId
 ) {
     

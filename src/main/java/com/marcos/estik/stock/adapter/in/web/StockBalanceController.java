@@ -12,12 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
 import com.marcos.estik.stock.adapter.in.web.mapper.StockBalanceWebMapper;
+import com.marcos.estik.stock.adapter.in.web.mapper.StockCategoryWebMapper;
 import com.marcos.estik.stock.adapter.in.web.response.StockBalanceResponse;
 import com.marcos.estik.stock.adapter.in.web.response.StockBalanceSummaryResponse;
+import com.marcos.estik.stock.adapter.in.web.response.StockCategoryResponse;
 import com.marcos.estik.stock.application.command.SearchStockBalanceCommand;
 import com.marcos.estik.stock.application.ports.in.FindStockBalanceByIdPort;
 import com.marcos.estik.stock.application.ports.in.SearchStockBalancePort;
+import com.marcos.estik.stock.application.ports.in.SearchStockCategoryPort;
 import com.marcos.estik.stock.application.view.StockBalanceView;
+import com.marcos.estik.stock.application.view.StockCategoryView;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +32,8 @@ public class StockBalanceController {
     
     private final FindStockBalanceByIdPort findStockBalanceByIdPort;
     private final SearchStockBalancePort searchStockBalancePort;
+    private final SearchStockCategoryPort searchStockCategoryPort;
+    private final StockCategoryWebMapper stockCategoryWebMapper;
     private final StockBalanceWebMapper stockBalanceWebMapper;
 
     @GetMapping
@@ -55,5 +61,17 @@ public class StockBalanceController {
     ) {
         StockBalanceView stockBalance = findStockBalanceByIdPort.execute(id);
         return ResponseEntity.ok(stockBalanceWebMapper.toResponse(stockBalance));
+    }
+
+    @GetMapping("/by-category")
+    public ResponseEntity<PageResult<StockCategoryResponse>> getByCategory(
+        @RequestParam(defaultValue = "") String name,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "20") int size
+    ) {
+        PageResult<StockCategoryView> categories = searchStockCategoryPort.execute(name, new PageQuery(page, size));
+        return ResponseEntity.ok(
+            categories.map(stockCategoryWebMapper::toResponse)
+        );
     }
 }
