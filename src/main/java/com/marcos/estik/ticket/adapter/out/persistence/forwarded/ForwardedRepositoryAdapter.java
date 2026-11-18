@@ -41,5 +41,10 @@ public class ForwardedRepositoryAdapter implements ForwardedRepositoryPort {
     public Boolean existsByTicketIdAndUserId(UUID ticketId, UUID userId) {
         return jpaForwardedRepository.existsByTicketIdAndUserId(ticketId, userId);
     }
+
+    @Override
+    public void deleteAllByTicketId(UUID ticketId) {
+        jpaForwardedRepository.deleteAllByTicketId(ticketId);
+    }
     
 }

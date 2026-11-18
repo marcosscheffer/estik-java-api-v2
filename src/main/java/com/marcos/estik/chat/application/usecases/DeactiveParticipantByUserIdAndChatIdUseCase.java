@@ -19,6 +19,10 @@ public class DeactiveParticipantByUserIdAndChatIdUseCase implements DeactivePart
     @Override
     public Participant execute(UUID userId, UUID chatId) {
         Participant participant = participantRepositoryPort.findByUserIdAndChatId(userId, chatId);
+        if (participant == null) {
+            return null;
+        }
+        
         participant.deactive();
         participantRepositoryPort.save(participant);
         return participant;

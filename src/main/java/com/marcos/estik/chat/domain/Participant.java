@@ -27,7 +27,6 @@ public class Participant {
 
     public void deactive() {
         this.active = Boolean.FALSE;
-        this.joinedAt = Instant.now();
     }
 
     public void active() {

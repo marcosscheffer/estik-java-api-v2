@@ -50,11 +50,17 @@ public class AssumeTicketUseCase implements AssumeTicketPort {
     @Transactional 
     public TicketView execute(UUID ticketId, AuthenticatedUser principal) {
         Ticket ticket = ticketRepositoryPort.findTicketById(ticketId);
-        TicketHistory ticketHistory = TicketHistory.create(
-            ticket.getId(), 
-            StatusEnum.PROGRESS, 
-            ticket.getSpecializationId()
-        );
+
+        if (!ticket.getStatus().equals(StatusEnum.PROGRESS)) {
+            TicketHistory ticketHistory = TicketHistory.create(
+                ticket.getId(), 
+                StatusEnum.PROGRESS, 
+                ticket.getSpecializationId()
+            );
+
+            ticketHistoryRepositoryPort.save(ticketHistory);
+        }
+
         if (assigneedRepositoryPort.existsByTicketIdAndUserId(ticket.getId(), principal.id())) {
             throw new TicketAlreadyAssignedException(ticket.getId());
         }
@@ -81,7 +87,6 @@ public class AssumeTicketUseCase implements AssumeTicketPort {
 
         ticket.assign(chatId);
         ticketRepositoryPort.save(ticket);
-        ticketHistoryRepositoryPort.save(ticketHistory);
         assigneedRepositoryPort.save(assigneed);
         ticketEventPublisherPort.execute(
             new TicketAssumedNotifyEvent (

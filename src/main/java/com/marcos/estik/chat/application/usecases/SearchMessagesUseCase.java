@@ -2,6 +2,7 @@ package com.marcos.estik.chat.application.usecases;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -50,19 +51,8 @@ public class SearchMessagesUseCase implements SearchMessagesPort {
     @Transactional(readOnly = true)
     public PageResult<MessageView> execute(UUID chatId, AuthenticatedUser principal, PageQuery page) {
         Chat chat = chatRepositoryPort.findById(chatId);
-        Boolean canSupervise = chat.getType() == ChatTypeEnum.TICKET 
-            && (principal.has(PermissionEnum.TICKET_SUPERVISOR) || principal.has(PermissionEnum.TICKET_MANAGE));
-        if (!canSupervise) {
-           Participant participant = participantRepositoryPort.findByUserIdAndChatId(principal.id(), chat.getId());
-            if (participant == null || !participant.getActive()) {
-                throw new ChatForbiddenException("You are not a participant of this chat");
-            }
-        }
-
-        if (canSupervise && principal.has(PermissionEnum.TICKET_SUPERVISOR) ) {
-            if(principal.specializationId() != ticket.specializationId() && ticket.specializationId() != null) {
-                throw new ChatForbiddenException("you not be access this chat");
-            }
+        if(!canRead(chat, principal)) {
+            throw new ChatForbiddenException("you not be access this chat");
         }
 
         return this.getMessages(chat, page);
@@ -118,5 +108,24 @@ public class SearchMessagesUseCase implements SearchMessagesPort {
             reply.getCreatedAt(),
             reply.getUpdatedAt()
         );
+    }
+
+    private Boolean canRead(Chat chat, AuthenticatedUser principal) {
+        Participant participant = participantRepositoryPort.findByUserIdAndChatId(principal.id(), chat.getId());
+        
+        if (participant != null && participant.getActive()) return true;
+
+        if (chat.getType() != ChatTypeEnum.TICKET) return false;
+
+        if (principal.has(PermissionEnum.TICKET_MANAGE)) {
+            return  true;
+        }
+
+        if (principal.has(PermissionEnum.TICKET_SUPERVISOR)) {
+            ChatTicketInfo ticket = loadChatFindTicketByChatIdPort.execute(chat.getId());
+            return ticket != null && Objects.equals(principal.specializationId(), ticket.specializationId());
+        }
+
+        return false;
     }
 }

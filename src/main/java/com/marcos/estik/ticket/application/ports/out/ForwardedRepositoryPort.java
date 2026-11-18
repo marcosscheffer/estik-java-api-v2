@@ -15,4 +15,6 @@ public interface ForwardedRepositoryPort {
 
     Boolean existsByTicketIdAndUserId(UUID ticketId, UUID userId);
 
+    void deleteAllByTicketId(UUID ticketId);
+
 }

@@ -60,7 +60,7 @@ public class ForwardTicketUseCase implements ForwardTicketPort {
         List<Assigneed> oldAssigneeds = assigneedRepositoryPort.searchAssigneed(ticket.getId());
 
         if (!oldForward.isEmpty()) {
-            oldForward.forEach(forward -> forwardedRepositoryPort.delete(forward.getId()));
+            forwardedRepositoryPort.deleteAllByTicketId(ticket.getId());
         }
 
         if (!oldAssigneeds.isEmpty()) {
