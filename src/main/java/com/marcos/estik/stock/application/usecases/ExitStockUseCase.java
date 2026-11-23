@@ -8,6 +8,7 @@ import com.marcos.estik.stock.application.ports.in.ExitStockPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindDepartamentByIdPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindFacilityByIdPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindItemByIdPort;
+import com.marcos.estik.stock.application.ports.out.LoadStockFindPurchaseByidPort;
 import com.marcos.estik.stock.application.ports.out.StockBalanceRepositoryPort;
 import com.marcos.estik.stock.application.ports.out.StockMovementRepositoryPort;
 import com.marcos.estik.stock.application.view.StockDepartamentInfo;
@@ -25,6 +26,7 @@ public class ExitStockUseCase implements ExitStockPort {
 
     private final StockBalanceRepositoryPort stockBalanceRepositoryPort;
     private final LoadStockFindFacilityByIdPort loadStockBalanceFindFacilityByIdPort;
+    private final LoadStockFindPurchaseByidPort loadStockFindPurchaseByidPort;
     private final LoadStockFindDepartamentByIdPort loadStockBalanceFindDepartamentByIdPort;
     private final StockMovementRepositoryPort stockMovementRepositoryPort;
     private final LoadStockFindItemByIdPort loadStockBalanceFindItemByIdPort;
@@ -72,6 +74,7 @@ public class ExitStockUseCase implements ExitStockPort {
         
         return new StockMovementView(
             stockMovement,
+            stockMovement.getPurchaseId() == null ? null : loadStockFindPurchaseByidPort.execute(stockMovement.getPurchaseId()),
             itemInfo,
             facilityInfo,
             null,

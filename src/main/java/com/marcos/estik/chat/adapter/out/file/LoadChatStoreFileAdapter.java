@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component 
 @RequiredArgsConstructor 
-public class LoadChatStoreFileUseCase implements LoadChatStoreFilePort {
+public class LoadChatStoreFileAdapter implements LoadChatStoreFilePort {
     
     private final StoreFilePort storeFilePort;
     private final SignFileUrlPort signFileUrlPort;

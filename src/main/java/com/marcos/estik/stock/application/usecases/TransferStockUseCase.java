@@ -8,6 +8,7 @@ import com.marcos.estik.stock.application.ports.in.TransferStockPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindDepartamentByIdPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindFacilityByIdPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindItemByIdPort;
+import com.marcos.estik.stock.application.ports.out.LoadStockFindPurchaseByidPort;
 import com.marcos.estik.stock.application.ports.out.StockBalanceRepositoryPort;
 import com.marcos.estik.stock.application.ports.out.StockMovementRepositoryPort;
 import com.marcos.estik.stock.application.view.StockDepartamentInfo;
@@ -27,6 +28,7 @@ public class TransferStockUseCase implements TransferStockPort {
     private final StockMovementRepositoryPort stockMovementRepositoryPort;
     private final LoadStockFindFacilityByIdPort loadStockFindFacilityByIdPort;
     private final LoadStockFindDepartamentByIdPort loadStockFindDepartamentByIdPort;
+    private final LoadStockFindPurchaseByidPort loadStockFindPurchaseByidPort;
     private final LoadStockFindItemByIdPort loadStockFindItemByIdPort;
 
     @Override
@@ -80,6 +82,7 @@ public class TransferStockUseCase implements TransferStockPort {
 
         return new StockMovementView(
             stockMovement,
+            stockMovement.getPurchaseId() == null ? null : loadStockFindPurchaseByidPort.execute(stockMovement.getPurchaseId()),
             itemInfo,
             facilitySourceInfo,
             facilityDestinationInfo,

@@ -8,6 +8,7 @@ import com.marcos.estik.stock.application.ports.in.SearchStockMovementPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindDepartamentByIdPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindFacilityByIdPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindItemByIdPort;
+import com.marcos.estik.stock.application.ports.out.LoadStockFindPurchaseByidPort;
 import com.marcos.estik.stock.application.ports.out.StockMovementRepositoryPort;
 import com.marcos.estik.stock.application.view.StockMovementView;
 import com.marcos.estik.stock.domain.StockMovement;
@@ -21,6 +22,7 @@ public class SearchStockMovementUseCase implements SearchStockMovementPort {
     private final StockMovementRepositoryPort stockMovementRepositoryPort;
     private final LoadStockFindItemByIdPort loadStockFindItemByIdPort;
     private final LoadStockFindDepartamentByIdPort loadStockFindDepartamentByIdPort;
+    private final LoadStockFindPurchaseByidPort loadStockFindPurchaseByidPort;
     private final LoadStockFindFacilityByIdPort loadStockFindFacilityByIdPort;
     
     @Override
@@ -36,6 +38,7 @@ public class SearchStockMovementUseCase implements SearchStockMovementPort {
 
         return stockMovements.map(stockMovement -> new StockMovementView(
             stockMovement,
+            stockMovement.getPurchaseId() == null ? null : loadStockFindPurchaseByidPort.execute(stockMovement.getPurchaseId()),
             loadStockFindItemByIdPort.execute(stockMovement.getItemId()),
             loadStockFindFacilityByIdPort.execute(stockMovement.getFacilitySourceId()),
             stockMovement.getFacilityDestinationId() == null ? null : loadStockFindFacilityByIdPort.execute(stockMovement.getFacilityDestinationId()),

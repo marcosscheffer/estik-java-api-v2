@@ -8,6 +8,7 @@ import com.marcos.estik.stock.application.ports.in.EntryStockPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindDepartamentByIdPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindFacilityByIdPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindItemByIdPort;
+import com.marcos.estik.stock.application.ports.out.LoadStockFindPurchaseByidPort;
 import com.marcos.estik.stock.application.ports.out.StockBalanceRepositoryPort;
 import com.marcos.estik.stock.application.ports.out.StockMovementRepositoryPort;
 import com.marcos.estik.stock.application.view.StockDepartamentInfo;
@@ -20,11 +21,13 @@ import com.marcos.estik.stock.domain.StockMovement;
 import lombok.RequiredArgsConstructor;
 
 @Service 
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
+@Transactional
 public class EntryStockUseCase implements EntryStockPort {
     
     private final StockBalanceRepositoryPort stockBalanceRepositoryPort;
     private final StockMovementRepositoryPort stockMovementRepositoryPort;
+    private final LoadStockFindPurchaseByidPort loadStockFindPurchaseByidPort;
     private final LoadStockFindFacilityByIdPort loadStockBalanceFindFacilityByIdPort;
     private final LoadStockFindDepartamentByIdPort loadStockBalanceFindDepartamentByIdPort;
     private final LoadStockFindItemByIdPort loadStockBalanceFindItemByIdPort;
@@ -61,6 +64,7 @@ public class EntryStockUseCase implements EntryStockPort {
 
         StockMovement stockMovement = StockMovement.in(
             itemInfo.id(), 
+            null,
             facilityInfo.id(),
             departamentInfo.id(),
             command.quantity(),
@@ -72,6 +76,7 @@ public class EntryStockUseCase implements EntryStockPort {
 
         return new StockMovementView(
             stockMovement,
+            stockMovement.getPurchaseId() == null ? null : loadStockFindPurchaseByidPort.execute(stockMovement.getPurchaseId()),
             itemInfo,
             facilityInfo,
             null,

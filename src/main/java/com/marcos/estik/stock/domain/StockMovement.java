@@ -11,6 +11,7 @@ import lombok.Getter;
 public class StockMovement {
     private UUID id;
     private UUID itemId;
+    private UUID purchaseId;
     private UUID facilitySourceId;
     private UUID facilityDestinationId;
     private UUID departamentSourceId;
@@ -22,6 +23,7 @@ public class StockMovement {
 
     public static StockMovement in(
         UUID itemId,
+        UUID purchaseId,
         UUID facilitySourceId,
         UUID departamentSourceId,
         Long quantity,
@@ -30,6 +32,7 @@ public class StockMovement {
         return new StockMovement(
             UUID.randomUUID(), 
             itemId, 
+            purchaseId,
             facilitySourceId,
             null,
             departamentSourceId,
@@ -50,7 +53,8 @@ public class StockMovement {
     ) {
         return new StockMovement(
             UUID.randomUUID(), 
-            itemId, 
+            itemId,
+            null,
             facilitySourceId,
             null,
             departamentSourceId,
@@ -72,6 +76,7 @@ public class StockMovement {
         return new StockMovement(
             UUID.randomUUID(), 
             itemId, 
+            null,
             facilitySourceId,
             null,
             departamentSourceId,
@@ -95,6 +100,7 @@ public class StockMovement {
         return new StockMovement(
             UUID.randomUUID(), 
             itemId, 
+            null,
             facilitySourceId,
             facilityDestinationId,
             departamentSourceId,
