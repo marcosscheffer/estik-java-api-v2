@@ -120,6 +120,14 @@ public class SecurityConfig {
                     "/categories/**"
                 ).hasAuthority("STOCK_MANAGE")
 
+                .requestMatchers(
+                    "/suppliers/**"
+                ).hasAuthority("STOCK_MANAGE")
+
+                .requestMatchers(
+                    "/purchases/**"
+                ).hasAuthority("STOCK_MANAGE")
+
                 // endpoint computers permissions
 
                 .requestMatchers(

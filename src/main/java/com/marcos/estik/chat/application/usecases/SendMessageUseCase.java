@@ -49,14 +49,19 @@ public class SendMessageUseCase implements SendMessagePort {
     public MessageView execute(UUID chatId, SendMessageCommand command, AuthenticatedUser principal) {
         Chat chat = chatRepositoryPort.findById(chatId);
         Participant participant = participantRepositoryPort.findByUserIdAndChatId(principal.id(), chat.getId());
+
+        Message replyTo = command.replyToId() == null ? null : messageRepositoryPort.findById(command.replyToId());
         
-        if (participant == null || !participant.getActive()) {
-            throw new ChatForbiddenException("You are not a participant of this chat");
+        if (participant == null || !participant.getActive()
+            || !(replyTo == null || replyTo.getChatId().equals(chat.getId()))
+        ) {
+            throw new ChatForbiddenException("Operation not valid");
         }
+
         Message message = Message.create(
             chat.getId(), 
             participant.getId(),
-            command.replyToId(), 
+            replyTo == null ? null : replyTo.getId(), 
             command.content()
         );
 

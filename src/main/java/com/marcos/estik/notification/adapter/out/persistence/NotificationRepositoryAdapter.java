@@ -70,4 +70,9 @@ public class NotificationRepositoryAdapter implements NotificationRepositoryPort
             )
         );
     }
+
+    @Override
+    public Long countByRecipientIdAndNotRead(UUID recipientId) {
+        return jpaNotificationRepository.countByRecipientIdAndRead(recipientId, false);
+    }
 }

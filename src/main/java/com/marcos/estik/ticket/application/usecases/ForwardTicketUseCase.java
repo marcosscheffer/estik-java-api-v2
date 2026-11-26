@@ -54,6 +54,16 @@ public class ForwardTicketUseCase implements ForwardTicketPort {
     @Transactional 
     public TicketView execute(UUID ticketId, ForwardCommand command, AuthenticatedUser principal) {
         Ticket ticket = ticketRepositoryPort.findTicketById(ticketId);
+
+        if(!principal.has(PermissionEnum.TICKET_MANAGE)
+            && !(principal.has(PermissionEnum.TICKET_SUPERVISOR)
+                && principal.specializationId() != null
+                && principal.specializationId().equals(ticket.getSpecializationId())
+            )
+        ) {
+            throw new TicketOwnerShipException("You cannot view this ticket");
+        }
+
         TicketHistory ticketHistory;
 
         List<Forwarded> oldForward = forwardedRepositoryPort.searchForwarded(ticket.getId());

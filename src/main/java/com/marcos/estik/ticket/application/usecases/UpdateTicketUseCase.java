@@ -17,6 +17,7 @@ import com.marcos.estik.ticket.application.view.TicketAssigneedInfo;
 import com.marcos.estik.ticket.application.view.TicketForwardedInfo;
 import com.marcos.estik.ticket.application.view.TicketView;
 import com.marcos.estik.ticket.domain.Ticket;
+import com.marcos.estik.ticket.domain.enums.StatusEnum;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +35,7 @@ public class UpdateTicketUseCase implements UpdateTicketPort {
     @Override
     public TicketView execute(UpdateTicketCommand command, UUID ticketId, AuthenticatedUser principal) {
         Ticket ticket = ticketRepositoryPort.findTicketById(ticketId);
+
 
         ticket.updateDetails(
             principal.id(),

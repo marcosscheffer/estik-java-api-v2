@@ -59,7 +59,11 @@ public class FindTicketByIdUseCase implements FindTicketByIdPort {
         if(!principal.id().equals(ticket.getRequesterId())
             && !assignees.stream().anyMatch(assigneeUser -> assigneeUser.user().id().equals(principal.id()))
             && !forwarded.stream().anyMatch(forwardedUser -> forwardedUser.user().id().equals(principal.id()))
-            && !principal.has(PermissionEnum.TICKET_SUPERVISOR)
+            && !principal.has(PermissionEnum.TICKET_MANAGE)
+            && !(principal.has(PermissionEnum.TICKET_SUPERVISOR)
+                && principal.specializationId() != null
+                && principal.specializationId().equals(ticket.getSpecializationId())
+            )
         ) {
             throw new TicketOwnerShipException("You cannot view this ticket");
         }

@@ -27,17 +27,23 @@ public class CreatePurchaseUseCase implements CreatePurchasePort {
     @Transactional 
     public PurchaseView execute(CreatePurchaseCommand command) {
         PurchaseSupplierInfo supplierInfo = loadPurchaseFindSupplierByIdPort.execute(command.supplierId());
-        PurchaseFileInfo file = loadPurchaseStoreFilePort.execute("/purchase", command.file());
+        PurchaseFileInfo file = null;
+
+        if (command.file() != null) {
+            file = loadPurchaseStoreFilePort.execute("purchase", command.file());
+            
+        }
+
         Purchase purchase = Purchase.create(
-            file.id(),
-            command.supplierId(), 
-            command.code()
-        );
+                file == null ? null : file.id(),
+                command.supplierId(), 
+                command.code()
+            );
 
         purchaseRepositoryPort.save(purchase);
         return new PurchaseView(
             purchase,
-            file,
+            file == null ? null : file,
             supplierInfo
         );
     }

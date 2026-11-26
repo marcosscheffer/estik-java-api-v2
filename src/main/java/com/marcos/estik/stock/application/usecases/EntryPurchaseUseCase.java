@@ -13,12 +13,14 @@ import com.marcos.estik.stock.application.ports.out.LoadStockCreatePurchasePort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindDepartamentByIdPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindFacilityByIdPort;
 import com.marcos.estik.stock.application.ports.out.LoadStockFindItemByIdPort;
+import com.marcos.estik.stock.application.ports.out.StockBalanceRepositoryPort;
 import com.marcos.estik.stock.application.ports.out.StockMovementRepositoryPort;
 import com.marcos.estik.stock.application.view.StockDepartamentInfo;
 import com.marcos.estik.stock.application.view.StockFacilityInfo;
 import com.marcos.estik.stock.application.view.StockItemInfo;
 import com.marcos.estik.stock.application.view.StockMovementView;
 import com.marcos.estik.stock.application.view.StockPurchaseInfo;
+import com.marcos.estik.stock.domain.StockBalance;
 import com.marcos.estik.stock.domain.StockMovement;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class EntryPurchaseUseCase implements EntryPurchasePort {
     private final LoadStockFindDepartamentByIdPort loadStockFindDepartamentByIdPort;
     private final LoadStockFindItemByIdPort loadStockFindItemByIdPort;
     private final StockMovementRepositoryPort stockMovementRepositoryPort;
+    private final StockBalanceRepositoryPort stockBalanceRepositoryPort;
 
     @Override
     @Transactional 
@@ -57,6 +60,27 @@ public class EntryPurchaseUseCase implements EntryPurchasePort {
         StockDepartamentInfo departamentInfo = loadStockFindDepartamentByIdPort.execute(command.departamentId());
         StockFacilityInfo facilityInfo = loadStockFindFacilityByIdPort.execute(command.facilityId());
         StockItemInfo itemInfo = loadStockFindItemByIdPort.execute(command.itemId());
+        StockBalance stockBalance;
+
+        if (!stockBalanceRepositoryPort.existsByFacilityIdAndDepartamentIdAndItemId(
+            facilityInfo.id(), departamentInfo.id(), itemInfo.id())) {
+                stockBalance = StockBalance.create(
+                    facilityInfo.id(), 
+                    departamentInfo.id(), 
+                    itemInfo.id(), 
+                    command.quantity()
+                );
+        } else {
+            stockBalance = stockBalanceRepositoryPort.FindByFacilityIdAndDepartamentIdAndItemId(
+                facilityInfo.id(), 
+                departamentInfo.id(), 
+                itemInfo.id()
+            );
+
+            stockBalance.entry(command.quantity());
+        }
+
+        stockBalanceRepositoryPort.save(stockBalance);
         return StockMovement.in(
             itemInfo.id(), 
             purchase.id(), 
@@ -73,9 +97,9 @@ public class EntryPurchaseUseCase implements EntryPurchasePort {
             purchaseInfo,
             loadStockFindItemByIdPort.execute(stockMovement.getItemId()),
             loadStockFindFacilityByIdPort.execute(stockMovement.getFacilitySourceId()),
-            loadStockFindFacilityByIdPort.execute(stockMovement.getFacilityDestinationId()),
+            null,
             loadStockFindDepartamentByIdPort.execute(stockMovement.getDepartamentSourceId()),
-            loadStockFindDepartamentByIdPort.execute(stockMovement.getDepartamentDestinationId())
+            null
         );
     }
 }

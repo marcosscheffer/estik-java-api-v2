@@ -18,5 +18,7 @@ public interface NotificationRepositoryPort {
     List<Notification> saveAll(List<Notification> notifications);
 
     Notification findById(UUID notificationId);
+
+    Long countByRecipientIdAndNotRead(UUID recipientId);
     
 }

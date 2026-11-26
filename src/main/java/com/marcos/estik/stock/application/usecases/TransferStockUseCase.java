@@ -40,7 +40,7 @@ public class TransferStockUseCase implements TransferStockPort {
         
         StockFacilityInfo facilityDestinationInfo = loadStockFindFacilityByIdPort.execute(command.facilityDestinationId());
         StockDepartamentInfo departamentDestinationInfo = loadStockFindDepartamentByIdPort.execute(command.departamentDestinationId());
-        StockItemInfo itemInfo = loadStockFindItemByIdPort.execute(command.itemId());
+        StockItemInfo itemInfo = loadStockFindItemByIdPort.execute(stockBalanceSource.getItemId());
         StockBalance stockBalanceDestination;
 
 

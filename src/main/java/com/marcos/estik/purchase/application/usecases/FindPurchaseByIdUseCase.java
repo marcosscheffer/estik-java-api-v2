@@ -9,7 +9,6 @@ import com.marcos.estik.purchase.application.port.in.FindPurchaseByIdPort;
 import com.marcos.estik.purchase.application.port.out.LoadPurchaseFindFileByIdPort;
 import com.marcos.estik.purchase.application.port.out.LoadPurchaseFindSupplierByIdPort;
 import com.marcos.estik.purchase.application.port.out.PurchaseRepositoryPort;
-import com.marcos.estik.purchase.application.view.PurchaseFileInfo;
 import com.marcos.estik.purchase.application.view.PurchaseView;
 import com.marcos.estik.purchase.domain.Purchase;
 
@@ -27,10 +26,9 @@ public class FindPurchaseByIdUseCase implements FindPurchaseByIdPort {
     @Override
     public PurchaseView execute(UUID id) {
         Purchase purchase = purchaseRepositoryPort.findById(id);
-        PurchaseFileInfo file = loadPurchaseFindFileByIdPort.execute(purchase.getFileId());
         return new PurchaseView(
             purchase,
-            file,
+            purchase.getFileId() == null ? null : loadPurchaseFindFileByIdPort.execute(purchase.getFileId()),
             loadPurchaseFindSupplierByIdPort.execute(purchase.getSupplierId())
         );
     }

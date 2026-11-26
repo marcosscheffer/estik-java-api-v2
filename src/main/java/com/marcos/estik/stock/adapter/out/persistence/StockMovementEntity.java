@@ -38,6 +38,9 @@ public class StockMovementEntity {
 
     @Column(name = "departament_destination_id")
     private UUID departamentDestinationId;
+
+    @Column(name = "purchase_id") 
+    private UUID purchaseId;
     private Long quantity;
     private String description;
 

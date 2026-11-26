@@ -14,5 +14,7 @@ public interface JpaNotificationRepository extends JpaRepository<NotificationEnt
     List<NotificationEntity> findByRecipientIdAndRead(UUID recipientId, boolean read);
 
     Page<NotificationEntity> findByRecipientId(UUID recipientId, Pageable pageable);
+
+    Long countByRecipientIdAndRead(UUID recipientId, Boolean read);
     
 }

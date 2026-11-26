@@ -83,7 +83,7 @@ public class FindChatByIdUseCase implements FindChatByIdPort {
 
         if (principal.has(PermissionEnum.TICKET_SUPERVISOR)) {
             ChatTicketInfo ticket = loadChatFindTicketByChatIdPort.execute(chat.getId());
-            return ticket != null && Objects.equals(principal.specializationId(), ticket.specializationId());
+            return ticket != null && principal.specializationId() != null && principal.specializationId().equals(ticket.specializationId());
         }
 
         return false;

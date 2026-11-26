@@ -119,6 +119,9 @@ public class Ticket {
         String description,
         UUID specializationId
     ) {
+        if (this.status  == StatusEnum.RESOLVED || this.status == StatusEnum.CANCELLED) {
+            throw new InvalidTicketStatusException("Ticket not be update");
+        }
          if(!actorId.equals(this.requesterId)) {
             throw new TicketOwnerShipException("you not owner of ticket");
         }

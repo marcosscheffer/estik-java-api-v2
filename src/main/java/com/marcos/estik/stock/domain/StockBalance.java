@@ -37,7 +37,7 @@ public class StockBalance {
     public void adjust(
         Long quantity
     ) {
-        if(quantity <= 0) {
+        if(quantity < 0) {
             throw new QuantityMovementInvalidException("quantity should never be less than 0");
         }
 
@@ -48,6 +48,10 @@ public class StockBalance {
     public void exit(
         Long quantity
     ) {
+        if(quantity < 0) {
+            throw new QuantityMovementInvalidException("quantity not be less 0");
+        }
+
         if(this.quantity < quantity) {
             throw new QuantityMovementInvalidException("quantity should never be less than 0");
         }
@@ -58,6 +62,10 @@ public class StockBalance {
     public void entry(
         Long quantity
     ) {
+        if(quantity < 0) {
+            throw new QuantityMovementInvalidException("quantity not be less 0");
+        }
+
         this.quantity += quantity;
         this.updatedAt = Instant.now();
     }

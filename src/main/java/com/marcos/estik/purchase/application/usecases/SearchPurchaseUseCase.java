@@ -30,7 +30,7 @@ public class SearchPurchaseUseCase implements SearchPurchasePort {
     private PurchaseView mapView(Purchase purchase) {
         return new PurchaseView(
             purchase,
-            loadPurchaseFindFileByIdPort.execute(purchase.getId()),
+            purchase.getFileId() == null ? null : loadPurchaseFindFileByIdPort.execute(purchase.getFileId()),
             loadPurchaseFindSupplierByIdPort.execute(purchase.getSupplierId())
         );
     }

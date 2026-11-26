@@ -23,10 +23,11 @@ import com.marcos.estik.supplier.application.port.in.FindSupplierByIdPort;
 import com.marcos.estik.supplier.application.port.in.SearchSupplierPort;
 import com.marcos.estik.supplier.domain.Supplier;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController 
-@RequestMapping("/supplier")
+@RequestMapping("/suppliers")
 @RequiredArgsConstructor 
 public class SupplierController {
 
@@ -37,7 +38,7 @@ public class SupplierController {
     
     @PostMapping
     public ResponseEntity<SupplierResponse> createSupplier(
-        @RequestBody CreateSupplierRequest request,
+        @RequestBody @Valid CreateSupplierRequest request,
         UriComponentsBuilder uriBuilder
     ) {
         Supplier supplier = createSupplierPort.execute(request.name());

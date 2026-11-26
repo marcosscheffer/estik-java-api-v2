@@ -6,7 +6,6 @@ public record TransferCommand(
     UUID stockBalanceId,
     UUID facilityDestinationId,
     UUID departamentDestinationId,
-    UUID itemId,
     Long quantity,
     String description
 ) {

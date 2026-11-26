@@ -1,7 +1,11 @@
 package com.marcos.estik.stock.adapter.in.web;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,17 +13,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.marcos.estik.shared.application.pagination.PageQuery;
 import com.marcos.estik.shared.application.pagination.PageResult;
+import com.marcos.estik.shared.domain.file.FileUpload;
 import com.marcos.estik.stock.adapter.in.web.mapper.StockMovementWebMapper;
+import com.marcos.estik.stock.adapter.in.web.request.MovementPurchaseRequest;
 import com.marcos.estik.stock.adapter.in.web.request.MovementRequest;
 import com.marcos.estik.stock.adapter.in.web.request.TransferRequest;
 import com.marcos.estik.stock.adapter.in.web.response.StockMovementResponse;
 import com.marcos.estik.stock.adapter.in.web.response.StockMovementSummaryResponse;
+import com.marcos.estik.stock.application.command.EntryPurchaseCommand;
 import com.marcos.estik.stock.application.command.SearchStockMovementCommand;
 import com.marcos.estik.stock.application.ports.in.AdjustStockPort;
+import com.marcos.estik.stock.application.ports.in.EntryPurchasePort;
 import com.marcos.estik.stock.application.ports.in.EntryStockPort;
 import com.marcos.estik.stock.application.ports.in.ExitStockPort;
 import com.marcos.estik.stock.application.ports.in.FindStockMovementByIdPort;
@@ -43,6 +53,7 @@ public class StockMovementController {
     private final AdjustStockPort adjustStockPort;
     private final TransferStockPort transferStockPort;
     private final StockMovementWebMapper stockMovementWebMapper;
+    private final EntryPurchasePort entryPurchasePort;
 
     @GetMapping
     public ResponseEntity<PageResult<StockMovementSummaryResponse>> getStockMovements(
@@ -114,5 +125,39 @@ public class StockMovementController {
         );
 
         return ResponseEntity.ok(stockMovementWebMapper.toResponse(stockMovement));
+    }
+
+    @PostMapping(path = "/entry/purchase", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<List<StockMovementResponse>> entryPurchase(
+        @RequestPart("request") @Valid MovementPurchaseRequest request,
+        @RequestPart(value = "files", required = false) MultipartFile file
+    ) {
+        List<StockMovementView> movements = entryPurchasePort.execute(
+            new EntryPurchaseCommand(
+                request.supplierId(),
+                request.code(),
+                toFileUpload(file),
+                request.items().stream().map(stockMovementWebMapper::toMovementCommand).toList()
+            )
+        );
+
+        return ResponseEntity.ok(movements.stream().map(stockMovementWebMapper::toResponse).toList());
+    }
+
+
+    private FileUpload toFileUpload(MultipartFile multipartFile) {
+        if (multipartFile == null || multipartFile.isEmpty()) {
+            return null;
+        }
+        
+        try {
+            return new FileUpload(
+                multipartFile.getOriginalFilename(),
+                multipartFile.getSize(),
+                multipartFile.getBytes()
+            );
+        } catch (IOException exception) {
+            throw new UncheckedIOException("Failed to read uploaded file", exception);
+        }
     }
 }

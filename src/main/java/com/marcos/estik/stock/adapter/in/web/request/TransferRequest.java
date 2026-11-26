@@ -12,8 +12,6 @@ public record TransferRequest(
     @NotNull 
     UUID departamentDestinationId,
     @NotNull 
-    UUID itemId,
-    @NotNull 
     Long quantity,
     String description
 ) {
