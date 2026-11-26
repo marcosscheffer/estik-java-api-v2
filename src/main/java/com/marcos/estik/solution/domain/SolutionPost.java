@@ -50,8 +50,7 @@ public class SolutionPost {
     public  void update(
         UUID actorId,
         String title,
-        String description,
-        UUID fileId
+        String description
     ) {
         if (!actorId.equals(authorId)) {
             throw new SolutionForbiddenException("Post does not belong to you");
@@ -63,6 +62,5 @@ public class SolutionPost {
 
         this.title = title;
         this.description = description;
-        this.fileId = fileId;
     }
 }

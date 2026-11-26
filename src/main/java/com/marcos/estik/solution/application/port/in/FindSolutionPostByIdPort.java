@@ -2,10 +2,10 @@ package com.marcos.estik.solution.application.port.in;
 
 import java.util.UUID;
 
-import com.marcos.estik.solution.domain.SolutionPost;
+import com.marcos.estik.solution.application.view.SolutionPostView;
 
 public interface FindSolutionPostByIdPort {
     
-    SolutionPost execute(UUID id);
+    SolutionPostView execute(UUID id);
 
 }

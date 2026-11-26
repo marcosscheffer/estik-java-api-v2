@@ -10,11 +10,11 @@ CREATE TABLE solution_posts (
     updated_at TIMESTAMP NOT NULL DEFAULT now()
 )
 
-CREATE TABLE solution_topics(
+CREATE TABLE solution_responses(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     author_id NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
     solution_post_id NOT NULL REFERENCES solution_posts(id) ON DELETE CASCADE,
-    topic VARCHAR(800) NOT NULL,
+    message VARCHAR(800) NOT NULL,
     file_id UUID REFERENCES files(id) ON DELETE SET NULL,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now()

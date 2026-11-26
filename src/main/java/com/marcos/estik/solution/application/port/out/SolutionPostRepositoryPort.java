@@ -13,4 +13,6 @@ public interface SolutionPostRepositoryPort {
 
     SolutionPost save(SolutionPost solutionPost);
 
+    void deleteById(UUID id);
+
 }
