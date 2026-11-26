@@ -60,6 +60,7 @@ public class StockMovementController {
         @RequestParam(required = false) UUID facilityId,
         @RequestParam(required = false) UUID departamentId,
         @RequestParam(required = false) TypeMovementEnum type,
+        @RequestParam(required = false) UUID purchaseId,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size
     ) {
@@ -67,6 +68,7 @@ public class StockMovementController {
             new SearchStockMovementCommand(
                 facilityId,
                 departamentId,
+                purchaseId,
                 type,
                 new PageQuery(page, size)
             )   

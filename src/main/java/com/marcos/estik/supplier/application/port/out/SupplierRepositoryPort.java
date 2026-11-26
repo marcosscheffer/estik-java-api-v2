@@ -14,4 +14,6 @@ public interface SupplierRepositoryPort {
 
     Supplier save(Supplier supplier);
 
+    void deleteById(UUID id);
+
 }

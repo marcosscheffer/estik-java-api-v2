@@ -29,7 +29,8 @@ public class SearchStockMovementUseCase implements SearchStockMovementPort {
     public PageResult<StockMovementView> execute(SearchStockMovementCommand command) {
         PageResult<StockMovement> stockMovements = stockMovementRepositoryPort.searchStockMovement(
             command.facilityId(), 
-            command.departamentId(), 
+            command.departamentId(),
+            command.purchaseId(),
             command.type(),
             command.page()
         );
@@ -38,7 +39,7 @@ public class SearchStockMovementUseCase implements SearchStockMovementPort {
 
         return stockMovements.map(stockMovement -> new StockMovementView(
             stockMovement,
-            stockMovement.getPurchaseId() == null ? null : loadStockFindPurchaseByidPort.execute(stockMovement.getPurchaseId()),
+            null,
             loadStockFindItemByIdPort.execute(stockMovement.getItemId()),
             loadStockFindFacilityByIdPort.execute(stockMovement.getFacilitySourceId()),
             stockMovement.getFacilityDestinationId() == null ? null : loadStockFindFacilityByIdPort.execute(stockMovement.getFacilityDestinationId()),

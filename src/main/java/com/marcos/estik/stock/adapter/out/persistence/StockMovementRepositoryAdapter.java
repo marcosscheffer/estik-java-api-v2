@@ -43,13 +43,15 @@ public class StockMovementRepositoryAdapter implements StockMovementRepositoryPo
     public PageResult<StockMovement> searchStockMovement(
         UUID facilityId, 
         UUID departamentId, 
+        UUID purchaseId,
         TypeMovementEnum type,
         PageQuery page
         ) {
         Specification<StockMovementEntity> spec = Specification.allOf(
             StockMovementSpecification.departamentIs(departamentId),
             StockMovementSpecification.facilityIs(facilityId),
-            StockMovementSpecification.typeIs(type)
+            StockMovementSpecification.typeIs(type),
+            StockMovementSpecification.purchaseIs(purchaseId)
         );
 
         Page<StockMovementEntity> stockMovementPage = jpaStockMovementRepository.findAll(

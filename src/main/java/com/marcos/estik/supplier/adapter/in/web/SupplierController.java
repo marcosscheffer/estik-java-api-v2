@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import com.marcos.estik.supplier.adapter.in.web.mapper.SupplierWebMapper;
 import com.marcos.estik.supplier.adapter.in.web.request.CreateSupplierRequest;
 import com.marcos.estik.supplier.adapter.in.web.response.SupplierResponse;
 import com.marcos.estik.supplier.application.port.in.CreateSupplierPort;
+import com.marcos.estik.supplier.application.port.in.DeleteSupplierByIdPort;
 import com.marcos.estik.supplier.application.port.in.FindSupplierByIdPort;
 import com.marcos.estik.supplier.application.port.in.SearchSupplierPort;
 import com.marcos.estik.supplier.domain.Supplier;
@@ -34,6 +36,7 @@ public class SupplierController {
     private final CreateSupplierPort createSupplierPort;
     private final SearchSupplierPort searchSupplierPort;
     private final FindSupplierByIdPort findSupplierByIdPort;
+    private final DeleteSupplierByIdPort deleteSupplierByIdPort;
     private final SupplierWebMapper supplierWebMapper;
     
     @PostMapping
@@ -73,4 +76,11 @@ public class SupplierController {
         );
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(
+        @PathVariable UUID id
+    ) {
+        deleteSupplierByIdPort.execute(id);
+        return ResponseEntity.noContent().build();
+    }
 }

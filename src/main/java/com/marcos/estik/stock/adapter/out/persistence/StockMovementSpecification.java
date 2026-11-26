@@ -34,4 +34,10 @@ public final class StockMovementSpecification {
             ? Specification.unrestricted()
             : (root, q, cb) -> cb.equal(root.get("type"), type);
     }
+
+    public static Specification<StockMovementEntity> purchaseIs(UUID purchaseId) {
+        return purchaseId == null
+            ? Specification.unrestricted()
+            : (root, q, cb) -> cb.equal(root.get("purchaseId"), purchaseId);
+    }
 }

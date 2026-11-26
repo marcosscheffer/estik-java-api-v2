@@ -48,5 +48,10 @@ public class PurchaseRepositoryAdapter implements PurchaseRepositoryPort {
         PurchaseEntity purchaseEntitySaved = jpaPurchaseRepository.save(purchaseEntity);
         return purchasePersistenceMapper.toDomain(purchaseEntitySaved);
     }
+
+    @Override
+    public void deleteById(UUID id) {
+        jpaPurchaseRepository.deleteById(id);
+    }
     
 }

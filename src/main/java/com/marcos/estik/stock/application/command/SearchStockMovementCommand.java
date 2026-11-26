@@ -8,6 +8,7 @@ import com.marcos.estik.stock.domain.TypeMovementEnum;
 public record SearchStockMovementCommand(
     UUID facilityId,
     UUID departamentId,
+    UUID purchaseId,
     TypeMovementEnum type,
     PageQuery page
 ) {

@@ -15,7 +15,8 @@ public interface StockMovementRepositoryPort {
 
     PageResult<StockMovement> searchStockMovement(
         UUID facilityId, 
-        UUID departamentId, 
+        UUID departamentId,
+        UUID purchaseId,
         TypeMovementEnum type,
         PageQuery page
     );

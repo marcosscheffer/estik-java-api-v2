@@ -14,4 +14,6 @@ public interface PurchaseRepositoryPort {
 
     Purchase save(Purchase purchase);
 
+    void deleteById(UUID id);
+
 }

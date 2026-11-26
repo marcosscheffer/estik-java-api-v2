@@ -48,4 +48,9 @@ public class SupplierRpositoryAdapter implements SupplierRepositoryPort {
         SupplierEntity supplierEntitySaved = jpaSupplierRepository.save(supplierEntity);
         return supplierPersistenceMapper.toDomain(supplierEntitySaved);
     }
+
+    @Override
+    public void deleteById(UUID id) {
+        jpaSupplierRepository.deleteById(id);
+    }
 }

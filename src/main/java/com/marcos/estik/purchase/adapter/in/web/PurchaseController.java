@@ -3,6 +3,7 @@ package com.marcos.estik.purchase.adapter.in.web;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.marcos.estik.purchase.adapter.in.web.mapper.PurchaseWebMapper;
 import com.marcos.estik.purchase.adapter.in.web.response.PurchaseResponse;
 import com.marcos.estik.purchase.adapter.in.web.response.PurchaseSummaryResponse;
+import com.marcos.estik.purchase.application.port.in.DeletePurchaseByIdPort;
 import com.marcos.estik.purchase.application.port.in.FindPurchaseByIdPort;
 import com.marcos.estik.purchase.application.port.in.SearchPurchasePort;
 import com.marcos.estik.purchase.application.view.PurchaseView;
@@ -28,6 +30,7 @@ public class PurchaseController {
     private final FindPurchaseByIdPort findPurchaseByIdPort;
     private final SearchPurchasePort searchPurchasePort;
     private final PurchaseWebMapper purchaseWebMapper;
+    private final DeletePurchaseByIdPort deletePurchaseByIdPort;
 
     @GetMapping("/{id}")
     public ResponseEntity<PurchaseResponse> getPurchase(
@@ -47,5 +50,13 @@ public class PurchaseController {
         return ResponseEntity.ok(
             purchases.map(purchaseWebMapper::toSummaryResponse)
         );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePurchase(
+        @PathVariable UUID id
+    ) {
+        deletePurchaseByIdPort.execute(id);
+        return ResponseEntity.noContent().build();
     }
 }
