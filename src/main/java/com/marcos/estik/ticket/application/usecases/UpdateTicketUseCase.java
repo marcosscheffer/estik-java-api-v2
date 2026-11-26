@@ -17,7 +17,6 @@ import com.marcos.estik.ticket.application.view.TicketAssigneedInfo;
 import com.marcos.estik.ticket.application.view.TicketForwardedInfo;
 import com.marcos.estik.ticket.application.view.TicketView;
 import com.marcos.estik.ticket.domain.Ticket;
-import com.marcos.estik.ticket.domain.enums.StatusEnum;
 
 import lombok.RequiredArgsConstructor;
 
