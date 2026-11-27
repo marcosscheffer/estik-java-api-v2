@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.marcos.estik.shared.application.pagination.PageQuery;
@@ -25,7 +26,7 @@ public class SolutionResponseRepositoryAdapter implements SolutionResponseReposi
     public PageResult<SolutionResponse> searchSolutionResponses(UUID solutionPostId, PageQuery page) {
         Page<SolutionResponseEntity> solutionResponses = jpaSolutionReponseRepository.findBySolutionPostId(
             solutionPostId, 
-            PageRequest.of(page.page(), page.size())
+            PageRequest.of(page.page(), page.size(), Sort.by("createdAt").ascending())
         );
 
         return new PageResult<SolutionResponse>(
