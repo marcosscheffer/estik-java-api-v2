@@ -3,7 +3,6 @@ package com.marcos.estik.solution.domain;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.marcos.estik.solution.domain.exception.SolutionAlreadyResolvedException;
 import com.marcos.estik.solution.domain.exception.SolutionForbiddenException;
 
 import lombok.AllArgsConstructor;
@@ -18,7 +17,6 @@ public class SolutionPost {
     private String title;
     private String description;
     private UUID fileId;
-    private Boolean resolved;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -36,16 +34,11 @@ public class SolutionPost {
             title, 
             description, 
             fileId, 
-            Boolean.FALSE, 
             Instant.now(), 
             Instant.now()    
         );
     }
 
-    public  void resolve() {
-        this.resolved = Boolean.TRUE;
-        this.updatedAt = Instant.now();
-    }
 
     public  void update(
         UUID actorId,
@@ -56,11 +49,8 @@ public class SolutionPost {
             throw new SolutionForbiddenException("Post does not belong to you");
         }
 
-        if(resolved) {
-            throw new SolutionAlreadyResolvedException("Editing not permitted when solution resolved");
-        }
-
         this.title = title;
         this.description = description;
+        this.updatedAt = Instant.now();
     }
 }

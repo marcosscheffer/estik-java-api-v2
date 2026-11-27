@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.solution.application.port.in.UpdateSolutionResponsePort;
 import com.marcos.estik.solution.application.port.out.LoadSolutionFindFileByidPort;
+import com.marcos.estik.solution.application.port.out.LoadSolutionFindUserByIdPort;
 import com.marcos.estik.solution.application.port.out.SolutionResponseRepositoryPort;
 import com.marcos.estik.solution.application.view.SolutionResponseView;
 import com.marcos.estik.solution.domain.SolutionResponse;
@@ -20,6 +21,7 @@ public class UpdateSolutionResponseUseCase implements UpdateSolutionResponsePort
 
     private final SolutionResponseRepositoryPort solutionResponseRepositoryPort;
     private final LoadSolutionFindFileByidPort loadSolutionFindFileByidPort;
+    private final LoadSolutionFindUserByIdPort loadSolutionFindUserByIdPort;
     
     @Override
     @Transactional 
@@ -29,7 +31,8 @@ public class UpdateSolutionResponseUseCase implements UpdateSolutionResponsePort
         solutionResponseRepositoryPort.save(solutionResponse);
         return new SolutionResponseView(
             solutionResponse,
-            solutionResponse.getFileId() == null ? null : loadSolutionFindFileByidPort.execute(solutionResponse.getFileId())
+            solutionResponse.getFileId() == null ? null : loadSolutionFindFileByidPort.execute(solutionResponse.getFileId()),
+            loadSolutionFindUserByIdPort.execute(solutionResponse.getAuthorId())
         );
     }
 }

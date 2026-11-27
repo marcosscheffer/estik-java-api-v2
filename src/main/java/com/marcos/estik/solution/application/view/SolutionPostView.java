@@ -4,7 +4,9 @@ import com.marcos.estik.solution.domain.SolutionPost;
 
 public record SolutionPostView(
     SolutionPost solutionPost,
-    SolutionFileInfo file
+    SolutionFileInfo file,
+    SolutionUserInfo author,
+    SolutionSpecializationInfo specialization
 ) {
     
 } 

@@ -26,6 +26,7 @@ import com.marcos.estik.files.domain.exception.FileMimeTypeInvalidException;
 import com.marcos.estik.notification.domain.exception.NotificationNotBelongException;
 import com.marcos.estik.notification.domain.exception.NotificationNotFoundException;
 import com.marcos.estik.shared.domain.exception.DomainCannotMovedException;
+import com.marcos.estik.solution.domain.exception.SolutionForbiddenException;
 import com.marcos.estik.stock.domain.exception.QuantityMovementInvalidException;
 import com.marcos.estik.ticket.domain.exception.ForwardedRoleInvalidException;
 import com.marcos.estik.ticket.domain.exception.InvalidTicketStatusException;
@@ -115,6 +116,14 @@ public class GlobalExceptionHandler {
     ) {
         String message = "Invalid value for the parameter '" + exception.getName() + "': " + exception.getValue();
         return build(HttpStatus.BAD_REQUEST, message, request);
+    }
+
+    @ExceptionHandler(SolutionForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleSolutionForbiddenException(
+        SolutionForbiddenException exception,
+        HttpServletRequest request
+    ) {
+        return build(HttpStatus.FORBIDDEN, exception.getMessage(), request);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)

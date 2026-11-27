@@ -7,7 +7,7 @@ import java.util.Set;
 public enum PermissionEnum {
     TICKET_OPEN, TICKET_WORK, TICKET_SUPERVISOR, TICKET_MANAGE,
 
-    SOLUTION_MANAGER, SOLUTION_WORK, SOLUTION_READ,
+    SOLUTION_MANAGE, SOLUTION_WORK, SOLUTION_READ,
 
     STOCK_READ, STOCK_MANAGE,
 
@@ -29,11 +29,17 @@ public enum PermissionEnum {
 
             case COMPUTER_MANAGE -> EnumSet.of(COMPUTER_READ);
 
+            case SOLUTION_WORK -> EnumSet.of(SOLUTION_READ);
+            case SOLUTION_MANAGE -> EnumSet.of(SOLUTION_WORK, SOLUTION_READ);
+
             case SYSTEM_MANAGE -> EnumSet.of(
                 TICKET_OPEN, 
                 TICKET_WORK, 
                 TICKET_SUPERVISOR, 
                 TICKET_MANAGE,
+                SOLUTION_READ,
+                SOLUTION_WORK,
+                SOLUTION_MANAGE,
                 STOCK_READ, 
                 STOCK_MANAGE,
                 COMPUTER_READ, 

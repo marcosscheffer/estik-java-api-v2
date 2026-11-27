@@ -3,6 +3,7 @@ package com.marcos.estik.solution.application.usecases;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.marcos.estik.security.AuthenticatedUser;
 import com.marcos.estik.shared.domain.user.PermissionEnum;
@@ -20,10 +21,11 @@ public class DeleteSolutionPostByIdUseCase implements DeleteSolutionPostByIdPort
     private final SolutionPostRepositoryPort solutionPostRepositoryPort;
 
     @Override
+    @Transactional 
     public void execute(UUID id, AuthenticatedUser principal) {
         SolutionPost solutionPost = solutionPostRepositoryPort.findById(id);
 
-        if (!solutionPost.getAuthorId().equals(principal.id()) && !principal.has(PermissionEnum.SOLUTION_MANAGER)) {
+        if (!solutionPost.getAuthorId().equals(principal.id()) && !principal.has(PermissionEnum.SOLUTION_MANAGE)) {
             throw new SolutionForbiddenException("The post not belong to you");
         }
         solutionPostRepositoryPort.deleteById(id);

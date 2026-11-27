@@ -1,0 +1,1 @@
+ALTER TABLE solution_posts DROP COLUMN resolved;

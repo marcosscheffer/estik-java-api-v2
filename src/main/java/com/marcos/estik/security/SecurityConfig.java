@@ -105,6 +105,17 @@ public class SecurityConfig {
                     "/departaments/**"
                 ).hasAnyAuthority("FACILITY_MANAGE")
 
+                // endpoint solutions permissions
+
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/solutions/**"
+                ).hasAuthority("SOLUTION_READ")
+
+                .requestMatchers(
+                    "/solutions/**"
+                ).hasAnyAuthority("SOLUTION_WORK", "SOLUTION_MANAGE")
+
                 // endpoint stock permissions
 
                 .requestMatchers(
